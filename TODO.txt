@@ -1,0 +1,22 @@
+2. concomitant models (check the ll, aic, bic if concomitant) and df
+3. Redo sem and cem acc. to em
+4. Documentation
+5. plot
+
+
+5. redo the distribution fit.
+6. plot()
+
+worked function:
+em()
+summary.em()
+print.summary.em()
+print.em()
+predict()
+update()
+
+
+worked models:
+lm
+glm - family: gaussian, poisson, binomial
+gnm - family: gaussian, poisson, binomial

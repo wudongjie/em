@@ -1,7 +1,7 @@
 library(gnm)
 
 test_that("test linear regression", {
-  #browser()
+  browser()
   NPreg <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[1])
   NPreg$x2 <- (NPreg$x)^2
   formula <- yn~x+x2
@@ -20,7 +20,6 @@ test_that("test linear regression", {
   results3 <- update(results2, formula2)
   print(summary(results3))
   results4 <- update(results3, latent=3)
-  print(summary(results4))
   results_glm <- em(glm, formula=formula, data=NPreg)
   print(summary(results_glm))
 })
@@ -31,6 +30,7 @@ test_that("test concomitant", {
   NPreg$x2 <- (NPreg$x)^2
   formula <- yn ~ x + x2
   formula_c <- ~ yb
+  browser()
   results <- em(lm, formula=formula, data=NPreg, concomitant=formula_c, verbose=T)
   fmm_fit <- predict(results)
   print(summary(results))

@@ -35,21 +35,7 @@ multi.em <- function(object, ..., iter=10, parallel=FALSE)
                    }
     )
   }
-  # for (i in (1:iter)) {
-  #   cat(paste0("Iteration ", i, ":"))
-  #   cat("\n")
-  #   out <- tryCatch(
-  #     {
-  #       emfit <- do.call(object, args)
-  #       fitted[[j]] <- emfit
-  #       cat(paste0("Loglik: ", logLik(emfit)))
-  #       cat("\n")
-  #       j <- j + 1
-  #     },
-  #     error=function(cond) {
-  #       return(NA)
-  #     })
-  # }
+
   maxid = 1
   fitted<-fitted[!sapply(fitted,is.null)]
   for (i in (2:length(fitted))) {

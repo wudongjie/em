@@ -93,10 +93,17 @@ em <- function(model, ..., latent=2, verbose=F,
         pi <- colSums(pi_matrix)/sum(pi_matrix)
         post_pr <- estep(results, pi_matrix)
         ll <- 0
-        for (i in 1:length(results)) {
-          ll <- ll + pi[[i]]*fit.den(results[[i]])
+        if (is.null(concomitant)) {
+          for (i in 1:length(results)) {
+            ll <- ll + pi[[i]]*fit.den(results[[i]])
+          }
+          ll <- sum(log(ll))
+        } else {
+          for (i in 1:length(results)) {
+            ll <- ll + results.con$fitted.values[,i]*fit.den(results[[i]])
+          }
+          ll <- sum(log(ll))
         }
-        ll <- sum(log(ll))
         conv <- ll - llp
         llp <- ll
         if (verbose) {
@@ -189,7 +196,6 @@ summary.em <- function(object){
   }
   ans$ll <- logLik(object)
   ans$df <- attr(ans$ll, "df")
-  #ans$ll <- sum(log(ans$ll))
   ans$coefficients <- do.call(rbind, ans$coefficients)
   rownames(ans$coefficients) <- names_coef
   ans$obs <- object$obs

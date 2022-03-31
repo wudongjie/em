@@ -10,11 +10,21 @@
 logLik.em <- function(object, ...) {
   p <- 0
   ll <- 0
-  for (i in 1:length(object$models)) {
-    p <- p + df.em(object$models[[i]])
-    ll <- ll + object$pi[[i]]*fit.den(object$models[[i]])
+  if (is.null(object$concomitant)) {
+    for (i in 1:length(object$models)) {
+      p <- p + df.em(object$models[[i]])
+      #ll <- ll + object$post_pr[,i]*log(object$pi[[i]]*fit.den(object$models[[i]]))
+      ll <- ll + object$pi[[i]]*fit.den(object$models[[i]])
+    }
+    ll <- sum(log(ll))
+  } else {
+    for (i in 1:length(object$models)) {
+      p <- p + df.em(object$models[[i]])
+      ll <- ll + object$results.con$fitted.values[,i]*fit.den(object$models[[i]])
+    }
+    p <- p + object$results.con$edf - 1
+    ll <- sum(log(ll))
   }
-  ll <- sum(log(ll))
   p <- p + object$latent - 1
   attr(ll, "nobs") <- object$obs
   attr(ll, "df") <- p
