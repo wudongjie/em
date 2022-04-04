@@ -1,3 +1,4 @@
+#' S-step of EM algorithm
 #' @description Given the posterior probability, generate a matrix to assign
 #' each individual to a class. The assignment is randomly sampled based on the posterior probability.
 #' @param postpr (`matrix()`) \cr

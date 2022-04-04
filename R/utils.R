@@ -1,3 +1,6 @@
+#' Transform a factor variable to a matrix of dummy variables
+#' @param x a factor vector
+#' @return a matrix of dummy variables
 #' @export
 vdummy = function(x) {
   stopifnot( all(x == floor(x)) )
@@ -12,7 +15,12 @@ vdummy = function(x) {
   return(t(dvec))
 }
 
-
+#' Flatten a data.frame or matrix by column or row with its name.
+#' The name will be transformed into the number of row/column plus 
+#' the name of column/row separated by `.`. 
+#' @param x a data.frame or matrix.
+#' @param by either by column or by row.
+#' @return a flattened vector with names 
 #' @export
 flatten <- function(x, by=c("col","row")){
   by <- match.arg(by)

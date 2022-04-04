@@ -1,3 +1,9 @@
+#' Multiple run of EM algorithm
+#' @param object the model to use in em, e.g. `lm`, `glm`, `gnm`
+#' @param ... arguments in the model object.
+#' @param iter number of iterations for running EM algorithm.
+#' @param parallel whether to use the parallel computing.
+#' @return return the `em` object with the maximum log-likelihood.
 #' @export
 multi.em <- function(object, ..., iter=10, parallel=FALSE)
 {

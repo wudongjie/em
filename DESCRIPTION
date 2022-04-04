@@ -1,5 +1,5 @@
 Package: em
-Title: What the Package Does (One Line, Title Case)
+Title: Generic EM Algorithm
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Dongjie",
@@ -14,8 +14,9 @@ Encoding: UTF-8
 LazyData: true
 NeedsCompilation: yes
 Depends: R (>= 3.0.0)
-Imports: nnet, stats, utils, gnm
+Imports: nnet, stats, utils, gnm, survival
 Suggests: 
     testthat (>= 3.0.0),
     parallel
 Config/testthat/edition: 3
+RoxygenNote: 7.1.1

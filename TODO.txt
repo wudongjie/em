@@ -1,11 +1,52 @@
-2. concomitant models (check the ll, aic, bic if concomitant) and df
+Do I really need Gnmterms and model.frame.gnm?
+
+
 3. Redo sem and cem acc. to em
 4. Documentation
+
+  ‘flatten’ ‘multi.em’ ‘vdummy’
+
+ Undocumented arguments in documentation object 'cem'
+     ‘model’ ‘pars’ ‘latent’ ‘verbose’ ‘max_iter’
+   
+   Undocumented arguments in documentation object 'em'
+     ‘model’ ‘...’ ‘latent’ ‘verbose’ ‘init.method’ ‘max_iter’
+     ‘concomitant’
+   
+   Undocumented arguments in documentation object 'estep'
+     ‘models’ ‘pi_matrix’
+   
+   Undocumented arguments in documentation object 'fit.den'
+     ‘object’ ‘...’
+   
+   Undocumented arguments in documentation object 'init.em'
+     ‘object’ ‘...’
+   
+   Undocumented arguments in documentation object 'logLik.em'
+     ‘object’ ‘...’
+   
+   Undocumented arguments in documentation object 'mstep'
+     ‘models’ ‘pars’ ‘post_pr’
+   
+   Undocumented arguments in documentation object 'sem'
+     ‘model’ ‘pars’ ‘latent’ ‘verbose’ ‘max_iter’
+
+
+
 5. plot
+
+6. check nlme and lme4
+
+Plot():
+
+1. Components graph (predicted value distribution of each component)
+2. observed vs fitted (weighted by prior or posterior)
+3. Probablity graph (prior vs. posterior)
+
+
 
 
 5. redo the distribution fit.
-6. plot()
 
 worked function:
 em()
@@ -14,6 +55,11 @@ print.summary.em()
 print.em()
 predict()
 update()
+
+
+other functions to do:
+coef
+nobs
 
 
 worked models:

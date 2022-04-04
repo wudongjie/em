@@ -1,15 +1,9 @@
-#' @title Generate the initial value of posterior probabilty
-#'
-#' @author Dongjie Wu
-#'
+#' Initialization of EM algorithm
 #' @description Given a matrix with number of rows equal to the number of
 #' observation and number of columns equal to the number of latent classes,
 #' function `init.em` generate the posterior probability using that matrix
 #' based on the method set by the user.
-#'
-#' @return The posterior probablity
-#'
-#'
+#' @return The posterior probability matrix
 #' @export
 init.em <- function(object, ...) {
   if (!is.matrix(object)) {

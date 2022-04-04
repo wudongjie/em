@@ -2,16 +2,10 @@
 % Please edit documentation in R/logLik.em.R
 \name{logLik.em}
 \alias{logLik.em}
-\title{logLik of EM Algorithm}
+\title{This function computes logLik of EM Algorithm.}
 \usage{
 \method{logLik}{em}(object, ...)
 }
-\value{
-the loglikelihood value
-}
 \description{
 This function computes logLik of EM Algorithm.
-}
-\author{
-Dongjie Wu
 }

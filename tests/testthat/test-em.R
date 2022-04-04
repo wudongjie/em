@@ -13,6 +13,13 @@ test_that("test linear regression", {
   fmm_fit <- predict(results)
   fmm_fit_post <- predict(results, prob="posterior")
 
+  # Test cem and sem
+  #results_cem <- cem(lm, formula=formula, data=NPreg, latent=2, verbose=T)
+  #results_sem <- sem(lm, formula=formula, data=NPreg, latent=2, verbose=T)
+  #print(summary(results_cem))
+  #print(summary(results_sem))
+  
+  
   print(summary(results))
   results2 <- em(lm, formula=formula, data=NPreg, init.method="kmeans") # Test kmeans
   print(summary(results2))
@@ -22,6 +29,7 @@ test_that("test linear regression", {
   results4 <- update(results3, latent=3)
   results_glm <- em(glm, formula=formula, data=NPreg)
   print(summary(results_glm))
+ 
 })
 
 test_that("test concomitant", {
@@ -30,7 +38,6 @@ test_that("test concomitant", {
   NPreg$x2 <- (NPreg$x)^2
   formula <- yn ~ x + x2
   formula_c <- ~ yb
-  browser()
   results <- em(lm, formula=formula, data=NPreg, concomitant=formula_c, verbose=T)
   fmm_fit <- predict(results)
   print(summary(results))
@@ -105,4 +112,19 @@ test_that("test gnm poisson(unidiff)", {
   print(summary(udf2_2))
   #print(summary(udf2_3))
   print(summary(udf2_4))
+})
+
+
+test_that("test clogit", {
+  library(survival)
+  browser()
+  resp <- levels(logan$occupation)
+  n <- nrow(logan)
+  indx <- rep(1:n, length(resp))
+  logan2 <- data.frame(logan[indx,],
+                       id = indx,
+                       tocc = factor(rep(resp, each=n)))
+  logan2$case <- (logan2$occupation == logan2$tocc)
+  cl_fit <- clogit(case ~ tocc + tocc:education + strata(id), logan2)
+  browser()
 })

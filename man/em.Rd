@@ -14,12 +14,29 @@ em(
   concomitant = NULL
 )
 }
+\arguments{
+\item{model}{the model used, e.g. `lm`, `glm`, `gnm`.}
+
+\item{...}{arguments used in the `model`.}
+
+\item{latent}{the number of latent classes.}
+
+\item{verbose}{`True` to print the process of convergence.}
+
+\item{init.method}{the initialization method used in the model.
+The default method is `random`.}
+
+\item{max_iter}{the maximum iteration for em algorithm.}
+
+\item{concomitant}{the formula to define the concomitant part of the model.
+The default is NULL.}
+}
 \value{
-the fitting result for the model.
+the fitting object for the model with the class `em`.
 }
 \description{
 A generic EM algorithm that can work on specific models/classes,
-models/classes that can use \code{logLik} to extract the log-likelihood function.
+models/classes that can use `logLik` to extract the log-likelihood function.
 }
 \author{
 Dongjie Wu

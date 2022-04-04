@@ -1,13 +1,20 @@
 #' @title A Generic EM Algorithm
-#'
 #' @author Dongjie Wu
-#'
 #' @description A generic EM algorithm that can work on specific models/classes,
 #' models/classes that can use `logLik` to extract the log-likelihood function.
-#'
-#' @return the fitting result for the model.
-#'
-#'
+#' @param model the model used, e.g. `lm`, `glm`, `gnm`.
+#' @param ... arguments used in the `model`.
+#' @param latent the number of latent classes.
+#' @param verbose `True` to print the process of convergence.
+#' @param init.method the initialization method used in the model.
+#' The default method is `random`.
+#' @param max_iter the maximum iteration for em algorithm.
+#' @param concomitant the formula to define the concomitant part of the model.
+#' The default is NULL.  
+#' @return the fitting object for the model with the class `em`.
+#' @importFrom stats coef dbinom dnorm dpois kmeans logLik 
+#' @importFrom stats model.frame model.matrix model.response nobs predict 
+#' @importFrom stats printCoefmat pt rmultinom
 #' @export
 em <- function(model, ..., latent=2, verbose=F,
                init.method = c("random", "kmeans"),
@@ -149,7 +156,7 @@ print.em <- function(x, digits = max(3L, getOption("digits") - 3L), ...){
 
 
 #' @export
-summary.em <- function(object){
+summary.em <- function(object, ...){
   ans = list(call=object$call,
              coefficients= list(),
              pi=object$pi,
@@ -250,7 +257,12 @@ predict.em <- function(object, prob=c("prior", "posterior"), ...) {
     compo[[i]] <- predict(object$models[[i]])
   }
   if (prob=="prior") {
-    pred = matrix(unlist(compo), ncol=object$latent) %*% object$pi
+    if (is.null(object$concomitant)) {
+      pred = matrix(unlist(compo), ncol=object$latent) %*% object$pi
+    } else {
+      browser()
+      pred = matrix(unlist(compo), ncol=object$latent) * object$results.con$fitted.values
+    }
   } else {
     pred = matrix(unlist(compo), ncol=object$latent) * object$post_pr
   }

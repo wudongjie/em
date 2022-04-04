@@ -1,3 +1,4 @@
+#' C-Step of EM algorithm
 #' @description Given the posterior probability, generate a matrix to assign
 #' each individual to a class. The assignment based on which probability is the largest.
 #' @param postpr (`matrix()`) \cr

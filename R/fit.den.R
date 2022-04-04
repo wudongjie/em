@@ -1,18 +1,10 @@
-#' @title Fit the density function for a fitted model
-#'
-#' @author Dongjie Wu
-#'
-#' @description Fit the density function for a fitted model.
-#'
-#' @return The fitted value
-#'
-#'
+#' Fit the density function for a fitted model.
 #' @export
 fit.den <- function(object, ...) {
   UseMethod("fit.den")
 }
 
-#' @description Fitting the density function using in `fitdistrplus::fitdist()`
+#' Fitting the density function using in `fitdistrplus::fitdist()`
 #' @export
 fit.den.fitdist <- function(object, ...) {
     ddistname <- paste("d", object$distname, sep="")
@@ -84,5 +76,11 @@ fit.den.nnet <- function(object, ...){
 
 #' @export
 fit.den.clogit <- function(object, ...){
-
+  y <- model.response(object$model)
+  if (is.null(dim(y))) {
+    ob <- length(y)
+  } else {
+    ob <- nrow(y)
+  }
+  den <- dbinom(y, size=rep(1, ob), prob=object$fitted.values)
 }

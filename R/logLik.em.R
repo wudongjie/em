@@ -1,11 +1,5 @@
-#' @title logLik of EM Algorithm
-#'
-#' @author Dongjie Wu
-#'
-#' @description This function computes logLik of EM Algorithm.
-#'
-#' @return the loglikelihood value
-
+#' This function computes logLik of EM Algorithm.
+#' @method logLik em
 #' @export
 logLik.em <- function(object, ...) {
   p <- 0

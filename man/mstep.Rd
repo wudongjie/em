@@ -2,16 +2,20 @@
 % Please edit documentation in R/mstep.R
 \name{mstep}
 \alias{mstep}
-\title{M-Step of EM Algorithm}
+\title{M-Step of EM algorithm}
 \usage{
 mstep(models, pars, post_pr = NULL)
+}
+\arguments{
+\item{models}{the models used in the EM algorithm}
+
+\item{pars}{the arguments in the models}
+
+\item{post_pr}{the posterior probability.}
 }
 \value{
 the fitting result for the model.
 }
 \description{
 This function performs an M-Step of EM Algorithm.
-}
-\author{
-Dongjie Wu
 }

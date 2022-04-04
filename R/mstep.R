@@ -1,12 +1,9 @@
-#' @title M-Step of EM Algorithm
-#'
-#' @author Dongjie Wu
-#'
+#' M-Step of EM algorithm
 #' @description This function performs an M-Step of EM Algorithm.
-#'
+#' @param models the models used in the EM algorithm
+#' @param pars the arguments in the models
+#' @param post_pr the posterior probability.
 #' @return the fitting result for the model.
-#'
-
 #' @export
 mstep <- function(models, pars, post_pr=NULL)
 {

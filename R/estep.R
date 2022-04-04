@@ -1,14 +1,7 @@
-#' @title E-Step of EM Algorithm
-#'
-#' @author Dongjie Wu
-#'
-#' @description This function performs an E-Step of EM Algorithm.
-#'
+#' This function performs an E-Step of EM Algorithm.
+#' @param models models used in the EM algorithm,
+#' @param pi_matrix the pi matrix.
 #' @return the fitting result for the model.
-#'
-
-#estep <- function(models, pi_matrix) UseMethod("estep")
-
 #' @export
 estep <- function(models, pi_matrix)
 {

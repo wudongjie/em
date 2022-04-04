@@ -2,16 +2,18 @@
 % Please edit documentation in R/estep.R
 \name{estep}
 \alias{estep}
-\title{E-Step of EM Algorithm}
+\title{This function performs an E-Step of EM Algorithm.}
 \usage{
 estep(models, pi_matrix)
+}
+\arguments{
+\item{models}{models used in the EM algorithm,}
+
+\item{pi_matrix}{the pi matrix.}
 }
 \value{
 the fitting result for the model.
 }
 \description{
 This function performs an E-Step of EM Algorithm.
-}
-\author{
-Dongjie Wu
 }

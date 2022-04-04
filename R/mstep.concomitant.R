@@ -1,5 +1,9 @@
-## This section was inspired by Flexmix.
-
+#' The mstep for the concomitant model.
+#' @description This section was inspired by Flexmix.
+#' @param formula the formula of the concomitant model.
+#' @param data the data or model.frame related to the concomitant model.
+#' @param postpr the posterior probability matrix.
+#' @return the function returns a fitted nnet object.
 mstep.concomitant <- function(formula, data, postpr) {
   x <- model.matrix(formula, data)
   y <- postpr
@@ -15,6 +19,12 @@ mstep.concomitant <- function(formula, data, postpr) {
                rang = 0, trace=FALSE)
 }
 
+#' The refit of for the concomitant model.
+#' This section was inspired by Flexmix.
+#' @param formula the formula of the concomitant model.
+#' @param data the data or model.frame related to the concomitant model.
+#' @param postpr the posterior probability matrix.
+#' @return the function returns a fitted multinom object.
 mstep.concomitant.refit <- function(formula, data, postpr) {
   x <- model.matrix(formula, data)
   y <- postpr

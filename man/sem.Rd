@@ -2,17 +2,39 @@
 % Please edit documentation in R/sem.R
 \name{sem}
 \alias{sem}
-\title{A Generic SEM Algorithm}
+\title{A generic SEM algorithm}
 \usage{
-sem(model, pars, latent = 2, verbose = F, max_iter = 500)
+sem(
+  model,
+  ...,
+  latent = 2,
+  verbose = F,
+  init.method = c("random", "kmeans"),
+  max_iter = 500,
+  concomitant = NULL
+)
+}
+\arguments{
+\item{model}{the model used, e.g. `lm`, `glm`, `gnm`.}
+
+\item{...}{arguments used in the `model`.}
+
+\item{latent}{the number of latent classes.}
+
+\item{verbose}{`True` to print the process of convergence.}
+
+\item{init.method}{the initialization method used in the model.
+The default method is `random`.}
+
+\item{max_iter}{the maximum iteration for em algorithm.}
+
+\item{concomitant}{the formula to define the concomitant part of the model.
+The default is NULL.}
 }
 \value{
-the fitting result for the model.
+the fitting object for the model with the class `em` and `sem`.
 }
 \description{
 A generic SEM algorithm that can work on specific models/classes,
-models/classes that can use \code{logLik} to extract the log-likelihood function.
-}
-\author{
-Dongjie Wu
+models/classes that can use `logLik` to extract the log-likelihood function.
 }

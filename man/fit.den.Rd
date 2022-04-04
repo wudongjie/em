@@ -2,16 +2,10 @@
 % Please edit documentation in R/fit.den.R
 \name{fit.den}
 \alias{fit.den}
-\title{Fit the density function for a fitted model}
+\title{Fit the density function for a fitted model.}
 \usage{
 fit.den(object, ...)
 }
-\value{
-The fitted value
-}
 \description{
 Fit the density function for a fitted model.
-}
-\author{
-Dongjie Wu
 }

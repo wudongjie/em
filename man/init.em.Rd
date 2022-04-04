@@ -2,19 +2,16 @@
 % Please edit documentation in R/init.em.R
 \name{init.em}
 \alias{init.em}
-\title{Generate the initial value of posterior probabilty}
+\title{Initialization of EM algorithm}
 \usage{
 init.em(object, ...)
 }
 \value{
-The posterior probablity
+The posterior probability matrix
 }
 \description{
 Given a matrix with number of rows equal to the number of
 observation and number of columns equal to the number of latent classes,
-function \code{init.em} generate the posterior probability using that matrix
+function `init.em` generate the posterior probability using that matrix
 based on the method set by the user.
-}
-\author{
-Dongjie Wu
 }
