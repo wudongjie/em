@@ -4,19 +4,7 @@
 \alias{multi.em}
 \title{Multiple run of EM algorithm}
 \usage{
-multi.em(object, ..., iter = 10, parallel = FALSE)
-}
-\arguments{
-\item{object}{the model to use in em, e.g. `lm`, `glm`, `gnm`}
-
-\item{...}{arguments in the model object.}
-
-\item{iter}{number of iterations for running EM algorithm.}
-
-\item{parallel}{whether to use the parallel computing.}
-}
-\value{
-return the `em` object with the maximum log-likelihood.
+multi.em(object, ...)
 }
 \description{
 Multiple run of EM algorithm

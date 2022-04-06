@@ -19,19 +19,18 @@ test_that("test m-step", {
   rD <- 1 - D
   mD <- matrix(c(D, rD), ncol=2)
   data <- data.frame(Y=Y,x1=x1,x2=x2)
-  pars <- list(formula=formula, data=data)
-  browser()
-  y_result <- mstep(list(lm, lm), pars, oDm)
+  lm_fit <- lm(formula=formula, data=data)
+  y_result <- mstep(list(lm_fit, lm_fit), oDm)
   pi_matrix <- matrix(colSums(oDm)/nrow(oDm),
                       nrow=1000, ncol=2,
                       byrow=T)
   mD <- estep(y_result, pi_matrix)
-  y_result <- mstep(list(lm, lm), pars, mD)
+  y_result <- mstep(list(lm_fit, lm_fit), mD)
   pi_matrix <- matrix(colSums(mD)/nrow(mD),
                       nrow=1000, ncol=2,
                       byrow=T)
   mD2 <- estep(y_result, pi_matrix)
-  y_result <- mstep(list(lm, lm), pars, mD2)
+  y_result <- mstep(list(lm_fit, lm_fit), mD2)
   print(y_result)
   #sum_to_1 = rep(c(1),100)
   #expect_equal(rowSums(y_result), sum_to_1)

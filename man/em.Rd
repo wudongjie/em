@@ -4,35 +4,7 @@
 \alias{em}
 \title{A Generic EM Algorithm}
 \usage{
-em(
-  model,
-  ...,
-  latent = 2,
-  verbose = F,
-  init.method = c("random", "kmeans"),
-  max_iter = 500,
-  concomitant = NULL
-)
-}
-\arguments{
-\item{model}{the model used, e.g. `lm`, `glm`, `gnm`.}
-
-\item{...}{arguments used in the `model`.}
-
-\item{latent}{the number of latent classes.}
-
-\item{verbose}{`True` to print the process of convergence.}
-
-\item{init.method}{the initialization method used in the model.
-The default method is `random`.}
-
-\item{max_iter}{the maximum iteration for em algorithm.}
-
-\item{concomitant}{the formula to define the concomitant part of the model.
-The default is NULL.}
-}
-\value{
-the fitting object for the model with the class `em`.
+em(object, ...)
 }
 \description{
 A generic EM algorithm that can work on specific models/classes,

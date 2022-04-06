@@ -76,11 +76,18 @@ fit.den.nnet <- function(object, ...){
 
 #' @export
 fit.den.clogit <- function(object, ...){
-  y <- model.response(object$model)
-  if (is.null(dim(y))) {
-    ob <- length(y)
-  } else {
-    ob <- nrow(y)
+  cl <- object$call
+  cl[[1L]] <- quote(stats::model.frame)
+  cl$method <- NULL
+  mf <- eval(cl)#, parent.frame())
+  y <- model.response(mf)
+  y <- as.double(y[,2])
+  fitted <- exp(predict(object))
+  dt <- data.frame(y=y, fitted=fitted)
+  gen.mn <- function(dt) {
+    dmultinom(dt$y, prob=dt$fitted)
   }
-  den <- dbinom(y, size=rep(1, ob), prob=object$fitted.values)
+  # TODO: extract the column of strata
+  den <- unlist(by(dt, mf$`strata(id)`, gen.mn, simplify = F))
+  den
 }

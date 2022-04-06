@@ -17,12 +17,12 @@ test_that("multiplication works", {
                           6, 6, 5, 3, 5, 4, 1), 7, 7, byrow = TRUE)
   formula1 <- Freq ~ country:origin + country:destination + Mult(Exp(country),
                                                                  Topo(origin, destination, spec = levelMatrix))
-  browser()
+  gnm_fit <- gnm(formula=formula1, family=poisson, data=erikson)
   t1 <- system.time(
-  udf_np <- multi.em(em, model=gnm, formula=formula1, family=poisson, data=erikson, latent=2)
+  udf_np <- multi.em(gnm_fit, latent=2)
   )
   t2 <- system.time(
-  udf_p <- multi.em(em, model=gnm, formula=formula1, family=poisson, data=erikson, latent=2, parallel=T)
+  udf_p <- multi.em(gnm_fit, latent=2, parallel=T)
   )
   print(t1)
   print(t2)

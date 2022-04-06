@@ -4,14 +4,14 @@
 \alias{mstep}
 \title{M-Step of EM algorithm}
 \usage{
-mstep(models, pars, post_pr = NULL)
+mstep(models, post_pr = NULL)
 }
 \arguments{
 \item{models}{the models used in the EM algorithm}
 
-\item{pars}{the arguments in the models}
-
 \item{post_pr}{the posterior probability.}
+
+\item{pars}{the arguments in the models}
 }
 \value{
 the fitting result for the model.

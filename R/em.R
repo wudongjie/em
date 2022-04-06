@@ -2,7 +2,16 @@
 #' @author Dongjie Wu
 #' @description A generic EM algorithm that can work on specific models/classes,
 #' models/classes that can use `logLik` to extract the log-likelihood function.
-#' @param model the model used, e.g. `lm`, `glm`, `gnm`.
+#' @importFrom stats coef dbinom dnorm dpois kmeans logLik 
+#' @importFrom stats model.frame model.matrix model.response nobs predict 
+#' @importFrom stats printCoefmat pt rmultinom dmultinom
+#' @export
+em <- function(object, ...) {
+  UseMethod("em")
+}
+
+#' The default em function
+#' @param object the model used, e.g. `lm`, `glm`, `gnm`.
 #' @param ... arguments used in the `model`.
 #' @param latent the number of latent classes.
 #' @param verbose `True` to print the process of convergence.
@@ -12,73 +21,54 @@
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
-#' @importFrom stats coef dbinom dnorm dpois kmeans logLik 
-#' @importFrom stats model.frame model.matrix model.response nobs predict 
-#' @importFrom stats printCoefmat pt rmultinom
-#' @export
-em <- function(model, ..., latent=2, verbose=F,
+em.default <- function(object, latent=2, verbose=F,
                init.method = c("random", "kmeans"),
-               max_iter=500, concomitant=NULL)
+               max_iter=500, concomitant=list(...), ...)
 {
+      if(!missing(...)) warning("extra arguments discarded")
       cl <- match.call()
-      fit <- do.call(model, list(...))
-      args <- list(...)
-      em.formula <- args$formula
-      m <- match(c("call", "terms","model", "y", "data", "x"), names(fit), 0L)
+      m <- match(c("call", "terms", "formula", "model", "y", "data", "x"), names(object), 0L)
       if (is.na(m[[1]])) {
         warning("There is no `call` for the model used.")
       } else if (is.na(m[[2]])) {
         warning("There is no `terms` for the model used.")
       } else {
-        mt <- fit[m]
+        mt <- object[m]
       }
       attr(mt$terms, ".Environment") <- environment() # attached to the current env
-      mlabel <- c("model", "data")
-      n <- NA
-      for (l in names(mt)) {
-        if (l %in% mlabel) {
-          if (is.null(dim(mt[[l]]))) {
-            n <- length(mt[[l]])
-          } else {
-            n <- nrow(mt[[l]])
-          }
-          break
-        }
+      if (is.null(mt$model)) {
+        mf <- mt$call
+        mm <- match(c("formula", "data", "subset", "weights", "na.action", "offset"),
+                    names(mf), 0L)
+        mf <- mf[c(1L, mm)]
+        mf[[1L]] <- quote(stats::model.frame)
+        mf <- eval(mf, parent.frame())
+        mt$model <- mf
       }
-      if (is.na(n)) {
-        stop("Data is not loaded. Check if the model function return
-             `model`, `data`, `x` or `y`.")
-      }
-      if (!is.null(mt$model)) {
-        mt$x <- model.matrix(mt$terms, mt$model)
-        mt$y <- model.response(mt$model)
-      }
-      else {
-        mt$x <- model.matrix(mt$terms, mt$data)
-        mt$y <- model.response(mt$data)
-      }
+      n <- nrow(mt$model)
+      mt$x <- model.matrix(mt$terms, mt$model)
+      mt$y <- model.response(mt$model)
+      
 
       ## load the concomitant model
-      if (!is.null(concomitant))
+      if (length(concomitant) != 0)
       {
-        mf.con <- match.call()
-        m.con <- match(c("concomitant", "data", "subset", "weights", "na.action", "offset"),
-                  names(mf.con), 0L)
-        mf.con <- mf.con[c(1L, m.con)]
+        m.con <- match(c("formula", "data", "subset", "weights", "na.action", "offset"),
+                  names(concomitant), 0L)
+        mf.con <- concomitant[m.con]
         mf.con$drop.unused.levels <- TRUE
-        mf.con[[1L]] <- quote(model.frame)
-        names(mf.con)[names(mf.con) == "concomitant"] <- "formula"
-        mf.con <- eval(mf.con, parent.frame())
+        mf.con <- do.call(model.frame, mf.con)
         mt.con <- attr(mf.con, "terms")
       }
       #### TODO: use init.em for init_pr
+      
       post_pr <- matrix(0, nrow=n, ncol=latent)
       class(post_pr) <- match.arg(init.method)
       post_pr <- init.em(post_pr, mt$x)
       #post_pr <- vdummy(sample(1:latent, size=n, replace=T))
       models <- list()
       for (i in 1:latent) {
-        models[[i]] <- model
+        models[[i]] <- object
       }
       results.con <- NULL
       cnt <- 0
@@ -88,10 +78,10 @@ em <- function(model, ..., latent=2, verbose=F,
         pi_matrix <- matrix(colSums(post_pr)/nrow(post_pr),
                            nrow=nrow(post_pr), ncol=ncol(post_pr),
                            byrow=T)
-        results <- mstep(models, args, post_pr=post_pr)
-        if (!is.null(concomitant)) {
-          if ("formula" %in% class(concomitant)) {
-            results.con <- mstep.concomitant(concomitant, mf.con, post_pr)
+        results <- mstep(models, post_pr=post_pr)
+        if (length(concomitant)!=0) {
+          if ("formula" %in% names(concomitant)) {
+            results.con <- mstep.concomitant(concomitant$formula, mf.con, post_pr)
             pi_matrix <- results.con$fitted.values
           } else {
             stop("concomitant need to be a formula")
@@ -100,7 +90,7 @@ em <- function(model, ..., latent=2, verbose=F,
         pi <- colSums(pi_matrix)/sum(pi_matrix)
         post_pr <- estep(results, pi_matrix)
         ll <- 0
-        if (is.null(concomitant)) {
+        if (length(concomitant)==0) {
           for (i in 1:length(results)) {
             ll <- ll + pi[[i]]*fit.den(results[[i]])
           }
@@ -129,8 +119,8 @@ em <- function(model, ..., latent=2, verbose=F,
                 obs=n,
                 post_pr=estep(results, pi_matrix),
                 concomitant=concomitant)
-      if (!is.null(concomitant)) {
-        z$results.con=mstep.concomitant.refit(concomitant, mf.con, post_pr)
+      if (length(concomitant)!=0) {
+        z$results.con=mstep.concomitant.refit(concomitant$formula, mf.con, post_pr)
         z$terms.con=mt.con
       }
       class(z) <- c("em")
@@ -176,7 +166,7 @@ summary.em <- function(object, ...){
 
     #ans$ll <- ans$ll + ans$pi[[i]]*fit.den(object$models[[i]])
   }
-  if (!is.null(object$concomitant)) {
+  if (length(object$concomitant)!=0) {
     ans$concomitant <- object$concomitant
     ans$concomitant.summary <- summary(object$results.con)
     c.df <- nrow(ans$concomitant.summary$fitted.values) -
@@ -233,7 +223,7 @@ print.summary.em <-
     cat("\n")
   }
   cat("\n")
-  if (!is.null(x$concomitant)) {
+  if (length(x$concomitant)!=0) {
     cat("Concomitant model: \n")
     printCoefmat(x$concomitant.coef, digits = digits, signif.stars = signif.stars,
                  na.print = "NA", ...)
@@ -257,10 +247,9 @@ predict.em <- function(object, prob=c("prior", "posterior"), ...) {
     compo[[i]] <- predict(object$models[[i]])
   }
   if (prob=="prior") {
-    if (is.null(object$concomitant)) {
+    if (length(object$concomitant)==0) {
       pred = matrix(unlist(compo), ncol=object$latent) %*% object$pi
     } else {
-      browser()
       pred = matrix(unlist(compo), ncol=object$latent) * object$results.con$fitted.values
     }
   } else {

@@ -5,13 +5,10 @@
 #' @param post_pr the posterior probability.
 #' @return the fitting result for the model.
 #' @export
-mstep <- function(models, pars, post_pr=NULL)
+mstep <- function(models, post_pr=NULL)
 {
     if (!is.list(models)) {
       stop("Please provide models in a list.")
-    }
-    if (!is.list(pars)) {
-      stop("Please provide arguments in a list.")
     }
     if (!is.null(post_pr)) {
       if(!is.matrix(post_pr)) {
@@ -23,10 +20,10 @@ mstep <- function(models, pars, post_pr=NULL)
     }
     result <- list()
     for (i in 1:length(models)) {
-        if (!is.null(post_pr)) {
-          pars$weights <- post_pr[,i]
-        }
-        result[[i]] <- suppressWarnings(do.call(models[[i]], pars))
+        cl <- models[[i]]$call
+        cl$weights <- post_pr[, i]
+        env <- attr(models[[i]]$terms, ".Environment")
+        result[[i]] <- suppressWarnings(eval(cl, env))
     }
     return(result)
 }
