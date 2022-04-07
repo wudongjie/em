@@ -1,4 +1,5 @@
 #' Multiple run of EM algorithm
+#' @export
 multi.em <- function(object, ...) {
   UseMethod("multi.em")
 }

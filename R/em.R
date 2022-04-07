@@ -20,6 +20,7 @@ em <- function(object, ...) {
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
+#' @export
 em.default <- function(object, latent=2, verbose=F,
                init.method = c("random", "kmeans"),
                max_iter=500, concomitant=list(...), ...)

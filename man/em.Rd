@@ -7,8 +7,7 @@
 em(object, ...)
 }
 \description{
-A generic EM algorithm that can work on specific models/classes,
-models/classes that can use `logLik` to extract the log-likelihood function.
+A generic EM algorithm that can work on specific models/objects.
 }
 \author{
 Dongjie Wu
