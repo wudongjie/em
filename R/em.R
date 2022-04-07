@@ -1,7 +1,6 @@
 #' @title A Generic EM Algorithm
 #' @author Dongjie Wu
-#' @description A generic EM algorithm that can work on specific models/classes,
-#' models/classes that can use `logLik` to extract the log-likelihood function.
+#' @description A generic EM algorithm that can work on specific models/objects.
 #' @importFrom stats coef dbinom dnorm dpois kmeans logLik 
 #' @importFrom stats model.frame model.matrix model.response nobs predict 
 #' @importFrom stats printCoefmat pt rmultinom dmultinom

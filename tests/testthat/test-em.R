@@ -1,6 +1,7 @@
 library(gnm)
 
 test_that("test linear regression", {
+  browser()
   NPreg <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[1])
   NPreg$x2 <- (NPreg$x)^2
   formula <- yn~x+x2
@@ -130,7 +131,7 @@ test_that("test gnm poisson(unidiff)", {
 #   formula1 <- case ~ tocc + tocc:education + strata(id)
 #   cl_fit <- clogit(formula1, logan2)
 #   cl_wfit <- clogit(formula1, logan2, weights=rep(1, 838*5), method="approximate")
-#   cl_fit2 <- em(clogit, formula=formula1, data=logan2, latent=2)
+#   cl_fit2 <- em(cl_fit, latent=2)
 #   
 #   cl <- cl_fit$call
 #   cl[[1L]] <- quote(stats::model.frame)
