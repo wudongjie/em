@@ -1,5 +1,11 @@
 Do I really need Gnmterms and model.frame.gnm?
 
+1. clogit is to slow
+2. pglm does not work for binomial
+3. Do glmer. It is a S4 system
+
+
+
 
 3. Redo sem and cem acc. to em
 4. Documentation

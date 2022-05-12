@@ -31,8 +31,13 @@ multi.em.default <- function(object, iter=10, parallel=FALSE, ...)
       fitted <- parallel::mclapply(seq_len(iter),
                                    function(x) {
                                      tryCatch({
-                                       do.call(em, args)
+                                       do.call(em, args, envir = parent.frame(3))
+                                       
+                                       
                                      }, error=function(e) {
+                                       message(str(args))
+                                       #print(message(ls(parent.frame(3))))
+                                       #print(message(e))
                                        NULL
                                      }
                                      )
@@ -42,7 +47,7 @@ multi.em.default <- function(object, iter=10, parallel=FALSE, ...)
       fitted <- lapply(seq_len(iter),
                    function(x) {
                       tryCatch({
-                         do.call(em, args)
+                         do.call(em, args, envir = parent.frame(3))
                          }, error=function(e) {
                             NULL
                          }
@@ -50,7 +55,7 @@ multi.em.default <- function(object, iter=10, parallel=FALSE, ...)
                    }
     )
   }
-
+  #browser()
   maxid = 1
   fitted<-fitted[!sapply(fitted,is.null)]
   if (length(fitted) == 0) {

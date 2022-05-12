@@ -17,7 +17,11 @@ estep <- function(models, pi_matrix)
 
     postpr <- list()
     for (i in 1: ncol(pi_matrix)) {
-      w <- fit.den(models[[i]])*pi_matrix[,i]
+      if (sum(pi_matrix[,i]) == 0) {
+        w <- pi_matrix[,i]
+      } else {
+        w <- fit.den(models[[i]])*pi_matrix[,i]
+      }
         #exp(predict(models[[i]]))
       postpr <- cbind(postpr, w)
     }

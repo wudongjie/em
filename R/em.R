@@ -17,15 +17,23 @@ em <- function(object, ...) {
 #' @param init.method the initialization method used in the model.
 #' The default method is `random`.
 #' @param max_iter the maximum iteration for em algorithm.
+#' @param algo the algorithm used in em: the default EM algorithm, 
+#' the classification em `cem`, or the stochastic em `sem`.
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
 #' @export
 em.default <- function(object, latent=2, verbose=F,
-               init.method = c("random", "kmeans"),
+               init.method = c("random", "kmeans"), 
+               algo= c("em", "cem", "sem"),
                max_iter=500, concomitant=list(...), ...)
 {
       if(!missing(...)) warning("extra arguments discarded")
+      algo <- match.arg(algo)
+      if (!("weights" %in% names(formals(match.fun(object$call[[1]]))))) {
+        warning("The model cannot be weighted. Changed to `sem` instead.")
+        algo <- "sem"
+      }
       cl <- match.call()
       m <- match(c("call", "terms", "formula", "model", "y", "data", "x"), names(object), 0L)
       if (is.na(m[[1]])) {
@@ -35,7 +43,7 @@ em.default <- function(object, latent=2, verbose=F,
       } else {
         mt <- object[m]
       }
-      attr(mt$terms, ".Environment") <- environment() # attached to the current env
+      #attr(mt$terms, ".Environment") <- environment() # attached to the current env
       if (is.null(mt$model)) {
         mf <- mt$call
         mm <- match(c("formula", "data", "subset", "weights", "na.action", "offset"),
@@ -48,6 +56,7 @@ em.default <- function(object, latent=2, verbose=F,
       n <- nrow(mt$model)
       mt$x <- model.matrix(mt$terms, mt$model)
       mt$y <- model.response(mt$model)
+      #mt$y <- as.double(mt$y[,2])
       
 
       ## load the concomitant model
@@ -68,7 +77,7 @@ em.default <- function(object, latent=2, verbose=F,
       #post_pr <- vdummy(sample(1:latent, size=n, replace=T))
       models <- list()
       for (i in 1:latent) {
-        models[[i]] <- object
+        models[[i]] <- mt
       }
       results.con <- NULL
       cnt <- 0
@@ -89,15 +98,25 @@ em.default <- function(object, latent=2, verbose=F,
         }
         pi <- colSums(pi_matrix)/sum(pi_matrix)
         post_pr <- estep(results, pi_matrix)
+        if (algo=="cem")     {
+          post_pr <- cstep(post_pr)
+        }
+        else if (algo=="sem") {
+          post_pr <- sstep(post_pr)
+        }
         ll <- 0
         if (length(concomitant)==0) {
           for (i in 1:length(results)) {
-            ll <- ll + pi[[i]]*fit.den(results[[i]])
+            if (pi[[i]] != 0) {
+                ll <- ll + pi[[i]]*fit.den(results[[i]]) 
+            }
           }
           ll <- sum(log(ll))
         } else {
           for (i in 1:length(results)) {
-            ll <- ll + results.con$fitted.values[,i]*fit.den(results[[i]])
+            if (any(!is.na(results[[i]]))) {
+              ll <- ll + results.con$fitted.values[,i]*fit.den(results[[i]])
+            }
           }
           ll <- sum(log(ll))
         }
@@ -116,6 +135,7 @@ em.default <- function(object, latent=2, verbose=F,
                 init.method = match.arg(init.method),
                 call=cl,
                 terms=mt$terms,
+                algorithm=algo,
                 obs=n,
                 post_pr=estep(results, pi_matrix),
                 concomitant=concomitant)
@@ -155,11 +175,13 @@ summary.em <- function(object, ...){
   names_coef <- c()
   for (i in 1:length(object$models)){
     #browser()
-    ans$sum.models[[i]] <- summary(object$models[[i]])
-    names_coef <- c(names_coef,
+    if (any(!is.na(object$models[[i]]))) {
+      ans$sum.models[[i]] <- summary(object$models[[i]])
+      names_coef <- c(names_coef,
                     paste(as.character(i),
                           names(coef(object$models[[i]])),sep="."))
-    ans$coefficients[[i]] <- coef(ans$sum.models[[i]])
+      ans$coefficients[[i]] <- coef(ans$sum.models[[i]])
+    }
     #ans$ll <- ans$ll + log(ans$pi[[i]]) + logLik(object$models[[i]])
     #ans$ll <- ans$ll + sum(object$models[[i]]$weights*
     #                         (log(ans$pi[[i]])+log(fit.den(object$models[[i]]))))
@@ -244,7 +266,9 @@ predict.em <- function(object, prob=c("prior", "posterior"), ...) {
   compo <- list()
   prob <- match.arg(prob)
   for (i in 1:length(object$models)){
-    compo[[i]] <- predict(object$models[[i]])
+    if (any(!is.na(object$models[[i]]))) {
+      compo[[i]] <- predict(object$models[[i]])
+    }
   }
   if (prob=="prior") {
     if (length(object$concomitant)==0) {

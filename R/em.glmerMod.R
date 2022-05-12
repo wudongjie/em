@@ -1,4 +1,4 @@
-#' The em function for `survival::clogit`.
+#' The em function for glmerMod
 #' @param object the model used, e.g. `lm`, `glm`, `gnm`.
 #' @param ... arguments used in the `model`.
 #' @param latent the number of latent classes.
@@ -12,48 +12,49 @@
 #' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
 #' @export
-em.clogit <- function(object, latent=2, verbose=F,
-                       init.method = c("random", "kmeans"),
-                      algo= c("em", "cem", "sem"),
+em.glmerMod <- function(object, latent=2, verbose=F,
+                       init.method = c("random", "kmeans"), 
+                       algo= c("em", "cem", "sem"),
                        max_iter=500, concomitant=list(...), ...)
 {
   if(!missing(...)) warning("extra arguments discarded")
-  cl <- match.call()
-  # if (object$call$method == "exact") {
-  #   warning("Method cannot be exact. Change to approximate.")
-  #   object$call$method = "breslow"
-  # }
-  #browser()
   algo <- match.arg(algo)
-  if (algo=="em") {
+  if (!("weights" %in% names(formals(match.fun(object@call[[1]]))))) {
     warning("The model cannot be weighted. Changed to `sem` instead.")
     algo <- "sem"
   }
-  m <- match(c("call", "terms", "formula", "model", "y", "data", "x"), names(object), 0L)
-  if (is.na(m[[1]])) {
-    warning("There is no `call` for the model used.")
-  } else if (is.na(m[[2]])) {
-    warning("There is no `terms` for the model used.")
-  } else {
-    mt <- object[m]
+  cl <- match.call()
+  # m <- match(c("call", "terms", "formula", "frame", "y", "data", "x"), slotNames(object), 0L)
+  # if (is.na(m[[1]])) {
+  #   warning("There is no `call` for the model used.")
+  # } else if (is.na(m[[2]])) {
+  #   warning("There is no `terms` for the model used.")
+  # } else {
+  #   mt <- object[m]
+  # }
+  mt <- list()
+  for (i in c("call", "terms", "formula", "frame", "y", "data", "x")) {
+    if (.hasSlot(object, i)) {
+      mt[[i]] <- slot(object, i)
+    }
   }
-  attr(mt$terms, ".Environment") <- environment() # attached to the current env
-  if (is.null(mt$model)) {
+  #attr(mt$terms, ".Environment") <- environment() # attached to the current env
+  if (is.null(mt$frame)) {
     mf <- mt$call
     mm <- match(c("formula", "data", "subset", "weights", "na.action", "offset"),
                 names(mf), 0L)
     mf <- mf[c(1L, mm)]
     mf[[1L]] <- quote(stats::model.frame)
     mf <- eval(mf, parent.frame())
-    mt$model <- mf
+    mt$frame <- mf
   }
-  nr <- object$n #nrow
-  n <- object$nevent #strata
-  ni <- object$n / object$nevent
-  mt$x <- model.matrix(mt$terms, mt$model)
-  mt$y <- model.response(mt$model)
-
-
+  mt$terms <- attr(mt$frame, "terms")
+  n <- nrow(mt$frame)
+  mt$x <- model.matrix(mt$terms, mt$frame)
+  mt$y <- model.response(mt$frame)
+  #mt$y <- as.double(mt$y[,2])
+  
+  
   ## load the concomitant model
   if (length(concomitant) != 0)
   {
@@ -65,7 +66,7 @@ em.clogit <- function(object, latent=2, verbose=F,
     mt.con <- attr(mf.con, "terms")
   }
   #### TODO: use init.em for init_pr
-
+  
   post_pr <- matrix(0, nrow=n, ncol=latent)
   class(post_pr) <- match.arg(init.method)
   post_pr <- init.em(post_pr, mt$x)
@@ -82,8 +83,7 @@ em.clogit <- function(object, latent=2, verbose=F,
     pi_matrix <- matrix(colSums(post_pr)/nrow(post_pr),
                         nrow=nrow(post_pr), ncol=ncol(post_pr),
                         byrow=T)
-    post_pr_ex <- post_pr[rep(1:nrow(post_pr), rep(ni, n)),]
-    results <- mstep(models, post_pr=post_pr_ex)
+    results <- mstep(models, post_pr=post_pr)
     if (length(concomitant)!=0) {
       if ("formula" %in% names(concomitant)) {
         results.con <- mstep.concomitant(concomitant$formula, mf.con, post_pr)
@@ -104,7 +104,7 @@ em.clogit <- function(object, latent=2, verbose=F,
     if (length(concomitant)==0) {
       for (i in 1:length(results)) {
         if (pi[[i]] != 0) {
-          ll <- ll + pi[[i]]*fit.den(results[[i]])
+          ll <- ll + pi[[i]]*fit.den(results[[i]]) 
         }
       }
       ll <- sum(log(ll))
@@ -131,6 +131,7 @@ em.clogit <- function(object, latent=2, verbose=F,
             init.method = match.arg(init.method),
             call=cl,
             terms=mt$terms,
+            algorithm=algo,
             obs=n,
             post_pr=estep(results, pi_matrix),
             concomitant=concomitant)

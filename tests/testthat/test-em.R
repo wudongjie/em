@@ -1,5 +1,3 @@
-library(gnm)
-
 test_that("test linear regression", {
   browser()
   NPreg <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[1])
@@ -7,31 +5,34 @@ test_that("test linear regression", {
   formula <- yn~x+x2
   formula2 <- yn~x
   fit_lm <- lm(formula, data=NPreg)
+  glm_fit <- glm(formula=formula, data=NPreg)
   pd <- predict(fit_lm)
   results <- em(fit_lm, latent=2, verbose=T)
   # Test predict
   fmm_fit <- predict(results)
   fmm_fit_post <- predict(results, prob="posterior")
 
-  # Test cem and sem
-  #results_cem <- cem(lm, formula=formula, data=NPreg, latent=2, verbose=T)
-  #results_sem <- sem(lm, formula=formula, data=NPreg, latent=2, verbose=T)
-  #print(summary(results_cem))
-  #print(summary(results_sem))
-  
-  
+  #Test cem and sem
+  results_sem <- em(fit_lm, latent=2, verbose=T, algo="sem")
+  # cem is very likely to result in all variables assigned to one class
+  results_cem <- multi.em(fit_lm, latent=2, verbose=T, algo="cem")
+  print(summary(results_cem))
+  print(summary(results_sem))
+  print(predict(results_sem))
+
+
   print(summary(results))
   results2 <- em(fit_lm, init.method="kmeans") # Test kmeans
   print(summary(results2))
   # Test update
   results4 <- update(results, latent=3)
-  glm_fit <- glm(formula=formula, data=NPreg)
   results_glm <- em(glm_fit)
   print(summary(results_glm))
- 
+
 })
 
 test_that("test concomitant", {
+  browser()
   NPreg <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[1])
   NPreg$x2 <- (NPreg$x)^2
   formula <- yn ~ x + x2
@@ -49,6 +50,7 @@ test_that("test concomitant", {
 
 
 test_that("test glm poisson", {
+  browser()
   NPreg <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[1])
   formula2 <- yp~x
   fit_glm <- glm(formula2, family=poisson, data=NPreg)
@@ -59,6 +61,7 @@ test_that("test glm poisson", {
 
 test_that("test glm logit", {
   # Example from "https://rdrr.io/cran/mixtools/man/logisregmixEM.html"
+  browser()
   set.seed(100)
   beta <- matrix(c(-10, .1, 20, -.1), 2, 2)
   x <- runif(500, 50, 250)
@@ -77,8 +80,10 @@ test_that("test glm logit", {
 
 
 test_that("test gnm poisson(unidiff)", {
+  library(gnm)
+
   ## Example from Turner and Firth (2020)
-  #browser()
+  browser()
   #
   ### Collapse to 7 by 7 table as in Erikson et al. (1982)
   erikson <- as.data.frame(gnm::erikson)
@@ -117,34 +122,94 @@ test_that("test gnm poisson(unidiff)", {
   print(summary(udf2_4))
 })
 
-# 
+
 # test_that("test clogit", {
 #   library(survival)
 #   browser()
-#   resp <- levels(logan$occupation)
-#   n <- nrow(logan)
-#   indx <- rep(1:n, length(resp))
-#   logan2 <- data.frame(logan[indx,],
-#                        id = indx,
-#                        tocc = factor(rep(resp, each=n)))
-#   logan2$case <- (logan2$occupation == logan2$tocc)
-#   formula1 <- case ~ tocc + tocc:education + strata(id)
-#   cl_fit <- clogit(formula1, logan2)
-#   cl_wfit <- clogit(formula1, logan2, weights=rep(1, 838*5), method="approximate")
-#   cl_fit2 <- em(cl_fit, latent=2)
-#   
-#   cl <- cl_fit$call
-#   cl[[1L]] <- quote(stats::model.frame)
-#   cl$method <- NULL
-#   mf <- eval(cl)#, parent.frame())
-#   y <- model.response(mf)
-#   y <- as.double(y[,2])
-#   fitted <- exp(predict(cl_fit))
-#   dt <- data.frame(y=y, fitted=fitted)
-#   gen.mn <- function(dt) {
-#     dmultinom(dt$y, prob=dt$fitted)
-#   }
-#   #id=mf$`strata(id)`
-#   results <- unlist(by(dt, mf$`strata(id)`, gen.mn, simplify = F))
+#   usdata <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[2])
+#   usdata_ex <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[3])
+# 
+#   usdata$in1 <- as.factor(usdata$x == usdata$y)
+#   usdata$a1 <- as.factor((usdata$x == 1) & (usdata$y == 1))
+#   usdata$a2 <- as.factor((usdata$x == 2) & (usdata$y == 2))
+#   usdata$a3 <- as.factor((usdata$x == 3) & (usdata$y == 3))
+#   usdata$y <- as.factor(usdata$y)
+#   usdata$x <- as.factor(usdata$x)
+#   usdata_ex$in1 <- as.factor((usdata_ex$a1_x1==1) | (usdata_ex$a2_x2==1) | (usdata_ex$a3_x3==1))
+#   formula1 <- chosen ~ 0 + a2 + a3 + a1_x1 + a2_x2 + a3_x3  + strata(obs)
+#   formula1.in1 <- chosen ~ 0 + a2 + a3 + in1 + strata(obs)
+#   formula2 <- obs ~ x + y + in1
+#   formula3 <- obs ~ x + y + a1 + a2 + a3
+#   p_fit <- glm(formula2, family=poisson, data=usdata)
+# 
+# 
+#   cl_fit <- clogit(formula1.in1, usdata_ex)
+#   #cl_wfit <- clogit(formula1, logan2, weights=rep(1, 838*5), method="breslow")
+#   p_fit2 <- em(p_fit, latent=2)
+#   cl_fit2 <- em(cl_fit, latent=2, algo="sem")
+#   print(summary(cl_fit2))
 #   browser()
 # })
+
+
+# test_that("plm", {
+#   browser()
+#   library(plm)
+#   usdata <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[3])
+#   formula1 <- chosen ~ 0 + a2 + a3 + a1_x1 + a2_x2 + a3_x3
+#   pfit_fe <- plm(formula1, data=usdata,
+#               model="within",
+#               index=c("obs", "alt"))
+#   print(summary(pfit_fe))
+#   pfit_re <- plm(formula1, data=usdata,
+#                 model="random",
+#                 index=c("obs", "alt"))
+#   print(summary(pfit_re))
+#   pfit_em <- em(pfit_fe, latent=2, algo="em")
+#   print(summary(pfit_em))
+#   pfit_em_r <- em(pfit_re, latent=2)
+#   print(summary(pfit_em_r))
+#   })
+
+
+# test_that("pglm", {
+#   browser()
+#   library(pglm)
+#   usdata <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[3])
+#   formula1 <- as.factor(chosen) ~ 0 + a2 + a3 + a1_x1 + a2_x2 + a3_x3
+#   pfit_fe <- pglm(formula1, data=usdata, family=list(family="binomial",link="logit") ,
+#                  effect="individual",model="random",
+#                  index=c("obs", "alt"))
+#   print(summary(pfit_fe))
+#   pfit_re <- pglm(formula1, data=usdata, family="binomial",
+#                  model="random",
+#                  index=c("obs", "alt"))
+#   print(summary(pfit_re))
+# })
+
+# test_that("glmer", {
+#   browser()
+#   library(lme4)
+#   usdata <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[3])
+#   formula1 <- chosen ~ a2 + a3 + a1_x1 + a2_x2 + a3_x3 + (1 | obs)
+#   fit_me <- glmer(formula1, data=usdata, family="binomial")
+#   print(summary(fit_me))
+#   fmm_me <- em(fit_me, latent=2)
+#   print(summary(fmm_me))
+# })
+
+# test_that("logmult unidiff", {
+#   browser()
+#   library(logmult)
+#   ## Yaish (1998, 2004)
+#   data(yaish)
+#   # Last layer omitted because of low frequencies
+#   yaish <- yaish[,,-7]
+#   # Layer (education) must be the third dimension
+#   yaish <- aperm(yaish, 3:1)
+#   model <- unidiff(yaish)
+#   em_fit <- em(model, latent=2)
+#   print(summary(em_fit))
+# }
+#           )
+

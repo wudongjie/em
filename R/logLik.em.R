@@ -4,17 +4,22 @@
 logLik.em <- function(object, ...) {
   p <- 0
   ll <- 0
+  upost_pr <- unique(object$post_pr)
   if (length(object$concomitant)==0) {
     for (i in 1:length(object$models)) {
-      p <- p + df.em(object$models[[i]])
-      #ll <- ll + object$post_pr[,i]*log(object$pi[[i]]*fit.den(object$models[[i]]))
-      ll <- ll + object$pi[[i]]*fit.den(object$models[[i]])
+      if (any(!is.na(object$models[[i]]))) {
+        p <- p + df.em(object$models[[i]])
+        #ll <- ll + object$post_pr[,i]*log(object$pi[[i]]*fit.den(object$models[[i]]))
+        ll <- ll + object$pi[[i]]*fit.den(object$models[[i]])
+      }
     }
     ll <- sum(log(ll))
   } else {
     for (i in 1:length(object$models)) {
-      p <- p + df.em(object$models[[i]])
-      ll <- ll + object$results.con$fitted.values[,i]*fit.den(object$models[[i]])
+      if (any(!is.na(object$models[[i]]))) {
+        p <- p + df.em(object$models[[i]])
+        ll <- ll + object$results.con$fitted.values[,i]*fit.den(object$models[[i]])
+      }
     }
     p <- p + object$results.con$edf - 1
     ll <- sum(log(ll))
@@ -45,3 +50,12 @@ df.em.glm <- function(object, ...) {
   npar <- object$rank + ifelse(object$family[1]$family == "gaussian", 1, 0)
   npar
 }
+
+logLik.plm <- function(object, ...){
+  out <- -plm::nobs(object) * log(2 * var(object$residuals) * pi)/2 - deviance(object)/(2 * var(object$residuals))
+  
+  attr(out,"df") <- nobs(object) - object$df.residual
+  attr(out,"nobs") <- plm::nobs(summary(object))
+  return(out)
+}
+

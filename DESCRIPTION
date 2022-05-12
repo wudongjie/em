@@ -14,7 +14,7 @@ Encoding: UTF-8
 LazyData: true
 NeedsCompilation: yes
 Depends: R (>= 3.0.0)
-Imports: nnet, stats, utils, gnm, survival
+Imports: nnet, stats, utils, gnm, survival, dplyr, plm
 Suggests: 
     testthat (>= 3.0.0),
     parallel

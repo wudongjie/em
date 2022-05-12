@@ -1,11 +1,10 @@
 #' M-Step of EM algorithm
 #' @description This function performs an M-Step of EM Algorithm.
 #' @param models the models used in the EM algorithm
-#' @param pars the arguments in the models
 #' @param post_pr the posterior probability.
 #' @return the fitting result for the model.
 #' @export
-mstep <- function(models, post_pr=NULL)
+mstep <- function(models, post_pr=NULL)   
 {
     if (!is.list(models)) {
       stop("Please provide models in a list.")
@@ -18,12 +17,42 @@ mstep <- function(models, post_pr=NULL)
         stop("The number of fitted models is not equal to the number of columns of post_pr!")
       }
     }
+    # The corner case: all post_pr is 0 for one class
     result <- list()
+    cls <- list()
+    upost_pr <- unique(as.vector(post_pr))
+    env <- parent.frame(2)
     for (i in 1:length(models)) {
-        cl <- models[[i]]$call
-        cl$weights <- post_pr[, i]
-        env <- attr(models[[i]]$terms, ".Environment")
-        result[[i]] <- suppressWarnings(eval(cl, env))
+    if (isS4(models[[i]])) {
+      cls[[i]] <- models[[i]]@call
+    } else {
+      cls[[i]] <- models[[i]]$call
+    } 
+    }
+    
+    if ((length(upost_pr) == 2) && (0 %in% upost_pr)) {
+      # Do k estimations separately
+      for (i in 1:length(models)) {
+        cl <- cls[[i]]
+        cl$subset <- ( post_pr[, i] == 1)
+        if (sum(cl$subset) == 0) {
+          result[[i]] <- NA
+        } else {
+          result[[i]] <- suppressWarnings(eval(cl, env))
+          if ("glmerMod" %in% class(result[[i]])) {
+            result[[i]]@frame = models[[i]]@frame
+          } else { 
+            result[[i]]$model <- models[[i]]$model
+          }
+        }
+      }
+    } else {
+      for (i in 1:length(models)) {
+          cl <- cls[[i]]
+          cl$weights <- post_pr[, i]
+          result[[i]] <- suppressWarnings(eval(cl, env))
+          #result[[i]]$model <- models[[i]]$model
+      }
     }
     return(result)
 }

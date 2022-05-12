@@ -10,8 +10,6 @@ mstep(models, post_pr = NULL)
 \item{models}{the models used in the EM algorithm}
 
 \item{post_pr}{the posterior probability.}
-
-\item{pars}{the arguments in the models}
 }
 \value{
 the fitting result for the model.
