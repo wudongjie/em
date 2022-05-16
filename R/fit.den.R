@@ -40,7 +40,7 @@ fit.den.glm <- function(object, ...){
     sigma <- sqrt(sum(object$weights * object$residuals^2/mean(object$weights))/(object$df.residual+2))
     den <- dnorm(y, mean=predict(object), sd=sigma)
   } else if (object$family[1]$family == "poisson") {
-    y <- model.response(model.frame(object$formula, data=object$model))
+    y <- model.response(object$model)
     den <- dpois(y, lambda=predict(object, type="response", newdata=object$data))
   } else if (object$family[1]$family == "binomial") {
     y <- model.response(object$model)
@@ -128,7 +128,7 @@ fit.den.glmerMod <- function(object, ...){
     sigma <- sqrt(sum(object@resp$weights * object$residuals^2/mean(object@resp$weights))/(object$df.residual-1))
     den <- dnorm(y, mean=predict(object), sd=sigma)
   } else if (object@resp$family[1]$family == "poisson") {
-    y <- model.response(model.frame(object$formula, data=object@frame))
+    y <- model.response(object@frame)
     den <- dpois(y, lambda=predict(object, type="response", newdata=object@frame, allow.new.levels = T))
   } else if (object@resp$family[1]$family == "binomial") {
     y <- model.response(object@frame)
