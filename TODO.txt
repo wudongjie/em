@@ -1,14 +1,21 @@
 Do I really need Gnmterms and model.frame.gnm?
 
-1. clogit is to slow
-2. pglm does not work for binomial
-3. Do glmer. It is a S4 system
+*1. clogit is to slow
+*2. Plot():
+
+a. Components graph (predicted value distribution of each component)
+b. observed vs fitted (weighted by prior or posterior)
+c. Probablity graph (prior vs. posterior)
 
 
 
-
-3. Redo sem and cem acc. to em
+3. fit a mixture of distribution
 4. Documentation
+
+low priority
+* pglm does not work for binomial (maybe delete pglm)
+* Do glmer. It is a S4 system. (lme4)
+
 
   ‘flatten’ ‘multi.em’ ‘vdummy’
 
@@ -39,20 +46,7 @@ Do I really need Gnmterms and model.frame.gnm?
 
 
 
-5. plot
 
-6. check nlme and lme4
-
-Plot():
-
-1. Components graph (predicted value distribution of each component)
-2. observed vs fitted (weighted by prior or posterior)
-3. Probablity graph (prior vs. posterior)
-
-
-
-
-5. redo the distribution fit.
 
 worked function:
 em()

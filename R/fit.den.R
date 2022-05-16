@@ -86,7 +86,6 @@ fit.den.nnet <- function(object, ...){
 #' Fit the density for the survival::clogit
 #' @export
 fit.den.coxph <- function(object, ...){
-  #browser()
   cl <- object$call
   cl$subset <- NULL
   cl[[1L]] <- quote(stats::model.frame)
@@ -108,7 +107,7 @@ fit.den.coxph <- function(object, ...){
   strat <- as.integer(strata(mf[temp$vars], shortlabel=T))
   # TODO: extract the column of strata
 
-  #browser()
+  #
   #library(data.table)
   df <- data.frame(y=y, fitted=pred,strat=strat)
   #dt <- data.table(df, key="strat")

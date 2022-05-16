@@ -198,18 +198,4 @@ test_that("test gnm poisson(unidiff)", {
 #   print(summary(fmm_me))
 # })
 
-# test_that("logmult unidiff", {
-#   browser()
-#   library(logmult)
-#   ## Yaish (1998, 2004)
-#   data(yaish)
-#   # Last layer omitted because of low frequencies
-#   yaish <- yaish[,,-7]
-#   # Layer (education) must be the third dimension
-#   yaish <- aperm(yaish, 3:1)
-#   model <- unidiff(yaish)
-#   em_fit <- em(model, latent=2)
-#   print(summary(em_fit))
-# }
-#           )
 
