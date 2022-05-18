@@ -11,6 +11,8 @@
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
+#' @importFrom methods .hasSlot slot
+#' @importFrom stats .checkMFClasses delete.response density deviance fitted makepredictcall model.weights terms var
 #' @export
 em.glmerMod <- function(object, latent=2, verbose=F,
                        init.method = c("random", "kmeans"), 

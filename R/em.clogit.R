@@ -11,6 +11,7 @@
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
+#' @importFrom utils methods str
 #' @export
 em.clogit <- function(object, latent=2, verbose=F,
                        init.method = c("random", "kmeans"),

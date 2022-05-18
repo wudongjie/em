@@ -1,0 +1,512 @@
+rm(formula2)
+devtools::test(filter="em")
+n
+n
+n
+n
+n
+n
+devtools::test(filter="em")
+devtools::test(filter="em")
+rm(list=ls())
+devtools::test(filter="em")
+devtools::test(filter="em")
+ls(env)
+eval(cl, env)
+ls(parent.env(env))
+ls(parent.frame(env))
+models$terms
+str(models[[i]]$terms)
+search()
+ls(.GlobalEnv)
+str(models[[i]])
+parent.env()
+parent.env(env)
+parent.frame()
+ls(parent.frame())
+ls(parent.frame(2)
+)
+ls(parent.frame(3))
+)
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+args()
+args
+do.call(em, args)
+?do.call
+ls(parent.frame())
+devtools::test(filter="em")
+do.call(em, args, envir = parent.frame())
+summary(do.call(em, args, envir = parent.frame()))
+devtools::test(filter="em")
+n
+n
+devtools::test(filter="em")
+update.packages()
+devtools::test(filter="em")
+devtools::test(filter="em")
+ls(parent.frame())
+ls(parent.frame(2))
+devtools::test(filter="em")
+devtools::test(filter="em")
+do.call(em, args, envir = parent.frame(2))
+do.call(em, args, envir = parent.frame(3))
+devtools::test(filter="em")
+devtools::test(filter="em")
+ls(env)
+eval(cl, env)
+n
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+ls(env)
+str(result[[i]])
+str(result[[i]])
+str(result[[1]])
+ls(env)
+str(results[[1]])
+str(result[[1]])
+str(result[[1]])
+devtools::test(filter="em")
+devtools::test(filter="em")
+print(object$fitted.values)
+dpois(y, lambda=object$fitted.values)
+parent.frame()
+ls(parent.frame())
+ls(parent.frame(2))
+devtools::test(filter="em")
+devtools::test(filter="em")
+models[[i]]$fitted.value
+models[[1]]$fitted.value
+predict(models[[1]])
+models[[1]]$fitted.value
+y
+length(y)
+length(predict(object))
+?predict
+str(object)
+predict(object, terms = object$terms)
+predict(object, newdata=object$data)
+predict(object, type="response", newdata=object$data)
+fitted.values(object)
+devtools::test(filter="em")
+devtools::test(filter="em")
+print(summary(results2))
+devtools::test(filter="em")
+length(y)
+length(predict(object))
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+object$fitted.values
+predict(object, type="response", newdata=object$data)
+predict(object, type="response", newdata=object$data)
+object$fitted.values
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+length(y)
+length(predict(object, type="response", newdata=object$data))
+devtools::test(filter="em")
+devtools::test(filter="em")
+class(fit_me)
+devtools::test(filter="em")
+devtools::test(filter="em")
+class(object)
+class(object)
+devtools::test(filter="em")
+devtools::test(filter="em")
+isS4(models[[1]])
+class(models)
+class(models[[1]])
+env
+ls(env)
+cl
+str(cl)
+ls(env)
+model[[i]]$frame
+models[[1]]$frame
+str(models[[1]]$frame)
+isS4(result[[1]])
+devtools::test(filter="em")
+update.packages(survival)
+update.packages("survival")
+library(survival)
+library(survival)
+update.packages("survival")
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+sum(usdata$obs)
+sum(usdata$obs)*3
+devtools::test(filter="em")
+is.factor(usdata$y)
+devtools::test(filter="em")
+summary(p_fit)
+devtools::test(filter="em")
+summary(p_fit2)
+devtools::test(filter="em")
+devtools::test(filter="em")
+aggregate(matrix(c(y,pred),ncol=2),
+strat, gen.mn)
+?aggregate
+aggregate(matrix(c(y,pred),ncol=2),
+list(strat), gen.mn)
+mat <- matrix(c(y, pred), ncol=2)
+mat[,2]
+y
+pred
+aggregate(matrix(c(y,pred),ncol=2),
+list(strat, strat), gen.mn)
+mat[,2]
+aggregate(matrix(c(y,pred),ncol=2),
+by=list(strat, strat), FUN="gen.mn")
+aggregate(matrix(c(y,pred),ncol=2),
+by=list(strat, strat), FUN=gen.mn)
+devtools::test(filter="em")
+devtools::test(filter="em")
+summary(p_fit)
+plyr::ddply(data.frame(y=y, fitted=pred), strat, gen.mn)
+plyr::ddply(data.frame(y=y, fitted=pred), strat, gen.mn)
+?plyr::ddply
+plyr::ddply(data.frame(y=y, fitted=pred,strat=strat), .(strat), gen.mn)
+plyr::ddply(data.frame(y=y, fitted=pred,strat=strat), strat, gen.mn)
+plyr::ddply(data.frame(y=y, fitted=pred,strat=strat), ~strat, gen.mn)
+unique(plyr::ddply(data.frame(y=y, fitted=pred,strat=strat), ~strat, gen.mn))
+plyr::ddply(data.frame(y=y, fitted=pred,strat=strat), ~strat, gen.mn)$V1
+devtools::test(filter="em")
+devtools::test(filter="em")
+print(summary(cl_fit2))
+summary(p_fit2)
+summary(p_fit2)$coef
+summary(p_fit2)$coef[,1]
+log(summary(p_fit2)$coef[,1])
+summary(p_fit)
+summary(cl_fit)
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+usdata$x == 2
+all((usdata$x==2), (usdata$y==2))
+(usdata$x==2) && (usdata$y==2)
+(usdata$x==2) & (usdata$y==2)
+devtools::test(filter="em")
+summary(p_fit)
+summary(cl_fit)
+devtools::test(filter="em")
+summary(p_fit)
+summary(cl_fit)
+sumarry(p_fit2)
+summary(p_fit2)
+summary(cl_fit2)
+?contr.treatment
+devtools::test(filter="em")
+cl_fit <- clogit(formula1.in1, usdata_ex)
+sum(usdata_ex$a1_x1==1)
+sum(usdata_ex$a2_x2==1)
+devtools::test(filter="em")
+unique(usdata_ex$in1)
+devtools::test(filter="em")
+cl_fit <- clogit(formula1.in1, usdata_ex)
+summary(cl_fit)
+p_fit <- glm(formula2, family=poisson, data=usdata)
+summary(p_fit)
+devtools::test(filter="em")
+summary(p_fit2)
+summary(cl_fit2)
+devtools::test(filter="em")
+devtools::test(filter="em")
+install.packages("data.table")
+install.packages("data.table")
+install.packages("data.table")
+devtools::test(filter="em")
+devtools::test(filter="em")
+dt[,den:=multinom(y, prob=fitted), by=strat]
+dt[,multinom(y, prob=fitted), by=strat]
+dt[,dmultinom(y, prob=fitted), by=strat]
+dmultinom(y,prob=pred)
+pred
+y
+dt[,multinom(y,prob=fitted)]
+dt[,dmultinom(y,prob=fitted)]
+dt[,dmultinom(y,prob=fitted), by=strat]
+dt[,sum(y), by=strat]
+length(y)
+length(dt$y)
+length(dt$fitted)
+dt$fitted
+dt[,sum(y), by=strat]
+dt[,sum(y), by=as.factor(strat)]
+t <- data.table::data.table(y=y, fitted=pred,strat=strat)
+t[,sum(y), by=strat]
+t[,sum(y-pred), by=strat]
+t[,sum(y-pred), by=strat]
+t[,sum(y-pred), by=as.factor(strat)]
+t[,s=sum(y-pred), by=as.factor(strat)]
+t[,s:=sum(y-pred), by=as.factor(strat)]
+t[,mean(y), by=as.factor(strat)]
+t[,mean(y), by=strat]
+t[,mean(fitted), by=strat]
+t[,mean(fitted.V1), by=strat]
+t[,mean(fitted.V1), by=strat]
+t[,mean(fitted), by=strat]
+t[,mean(pred), by=strat]
+library(data.table)
+t[,mean(pred), by=strat]
+t[,s:=sum(y-pred), by=as.factor(strat)]
+is.data.table(t)
+dt[,dmultinom(y,prob=fitted), by=strat]
+dt[,.multinom(y, prob=fitted), by=strat]
+dt[,.(den=multinom(y, prob=fitted)), by=strat]
+dt[,(den:=multinom(y, prob=fitted)), by=strat]
+dt[,(y:=multinom(y, prob=fitted)), by=strat]
+devtools::test(filter="em")
+dt[,den:=multinom(y, prob=fitted), by=strat]
+dt[,den:=sum(fitted), by=strat]
+dt[,sum(fitted), by=strat]
+dt[,sum(y), by=strat]
+dt[,sum(y), by=list(strat)]
+is.data.table(dt)
+is.data.frame(dt)
+devtools::test(filter="em")
+dt[,sum(fitted), by=strat]
+dt[,sum(y), by=list(strat)]
+dt[,mean(y-fitted), by=strat]
+dt[,sum(y), by=strat]
+dt[,sum(y-fitted), by=strat]
+str(dt)
+dt[,sum(y), by=strat]
+dt[,sum(y), by=list(strat)]
+dt <- setDT(dt)
+str(dt)
+dt[,sum(y), by=list(strat)]
+dt[sum(y), by=list(strat)]
+dt[sum(y), by=strat]
+dt[sum(y), ,by=strat]
+dt[by=strat,,sum(y)]
+dt[,sum(y), by=strat]
+?data.table
+dt[,sum(y)]
+df[,sum(y)]
+?[.data.frame`
+?.data.frame`
+?.data.frame
+library(data.table)
+dt <- data.table(a=runif(100,0,1),g=rep(1:10, 10))
+dt[,sum(a),by=g]
+df <- data.frame(a=runif(100,0,1),g=rep(1:10, 10))
+dt <- data.table(df)
+dt[,sum(a),by=g]
+str(dt)
+devtools::test(filter="em")
+dt <- setDT(dt)
+?aggregate
+devtools::test(filter="em")
+devtools::test(filter="em")
+aggregate(df, by=list(strat), gen.mn)
+df$fitted
+aggregate(df, by=list(strat), dmultinom(df$y, prob=df$fitted))
+aggregate(df, by=list(strat), function(df){dmultinom(df$y, prob=df$fitted)})
+df <- data.frame(y=y, fitted=pred)
+aggregate(df, by=list(strat), function(df){dmultinom(df$y, prob=df$fitted)})
+library(dplyr)
+df %>% group_by(strat)
+df <- data.frame(y=y, fitted=pred,strat=strat)
+df %>% group_by(strat)
+df %>% group_by(strat) %>% summarise(dmultinom(y, prob=fitted))
+df %>% group_by(strat) %>% summarise(den=dmultinom(y, prob=fitted))
+(df %>% group_by(strat) %>% summarise(den=dmultinom(y, prob=fitted)))$den
+devtools::test(filter="em")
+devtools::test(filter="em")
+print(summary(cl_fit2))
+devtools::test(filter="em")
+isS4(models)
+isS4(models[[i]])
+devtools::test(filter="em")
+z
+devtools::test(filter="den")
+devtools::test(filter="den")
+var(object$residuals)
+sqrt(var(object$residuals))
+sum(log(dnorm(y, mean=predict(object), sd=sqrt(var(object$residuals)))))
+length(object$residuals)
+length(object)*log(2*var(object$residuals)*pi)/2 - deviance(object)/(2*var(object$residuals))
+-length(object)*log(2*var(object$residuals)*pi)/2 - deviance(object)/(2*var(object$residuals))
+plm::nobs(object)
+-plm::nobs(object)*log(2*var(object$residuals)*pi)/2 - deviance(object)/(2*var(object$residuals))
+length(var(object$residuals))
+sum(log(dnorm(y, mean=predict(object), sd=var(object$residuals))))
+?predict.plm
+y - predict(object)
+residuals(object)
+y - predict(object, effects="individual")
+?plm.predict
+?predict.plm
+fitted(object)
+y-fitted(object)
+residuals(object)
+y-fitted(object)
+y-fitted(object, effect="individual")
+y-fitted(object, model="pooling")
+residuals(object)
+y-fitted(object, model="within")
+pmodel.response(object$model, model = "pooling") - fitted(object, model="pooling")
+pmodel.response(object$model, model = "pooling", effect="individual") - fitted(object, model="pooling")
+pmodel.response(object$model, model = "within", effect="individual") - fitted(object, model="within")
+str(object)
+object$args$model
+devtools::test(filter="den")
+devtools::test(filter="em")
+devtools::test(filter="em")
+str(pfit_fe)
+str(pfit_re)
+pfit_re$ercomp$theta
+devtools::test(filter="den")
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+?browser()
+devtools::test(filter="multi")
+parallel::mclapply(seq_len(iter),
+function(x) {
+tryCatch({
+do.call(em, args, envir = parent.frame(3))
+}, error=function(e) {
+print(message(e))
+NULL
+}
+)
+}, mc.cores = numCores
+)
+parallel::mclapply(seq_len(iter),
+function(x) {
+tryCatch({
+do.call(em, args, envir = parent.frame())
+}, error=function(e) {
+print(message(e))
+NULL
+}
+)
+}, mc.cores = numCores
+)
+parallel::mclapply(seq_len(iter),
+function(x) {
+tryCatch({
+do.call(em, args, envir = parent.frame(2))
+}, error=function(e) {
+print(message(e))
+NULL
+}
+)
+}, mc.cores = numCores
+)
+parallel::mclapply(seq_len(iter),
+function(x) {
+tryCatch({
+do.call(em, args, envir = parent.frame(3))
+}, error=function(e) {
+print(message(e))
+NULL
+}
+)
+}, mc.cores = numCores
+)
+parallel::mclapply(seq_len(iter),
+function(x) {
+tryCatch({
+do.call(em, args, envir = parent.frame(4))
+}, error=function(e) {
+print(message(e))
+NULL
+}
+)
+}, mc.cores = numCores
+)
+parallel::mclapply(seq_len(iter),
+function(x) {
+tryCatch({
+do.call(em, args, envir = parent.frame())
+}, error=function(e) {
+print(message(e))
+NULL
+}
+)
+}, mc.cores = numCores
+)
+parallel::mclapply(seq_len(iter),
+function(x) {
+tryCatch({
+do.call(em, args, envir = parent.frame(5))
+}, error=function(e) {
+print(message(e))
+NULL
+}
+)
+}, mc.cores = numCores
+)
+lapply(seq_len(iter),
+function(x) {
+tryCatch({
+do.call(em, args, envir = parent.frame(3))
+}, error=function(e) {
+NULL
+}
+)
+}
+)
+?parent.frame
+sys.frame
+ls(sys.frame)
+ls(sys.frame())
+ls(sys.parent())
+ls(sys.frame(-1))
+ls(sys.frame(-2))
+ls(sys.frame(-3))
+devtools::test(filter="multi")
+ls(parent.frame(1))
+ls(parent.frame(2))
+ls(parent.frame(3))
+do.call(em, args, envir = parent.frame(2))
+do.call(em, args, envir = parent.frame(3))
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+c
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+devtools::test(filter="multi")
+source("~/Dropbox/SIBMOB/em/R/multi.em.R")
+source("~/Dropbox/SIBMOB/em/R/multi.em.R")
+source("~/Dropbox/SIBMOB/em/R/multi.em.R")
+devtools::check()
+devtools::test(filter="mstep")
+devtools::test(filter="mstep")
+devtools::check()
+devtools::check()
+devtools::build()
+devtools::test(filter="em")
+rm(list=ls())
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::test(filter="em")
+devtools::check()
+devtools::build()
+devtools::check()

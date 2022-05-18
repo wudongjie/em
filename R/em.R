@@ -88,6 +88,9 @@ em.default <- function(object, latent=2, verbose=F,
                            nrow=nrow(post_pr), ncol=ncol(post_pr),
                            byrow=T)
         results <- mstep(models, post_pr=post_pr)
+        for (i in (1:length(results))) {
+          print(results[[i]]$coefficients)
+        }
         if (length(concomitant)!=0) {
           if ("formula" %in% names(concomitant)) {
             results.con <- mstep.concomitant(concomitant$formula, mf.con, post_pr)
