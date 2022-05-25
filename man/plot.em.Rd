@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{em}(
   x,
-  by = c("component", "response", "prob"),
+  by = c("component", "response", "prob", "prob.hist"),
   prior = T,
   cols = rep(1, length(x$models)),
   lwds = rep(3, length(x$models)),
@@ -15,13 +15,15 @@
   main = NULL,
   lgd = list(),
   lgd.loc = "topleft",
+  hist.args = list(main = "Histograms of posterior probabilities", xlab =
+    "Posterior Probabilities"),
   ...
 )
 }
 \arguments{
 \item{x}{the `em` model to plot}
 
-\item{by}{the type of the graph to produce. The default is ``}
+\item{by}{the type of the graph to produce. The default is `component`.}
 
 \item{prior}{whether fit the model using prior probabilities.}
 
@@ -40,11 +42,14 @@ The last two represent the y-axis limits}
 \item{lgd}{a list for legend related arguments.}
 
 \item{lgd.loc}{the location of the legend. The default is "topleft".}
+
+\item{hist.args}{The list of arguments for the histogram.}
 }
 \description{
 This is the generic plot function for `em` project. One can produce
 three types of graphs using this function 
 1. A graph of the predicted value distribution for each component.
 2. the distribution of the response variable vs the distribution of the fitted value weighted by either prior or posterior probability.
-3. A graph of probability distributions (prior vs. posterior)
+3. A combined graph of posterior probability distributions.
+4. A histogram of posterior probability distributions
 }

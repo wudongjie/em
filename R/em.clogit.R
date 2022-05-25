@@ -70,7 +70,16 @@ em.clogit <- function(object, latent=2, verbose=F,
   post_pr <- matrix(0, nrow=n, ncol=latent)
   class(post_pr) <- match.arg(init.method)
   post_pr <- init.em(post_pr, mt$x)
-  #post_pr <- vdummy(sample(1:latent, size=n, replace=T))
+  # chk_df <- 10
+  # while (any(colSums(post_pr) <= length(object$coefficients))) {
+  #   warnings("Lack of degree of freedom. Reinitializing...")
+  #   class(post_pr) <- match.arg(init.method)
+  #   post_pr <- init.em(post_pr, mt$x)
+  #   chk_df <- chk_df - 1
+  #   if (chk_df <= 0) {
+  #     stop("Lack of degree of freedom.")
+  #   }
+  # }
   models <- list()
   for (i in 1:latent) {
     models[[i]] <- object
@@ -85,6 +94,9 @@ em.clogit <- function(object, latent=2, verbose=F,
                         byrow=T)
     post_pr_ex <- post_pr[rep(1:nrow(post_pr), rep(ni, n)),]
     results <- mstep(models, post_pr=post_pr_ex)
+    # Likely that there are not enough obs in a class.
+    #browser()
+    #if (results$)
     if (length(concomitant)!=0) {
       if ("formula" %in% names(concomitant)) {
         results.con <- mstep.concomitant(concomitant$formula, mf.con, post_pr)

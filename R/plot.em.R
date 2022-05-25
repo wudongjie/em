@@ -3,9 +3,10 @@
 #' three types of graphs using this function 
 #' 1. A graph of the predicted value distribution for each component.
 #' 2. the distribution of the response variable vs the distribution of the fitted value weighted by either prior or posterior probability.
-#' 3. A graph of probability distributions (prior vs. posterior)
+#' 3. A combined graph of posterior probability distributions.
+#' 4. A histogram of posterior probability distributions
 #' @param x the `em` model to plot
-#' @param by the type of the graph to produce. The default is `` 
+#' @param by the type of the graph to produce. The default is `component`. 
 #' @param prior whether fit the model using prior probabilities.
 #' @param cols lines' colors.
 #' @param lwds Lines' widths.
@@ -16,14 +17,16 @@
 #' @param main the main title.
 #' @param lgd a list for legend related arguments. 
 #' @param lgd.loc the location of the legend. The default is "topleft".
-#' @importFrom graphics legend lines
+#' @param hist.args The list of arguments for the histogram.
+#' @importFrom graphics legend lines hist par title
 #' @export
-plot.em <- function(x, by=c("component", "response", "prob"), prior=T, 
+plot.em <- function(x, by=c("component", "response", "prob", "prob.hist"), prior=T, 
                     cols=rep(1, length(x$models)), 
                     lwds=rep(3, length(x$models)), 
                     ltys=c(1:length(x$models)), 
                     ranges=NULL, main=NULL, lgd=list(), lgd.loc="topleft",
-                    ...) {
+                    hist.args=list(main="Histograms of posterior probabilities",
+                                   xlab="Posterior Probabilities"), ...) {
   if (!is.null(ranges)) {
     if (length(ranges) != 4) {
       stop("Please set correct ranges with 4 elements.")
@@ -94,7 +97,7 @@ plot.em <- function(x, by=c("component", "response", "prob"), prior=T,
   }
   else if (t == "prob") {
     if (is.null(main)){
-      main = "The distribution of posterior probability by component"
+      main = "The distribution of posterior probabilities"
     }
     for (i in (1:length(x$models))) {
       if (is.null(ranges)) {
@@ -113,10 +116,6 @@ plot.em <- function(x, by=c("component", "response", "prob"), prior=T,
               col=cols[[i]],
               lwd=lwds[[i]],
               lty=ltys[[i]])
-        lines(x$pi[[i]], 
-              col=cols[[i]],
-              lwd=lwds[[i]],
-              lty=ltys[[i]])
       }
     }
     lgd[[1L]] <- lgd.loc
@@ -125,6 +124,21 @@ plot.em <- function(x, by=c("component", "response", "prob"), prior=T,
     lgd$lwd <- lwds
     lgd$lty <- ltys
     do.call(legend, lgd)  
+  } else if (t == "prob.hist") {
+    par(mfrow=c(3,1)) 
+    ttl <- hist.args$main
+    browser()
+    for (i in (1:length(x$models))) {
+      hist.args$main <- ""
+      main <- paste("Comp", i, sep=".")
+      hist.args$x <- x$post_pr[,i]
+      do.call(hist, hist.args)
+      if (i==1) {
+        title(ttl, line=2)
+      }
+      title(main, adj=1)
+    }
+    browser()
   }
   else {
     stop("The graph type does not exist.")

@@ -56,8 +56,6 @@ em.default <- function(object, latent=2, verbose=F,
       n <- nrow(mt$model)
       mt$x <- model.matrix(mt$terms, mt$model)
       mt$y <- model.response(mt$model)
-      #mt$y <- as.double(mt$y[,2])
-      
 
       ## load the concomitant model
       if (length(concomitant) != 0)
@@ -72,9 +70,47 @@ em.default <- function(object, latent=2, verbose=F,
       #### TODO: use init.em for init_pr
       
       post_pr <- matrix(0, nrow=n, ncol=latent)
-      class(post_pr) <- match.arg(init.method)
-      post_pr <- init.em(post_pr, mt$x)
-      #post_pr <- vdummy(sample(1:latent, size=n, replace=T))
+      # check the degree of freedom
+      # chk_df <- 10
+      # while (any(colSums(post_pr) <= length(object$coefficients))) {
+      #   warnings("Lack of degree of freedom. Reinitializing...")
+      #   class(post_pr) <- match.arg(init.method)
+      #   post_pr <- init.em(post_pr, mt$x)
+      #   chk_df <- chk_df - 1
+      #   if (chk_df <= 0) {
+      #     stop("Lack of degree of freedom.")
+      #   }
+      # }
+      #browser()
+      lt = 1
+      ln = 1
+      lns = names(object$xlevels)
+      chk_ft = 10
+      # check factors with one level.
+      bool_ft <- c()
+      cond1 <- T
+      #browser()
+      
+      while (cond1) {
+        class(post_pr) <- match.arg(init.method)
+        post_pr <- init.em(post_pr, mt$x)
+        if (identical(lns, character(0))) {
+          break
+        }
+        for (i in 1:latent) {
+          bool_ft = c(bool_ft, 
+                      any(unlist(lapply(lns, function(x){
+                        length(unique(subset(mt$model, 
+                                             post_pr[,i]==1)[[x]]))==1
+                      }))))
+        }
+        chk_ft = chk_ft - 1
+        if (chk_ft <= 0) {
+          stop("There is at least one factor with only one level!")
+        }
+        cond1 <- any(bool_ft)
+      }
+      # check whether factors have only one level.
       models <- list()
       for (i in 1:latent) {
         models[[i]] <- mt
@@ -84,13 +120,10 @@ em.default <- function(object, latent=2, verbose=F,
       conv <- 1
       llp <- 0
       while((abs(conv) > 1e-4) & (max_iter > cnt)) {
-        pi_matrix <- matrix(colSums(post_pr)/nrow(post_pr),
-                           nrow=nrow(post_pr), ncol=ncol(post_pr),
-                           byrow=T)
         results <- mstep(models, post_pr=post_pr)
-        for (i in (1:length(results))) {
-          print(results[[i]]$coefficients)
-        }
+        pi_matrix <- matrix(colSums(post_pr)/nrow(post_pr),
+                            nrow=nrow(post_pr), ncol=ncol(post_pr),
+                            byrow=T)
         if (length(concomitant)!=0) {
           if ("formula" %in% names(concomitant)) {
             results.con <- mstep.concomitant(concomitant$formula, mf.con, post_pr)

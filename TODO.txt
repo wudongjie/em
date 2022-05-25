@@ -1,15 +1,8 @@
 Do I really need Gnmterms and model.frame.gnm?
 
 *1. clogit is to slow
-*2. Plot():
 
-a. Components graph (predicted value distribution of each component)
-b. observed vs fitted (weighted by prior or posterior)
-c. Probablity graph (prior vs. posterior)
-
-
-
-3. fit a mixture of distribution
+3. fit a mixture of distribution  ----use fitdist instead of fitdistr
 4. Documentation
 
 low priority
@@ -17,36 +10,8 @@ low priority
 * Do glmer. It is a S4 system. (lme4)
 
 
-  ‘flatten’ ‘multi.em’ ‘vdummy’
-
- Undocumented arguments in documentation object 'cem'
-     ‘model’ ‘pars’ ‘latent’ ‘verbose’ ‘max_iter’
-   
-   Undocumented arguments in documentation object 'em'
-     ‘model’ ‘...’ ‘latent’ ‘verbose’ ‘init.method’ ‘max_iter’
-     ‘concomitant’
-   
-   Undocumented arguments in documentation object 'estep'
-     ‘models’ ‘pi_matrix’
-   
-   Undocumented arguments in documentation object 'fit.den'
-     ‘object’ ‘...’
-   
-   Undocumented arguments in documentation object 'init.em'
-     ‘object’ ‘...’
-   
-   Undocumented arguments in documentation object 'logLik.em'
-     ‘object’ ‘...’
-   
-   Undocumented arguments in documentation object 'mstep'
-     ‘models’ ‘pars’ ‘post_pr’
-   
-   Undocumented arguments in documentation object 'sem'
-     ‘model’ ‘pars’ ‘latent’ ‘verbose’ ‘max_iter’
-
-
-
-
+unidiff individual level package.
+setting constraint in1 by cluster.
 
 worked function:
 em()

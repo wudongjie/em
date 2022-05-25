@@ -17,6 +17,7 @@ Depends: R (>= 3.0.0)
 Imports: nnet, stats, utils, gnm, survival, dplyr, plm, methods
 Suggests: 
     testthat (>= 3.0.0),
-    parallel
+    parallel,
+    fitdistrplus
 Config/testthat/edition: 3
 RoxygenNote: 7.1.1

@@ -4,6 +4,7 @@ test_that("Test Plots", {
     formula <- yn~x+x2
     formula2 <- yn~x
     fit_lm <- lm(formula, data=NPreg)
+    browser()
     glm_fit <- glm(formula=formula, data=NPreg)
     pd <- predict(fit_lm)
     results <- em(fit_lm, latent=3, verbose=T)
@@ -12,5 +13,7 @@ test_that("Test Plots", {
     plot(results, by="response")
     dev.off()
     plot(results, by="prob")
+    dev.off()
+    plot(results, by="prob.hist")
     dev.off()
 })

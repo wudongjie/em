@@ -39,6 +39,8 @@ mstep <- function(models, post_pr=NULL)
           result[[i]] <- NA
         } else {
           result[[i]] <- suppressWarnings(eval(cl, env))
+          #browser()
+          #print(result[[i]]$coefficients)
           if ("glmerMod" %in% class(result[[i]])) {
             result[[i]]@frame = models[[i]]@frame
           } else { 

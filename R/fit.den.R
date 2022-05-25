@@ -24,6 +24,14 @@ fit.den.lm <- function(object, ...) {
     if (is.null(object$weights)) {
       object$weights = 1
     }
+    if (length(object$xlevels)!=0) {
+      for (i in 1:length(object$xlevels)) {
+        if (length(levels(object$data[[names(object$xlevels[i])]])) != 
+            length(object$xlevels[[i]])) {
+          object$xlevels[[i]] <- levels(object$data[[names(object$xlevels[i])]])
+        }
+      }
+    }
     y <- model.response(object$model)
     sigma <- sqrt(sum(object$weights * object$residuals^2/mean(object$weights))/(object$df.residual+2))
     den <- dnorm(y, mean=predict(object), sd=sigma)
@@ -34,6 +42,14 @@ fit.den.lm <- function(object, ...) {
 fit.den.glm <- function(object, ...){
   if (is.null(object$weights)) {
     object$weights = 1
+  }
+  if (length(object$xlevels)!=0) {
+    for (i in 1:length(object$xlevels)) {
+      if (length(levels(object$data[[names(object$xlevels[i])]])) != 
+          length(object$xlevels[[i]])) {
+        object$xlevels[[i]] <- levels(object$data[[names(object$xlevels[i])]])
+      }
+    }
   }
   if (object$family[1]$family == "gaussian") {
     y <- model.response(object$model)
@@ -57,6 +73,14 @@ fit.den.glm <- function(object, ...){
 fit.den.gnm <- function(object, ...){
   if (is.null(object$weights)) {
     object$weights = 1
+  }
+  if (length(object$xlevels)!=0) {
+    for (i in 1:length(object$xlevels)) {
+      if (length(levels(object$model[[names(object$xlevels[i])]])) != 
+          length(object$xlevels[[i]])) {
+        object$xlevels[[i]] <- levels(object$model[[names(object$xlevels[i])]])
+      }
+    }
   }
   if (object$family[1]$family == "gaussian") {
     y <- model.response(object$model)
@@ -86,6 +110,7 @@ fit.den.nnet <- function(object, ...){
 #' Fit the density for the survival::clogit
 #' @export
 fit.den.coxph <- function(object, ...){
+  
   cl <- object$call
   cl$subset <- NULL
   cl[[1L]] <- quote(stats::model.frame)
@@ -94,6 +119,14 @@ fit.den.coxph <- function(object, ...){
   y <- model.response(mf)
   y <- as.double(y[,2])
   x <- model.matrix.coxph(object,data=mf)
+  if (length(object$xlevels)!=0) {
+    for (i in 1:length(object$xlevels)) {
+      if (length(levels(object$data[[names(object$xlevels[i])]])) != 
+          length(object$xlevels[[i]])) {
+        object$xlevels[[i]] <- levels(object$data[[names(object$xlevels[i])]])
+      }
+    }
+  }
   co <- coef(object)
   co[is.na(co)] <- 0
   pred <- exp(x %*% co) / (1 + exp(x %*% co))
