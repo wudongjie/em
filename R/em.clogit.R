@@ -93,6 +93,9 @@ em.clogit <- function(object, latent=2, verbose=F,
                         nrow=nrow(post_pr), ncol=ncol(post_pr),
                         byrow=T)
     post_pr_ex <- post_pr[rep(1:nrow(post_pr), rep(ni, n)),]
+    if (length(post_pr_ex) == nr) {
+      post_pr_ex <- matrix(post_pr_ex, ncol=1)
+    }
     results <- mstep(models, post_pr=post_pr_ex)
     # Likely that there are not enough obs in a class.
     #browser()

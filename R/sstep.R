@@ -8,5 +8,10 @@ sstep = function(postpr) {
     vec <- rmultinom(1:length(postpr), size=1,prob=postpr)
     return(vec)
   }
-  return(t(apply(postpr,1,assign_func)))
+  y = apply(postpr,1,assign_func)
+  if (ncol(postpr) == 1) {
+    return(matrix(y,ncol=1))
+  } else {
+    return(t(apply(postpr,1,assign_func)))
+  }
 }

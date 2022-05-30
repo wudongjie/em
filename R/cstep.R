@@ -9,5 +9,9 @@ cstep = function(postpr) {
     vec[[which.max(postpr)]] <- 1
     return(vec)
   }
-  return(t(apply(postpr,1,assign_func)))
+  if (ncol(postpr) == 1) {
+    return(matrix(y,ncol=1))
+  } else {
+    return(t(apply(postpr,1,assign_func)))
+  }
 }

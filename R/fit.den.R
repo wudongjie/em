@@ -121,9 +121,9 @@ fit.den.coxph <- function(object, ...){
   x <- model.matrix.coxph(object,data=mf)
   if (length(object$xlevels)!=0) {
     for (i in 1:length(object$xlevels)) {
-      if (length(levels(object$data[[names(object$xlevels[i])]])) != 
+      if (length(levels(mf[[names(object$xlevels[i])]])) != 
           length(object$xlevels[[i]])) {
-        object$xlevels[[i]] <- levels(object$data[[names(object$xlevels[i])]])
+        object$xlevels[[i]] <- levels(mf[[names(object$xlevels[i])]])
       }
     }
   }

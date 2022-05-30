@@ -7,6 +7,7 @@ test_that("test linear regression", {
   fit_lm <- lm(formula, data=NPreg)
   glm_fit <- glm(formula=formula, data=NPreg)
   pd <- predict(fit_lm)
+  result1 <- em(fit_lm, latent=1)
   results <- em(fit_lm, latent=2, verbose=T)
   # Test predict
   fmm_fit <- predict(results)
@@ -122,7 +123,38 @@ test_that("test gnm poisson(unidiff)", {
   print(summary(udf2_4))
 })
 
+test_that("test clogit", {
+  library(survival)
+  browser()
+  usdata <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[2])
+  usdata_ex <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[3])
 
+  usdata$in1 <- as.factor(usdata$x == usdata$y)
+  usdata$a1 <- as.factor((usdata$x == 1) & (usdata$y == 1))
+  usdata$a2 <- as.factor((usdata$x == 2) & (usdata$y == 2))
+  usdata$a3 <- as.factor((usdata$x == 3) & (usdata$y == 3))
+  usdata$y <- as.factor(usdata$y)
+  usdata$x <- as.factor(usdata$x)
+  usdata_ex$in1 <- as.factor((usdata_ex$a1_x1==1) | (usdata_ex$a2_x2==1) | (usdata_ex$a3_x3==1))
+  formula1 <- chosen ~ 0 + a2 + a3 + a1_x1 + a2_x2 + a3_x3  + strata(obs)
+  formula1.in1 <- chosen ~ 0 + a2 + a3 + in1 + strata(obs)
+  formula1.in1.f <- chosen ~ 0 + a2 + a3 + in1 + strata(obs)
+  formula2 <- obs ~ x + y + in1
+  formula3 <- obs ~ x + y + a1 + a2 + a3
+  p_fit <- glm(formula2, family=poisson, data=usdata)
+
+  browser()
+  #Fix the predict of missing coeffieicnets
+  #p_fit4 <- em(p_fit, latent=5)
+
+  cl_fit <- clogit(formula1.in1, usdata_ex)
+  cl_fit1 <- em(cl_fit, latent=1, algo="sem", verbose=T)
+  #cl_wfit <- clogit(formula1, logan2, weights=rep(1, 838*5), method="breslow")
+  p_fit2 <- em(p_fit, latent=2)
+  cl_fit2 <- em(cl_fit, latent=2, algo="sem")
+  print(summary(cl_fit2))
+  browser()
+})
 
 
 

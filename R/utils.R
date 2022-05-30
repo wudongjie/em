@@ -12,7 +12,11 @@ vdummy = function(x) {
     return(vec)
   }
   dvec <- sapply(x, to_dummy)
-  return(t(dvec))
+  if (length(dvec) == length(x)) {
+    return(matrix(dvec,ncol=1))
+  } else {
+    return(t(dvec))
+  }
 }
 
 #' Flatten a data.frame or matrix by column or row with its name.
