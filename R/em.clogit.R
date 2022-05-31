@@ -15,7 +15,7 @@
 #' @export
 em.clogit <- function(object, latent=2, verbose=F,
                        init.method = c("random", "kmeans"),
-                      algo= c("em", "cem", "sem"),
+                      algo= c("em", "cem", "sem"), cluster.by=NULL,
                        max_iter=500, concomitant=list(...), ...)
 {
   if(!missing(...)) warning("extra arguments discarded")
@@ -50,7 +50,6 @@ em.clogit <- function(object, latent=2, verbose=F,
   }
   nr <- object$n #nrow
   n <- object$nevent #strata
-  ni <- object$n / object$nevent
   mt$x <- model.matrix(mt$terms, mt$model)
   mt$y <- model.response(mt$model)
 
@@ -66,10 +65,27 @@ em.clogit <- function(object, latent=2, verbose=F,
     mt.con <- attr(mf.con, "terms")
   }
   #### TODO: use init.em for init_pr
-
-  post_pr <- matrix(0, nrow=n, ncol=latent)
+  if (is.null(cluster.by)) {
+    np <- n
+  } else {
+    # Check cluster.by
+    if (is.null(dim(cluster.by))) {
+      if (length(cluster.by) != nr) {
+        stop("cluster.by does not match data used.")
+      }  
+      np <- length(unique(cluster.by))
+    } else {
+      if (nrow(cluster.by) != nr) {
+        stop("cluster.by does not match data used.")
+      }
+      np <- nrow(unique(cluster.by))
+    }
+  }
+  post_pr <- matrix(0, nrow=np, ncol=latent)
   class(post_pr) <- match.arg(init.method)
   post_pr <- init.em(post_pr, mt$x)
+  ni <- nr / np
+  
   # chk_df <- 10
   # while (any(colSums(post_pr) <= length(object$coefficients))) {
   #   warnings("Lack of degree of freedom. Reinitializing...")

@@ -10,6 +10,7 @@
   verbose = F,
   init.method = c("random", "kmeans"),
   algo = c("em", "cem", "sem"),
+  cluster.by = NULL,
   max_iter = 500,
   concomitant = list(...),
   ...
