@@ -150,7 +150,8 @@ fit.den.coxph <- function(object, ...){
   #den <- unlist(by(dt,
   #                 strat, gen.mn, simplify = F))
   #den <- plyr::ddply(dt, ~strat, gen.mn)$V1
-  (df %>% dplyr::group_by(strat) %>% dplyr::summarise(den=dmultinom(y, prob=fitted)))$den
+  den <- (df %>% dplyr::group_by(strat) %>% dplyr::summarise(den=dmultinom(y, prob=fitted)))$den
+  den
 }
 
 #' @export

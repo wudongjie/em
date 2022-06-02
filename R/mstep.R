@@ -39,6 +39,7 @@ mstep <- function(models, post_pr=NULL)
           result[[i]] <- NA
         } else {
           result[[i]] <- suppressWarnings(eval(cl, env))
+          result[[i]]$cfreq <- models[[i]]$cfreq
           #browser()
           #print(result[[i]]$coefficients)
           if ("glmerMod" %in% class(result[[i]])) {
@@ -53,6 +54,7 @@ mstep <- function(models, post_pr=NULL)
           cl <- cls[[i]]
           cl$weights <- post_pr[, i]
           result[[i]] <- suppressWarnings(eval(cl, env))
+          result[[i]]$cfreq <- models[[i]]$cfreq
           #result[[i]]$model <- models[[i]]$model
       }
     }

@@ -14,7 +14,6 @@ estep <- function(models, pi_matrix)
     if (length(models) != ncol(pi_matrix)) {
       stop("The number of fitted models is not equal to the number of columns of pi_matrix!")
     }
-
     postpr <- list()
     for (i in 1: ncol(pi_matrix)) {
       if (sum(pi_matrix[,i]) == 0) {

@@ -50,8 +50,7 @@ em.clogit <- function(object, latent=2, verbose=F,
   }
   nr <- object$n #nrow
   n <- object$nevent #strata
-  mt$x <- model.matrix(mt$terms, mt$model)
-  mt$y <- model.response(mt$model)
+
 
 
   ## load the concomitant model
@@ -65,27 +64,43 @@ em.clogit <- function(object, latent=2, verbose=F,
     mt.con <- attr(mf.con, "terms")
   }
   #### TODO: use init.em for init_pr
+  temp <- untangle.specials(object$terms, 'strata', 1)
+  strat <- as.integer(strata(mf[temp$vars], shortlabel=T))
+  mt$model <- mt$model[order(strat),]
+  strat <- strat[order(strat)]
+  strat.freq <- as.data.frame(table(strat))$Freq
   if (is.null(cluster.by)) {
     np <- n
+    cfreq <- 1
+    # Look for the strata variable
   } else {
     # Check cluster.by
     if (is.null(dim(cluster.by))) {
       if (length(cluster.by) != nr) {
         stop("cluster.by does not match data used.")
-      }  
+      }
+      mt$model <- mt$model[order(cluster.by),]
+      cluster.by <- cluster.by[order(cluster.by)]
       np <- length(unique(cluster.by))
+      cfreq <- as.data.frame(table(cluster.by[!duplicated(strat)]))$Freq
+      cfreq <- cfreq[cfreq>0]
     } else {
       if (nrow(cluster.by) != nr) {
         stop("cluster.by does not match data used.")
       }
+      mt$model <- mt$model[do.call(order, as.data.frame(cluster.by)),]
+      cluster.by <- cluster.by[do.call(order, as.data.frame(cluster.by)),]
       np <- nrow(unique(cluster.by))
+      cfreq <- as.data.frame(table(data.frame(cluster.by[!duplicated(strat),])))$Freq
+      cfreq <- cfreq[cfreq>0]  
     }
   }
   post_pr <- matrix(0, nrow=np, ncol=latent)
   class(post_pr) <- match.arg(init.method)
   post_pr <- init.em(post_pr, mt$x)
-  ni <- nr / np
-  
+  mt$x <- model.matrix(mt$terms, mt$model)
+  mt$y <- model.response(mt$model)
+
   # chk_df <- 10
   # while (any(colSums(post_pr) <= length(object$coefficients))) {
   #   warnings("Lack of degree of freedom. Reinitializing...")
@@ -105,10 +120,14 @@ em.clogit <- function(object, latent=2, verbose=F,
   conv <- 1
   llp <- 0
   while((abs(conv) > 1e-4) & (max_iter > cnt)) {
+    post_pr <- post_pr[rep(1:nrow(post_pr), cfreq),]
+    if (length(post_pr) == n) {
+      post_pr <- matrix(post_pr, ncol=1)
+    }
     pi_matrix <- matrix(colSums(post_pr)/nrow(post_pr),
                         nrow=nrow(post_pr), ncol=ncol(post_pr),
                         byrow=T)
-    post_pr_ex <- post_pr[rep(1:nrow(post_pr), rep(ni, n)),]
+    post_pr_ex <- post_pr[rep(1:n, strat.freq),]
     if (length(post_pr_ex) == nr) {
       post_pr_ex <- matrix(post_pr_ex, ncol=1)
     }
@@ -126,12 +145,17 @@ em.clogit <- function(object, latent=2, verbose=F,
     }
     pi <- colSums(pi_matrix)/sum(pi_matrix)
     post_pr <- estep(results, pi_matrix)
+    if (length(cfreq) != 1) {
+        post_pr <- aggregate(post_pr, by=list(rep(1:length(cfreq), cfreq)), sum)[,-1]
+        post_pr <- post_pr/rowSums(post_pr)
+    }
     if (algo=="cem")     {
       post_pr <- cstep(post_pr)
     }
     else if (algo=="sem") {
       post_pr <- sstep(post_pr)
     }
+
     ll <- 0
     if (length(concomitant)==0) {
       for (i in 1:length(results)) {
