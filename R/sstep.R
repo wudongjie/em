@@ -12,6 +12,6 @@ sstep = function(postpr) {
   if (ncol(postpr) == 1) {
     return(matrix(y,ncol=1))
   } else {
-    return(t(apply(postpr,1,assign_func)))
+    return(t(y))
   }
 }

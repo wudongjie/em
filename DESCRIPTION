@@ -13,11 +13,11 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: yes
-Depends: R (>= 3.0.0), dplyr
-Imports: nnet, stats, utils, gnm, survival, plm, methods
+Depends: R (>= 3.0.0)
+Imports: nnet, stats, utils, gnm, survival, plm, methods, mclust, dplyr
 Suggests: 
     testthat (>= 3.0.0),
     parallel,
     fitdistrplus
 Config/testthat/edition: 3
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

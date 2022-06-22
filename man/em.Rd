@@ -6,6 +6,11 @@
 \usage{
 em(object, ...)
 }
+\arguments{
+\item{object}{the model used, e.g. `lm`, `glm`, `gnm`.}
+
+\item{...}{arguments used in the `model`.}
+}
 \description{
 A generic EM algorithm that can work on specific models/objects.
 }

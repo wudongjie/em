@@ -4,6 +4,7 @@
 #' function `init.em` generate the posterior probability using that matrix
 #' based on the method set by the user.
 #' @return The posterior probability matrix
+#' @importFrom "stats" "aggregate" "rlnorm" "runif"
 #' @export
 init.em <- function(object, ...) {
   if (!is.matrix(object)) {
@@ -13,16 +14,43 @@ init.em <- function(object, ...) {
 }
 
 init.em.random <- function(object, ...) {
-  z <- vdummy(sample(1:ncol(object), size=nrow(object), replace=T))
+  args = list()
+  if (!missing(...)) {
+    args = list(...)
+  }
+  z <- vdummy(sample(1:ncol(object), size=nrow(object), replace=T, prob=args$init.prob))
   z
 }
 
-init.em.kmeans <- function(object, data, ...) {
+init.em.random.weights <- function(object, ...) {
+  args = list()
   if (!missing(...)) {
     args = list(...)
-    z <- vdummy(kmeans(data, centers=ncol(object), args))
-  } else {
-    z <- vdummy(kmeans(data, centers=ncol(object))$cluster)
   }
+  z <- apply(object, 2, function(x){runif(x, min=0.001, max=1)})
+  z <- t(apply(z, 1, function(x){x/sum(x)}))
+  z
+}
+
+init.em.kmeans <- function(object, ...) {
+  if (!missing(...)) {
+    args = list(...)
+  }
+  if (is.null(args$data)) {
+    stop("Please provide the data")
+  }
+  z <- vdummy(kmeans(args$data, centers=ncol(object), nstart=20, algorithm = "Lloyd")$cluster)
+  z
+}
+
+init.em.hc <- function(object, ...) {
+  if (!missing(...)) {
+    args = list(...)
+  }
+  if (is.null(args$data)) {
+    stop("Please provide the data")
+  }
+  #browser()
+  z <- vdummy(mclust::hclass(mclust::hcEII(args$data), 2))
   z
 }

@@ -12,5 +12,5 @@ The matrix of the posterior probability}
 }
 \description{
 Given the posterior probability, generate a matrix to assign
-each individual to a class. The assignment based on which probability is the largest.
+each individual to a class. The assignment is based on which probability is the largest.
 }

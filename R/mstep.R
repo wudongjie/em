@@ -30,7 +30,7 @@ mstep <- function(models, post_pr=NULL)
     } 
     }
     
-    if ((length(upost_pr) == 2) && (0 %in% upost_pr)) {
+    if ((length(upost_pr) <= 2) && (1 %in% upost_pr)) {
       # Do k estimations separately
       for (i in 1:length(models)) {
         cl <- cls[[i]]
@@ -39,7 +39,7 @@ mstep <- function(models, post_pr=NULL)
           result[[i]] <- NA
         } else {
           result[[i]] <- suppressWarnings(eval(cl, env))
-          result[[i]]$cfreq <- models[[i]]$cfreq
+          #result[[i]]$cfreq <- models[[i]]$cfreq
           #browser()
           #print(result[[i]]$coefficients)
           if ("glmerMod" %in% class(result[[i]])) {
@@ -51,10 +51,12 @@ mstep <- function(models, post_pr=NULL)
       }
     } else {
       for (i in 1:length(models)) {
+          #browser()
           cl <- cls[[i]]
-          cl$weights <- post_pr[, i]
+          wts <- post_pr[, i]
+          cl$weights <- wts
           result[[i]] <- suppressWarnings(eval(cl, env))
-          result[[i]]$cfreq <- models[[i]]$cfreq
+          #result[[i]]$cfreq <- models[[i]]$cfreq
           #result[[i]]$model <- models[[i]]$model
       }
     }

@@ -4,6 +4,8 @@
 #' @importFrom stats coef dbinom dnorm dpois kmeans logLik 
 #' @importFrom stats model.frame model.matrix model.response nobs predict 
 #' @importFrom stats printCoefmat pt rmultinom dmultinom
+#' @param object the model used, e.g. `lm`, `glm`, `gnm`.
+#' @param ... arguments used in the `model`.
 #' @export
 em <- function(object, ...) {
   UseMethod("em")
@@ -15,22 +17,24 @@ em <- function(object, ...) {
 #' @param latent the number of latent classes.
 #' @param verbose `True` to print the process of convergence.
 #' @param init.method the initialization method used in the model.
-#' The default method is `random`.
+#' The default method is `random`. `kmeans` is K-means clustering. 
+#' `hc` is model-based agglomerative hierarchical clustering.
+#' @param init.prob the starting prior probabilities used in classification based method.
 #' @param max_iter the maximum iteration for em algorithm.
-#' @param algo the algorithm used in em: the default EM algorithm, 
+#' @param algo the algorithm used in em: `em` the default EM algorithm, 
 #' the classification em `cem`, or the stochastic em `sem`.
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
 #' @export
 em.default <- function(object, latent=2, verbose=F,
-               init.method = c("random", "kmeans"), 
-               algo= c("em", "cem", "sem"),
+               init.method = c("random", "kmeans", "hc"), init.prob = NULL,
+               algo= c("em", "cem", "sem"), 
                max_iter=500, concomitant=list(...), ...)
 {
       if(!missing(...)) warning("extra arguments discarded")
       algo <- match.arg(algo)
-      if (!("weights" %in% names(formals(match.fun(object$call[[1]]))))) {
+      if (!("weights" %in% names(formals(match.fun(object$call[[1]])))) & (algo=="em")) {
         warning("The model cannot be weighted. Changed to `sem` instead.")
         algo <- "sem"
       }
@@ -93,7 +97,17 @@ em.default <- function(object, latent=2, verbose=F,
       
       while (cond1) {
         class(post_pr) <- match.arg(init.method)
-        post_pr <- init.em(post_pr, mt$x)
+        if (!is.null(init.prob)) {
+          if (!is.vector(init.prob)) {
+            warnings("init.prob should be a vector! Drop init.prob.")
+            init.prob = NULL
+          } 
+          if (length(init.prob)!=latent) {
+            warnings("init.prob should be equal to the number of latent classes! Dropb init.prob.")
+            init.prob = NULL
+          }
+        }
+        post_pr <- init.em(post_pr, data=cbind(mt$y, mt$x), init.prob=init.prob)
         if (identical(lns, character(0))) {
           break
         }

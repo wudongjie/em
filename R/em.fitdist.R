@@ -4,18 +4,18 @@
 #' @param latent the number of latent classes.
 #' @param verbose `True` to print the process of convergence.
 #' @param init.method the initialization method used in the model.
-#' The default method is `random`.
+#' The default method is `random`. `kmeans` is K-means clustering. 
+#' `hc` is model-based agglomerative hierarchical clustering.
+#' @param init.prob the starting prior probabilities used in classification based method.
 #' @param max_iter the maximum iteration for em algorithm.
-#' @param algo the algorithm used in em: the default EM algorithm, 
+#' @param algo the algorithm used in em: `em` the default EM algorithm, 
 #' the classification em `cem`, or the stochastic em `sem`.
-#' @param concomitant the formula to define the concomitant part of the model.
-#' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
 #' @export
 em.fitdist <- function(object, latent=2, verbose=F,
-                       init.method = c("random", "kmeans"), 
-                       algo= c("em", "cem", "sem"),
-                       max_iter=500, concomitant=list(...), ...)
+                       init.method = c("random", "kmeans", "hc"), init.prob = NULL,
+                       algo= c("em", "cem", "sem"), 
+                       max_iter=500, ...)
 {
    args = list()
    browser()
@@ -53,14 +53,6 @@ em.fitdist <- function(object, latent=2, verbose=F,
      for (i in (1:length(results))) {
        print(results[[i]]$coefficients)
      }
-     if (length(concomitant)!=0) {
-       if ("formula" %in% names(concomitant)) {
-         results.con <- mstep.concomitant(concomitant$formula, mf.con, post_pr)
-         pi_matrix <- results.con$fitted.values
-       } else {
-         stop("concomitant need to be a formula")
-       }
-     }
      pi <- colSums(pi_matrix)/sum(pi_matrix)
      post_pr <- estep(results, pi_matrix)
      if (algo=="cem")     {
@@ -70,21 +62,12 @@ em.fitdist <- function(object, latent=2, verbose=F,
        post_pr <- sstep(post_pr)
      }
      ll <- 0
-     if (length(concomitant)==0) {
-       for (i in 1:length(results)) {
-         if (pi[[i]] != 0) {
-           ll <- ll + pi[[i]]*fit.den(results[[i]]) 
-         }
+     for (i in 1:length(results)) {
+       if (pi[[i]] != 0) {
+         ll <- ll + pi[[i]]*fit.den(results[[i]]) 
        }
-       ll <- sum(log(ll))
-     } else {
-       for (i in 1:length(results)) {
-         if (any(!is.na(results[[i]]))) {
-           ll <- ll + results.con$fitted.values[,i]*fit.den(results[[i]])
-         }
-       }
-       ll <- sum(log(ll))
      }
+     ll <- sum(log(ll))
      conv <- ll - llp
      llp <- ll
      if (verbose) {
@@ -102,12 +85,7 @@ em.fitdist <- function(object, latent=2, verbose=F,
              terms=mt$terms,
              algorithm=algo,
              obs=n,
-             post_pr=estep(results, pi_matrix),
-             concomitant=concomitant)
-   if (length(concomitant)!=0) {
-     z$results.con=mstep.concomitant.refit(concomitant$formula, mf.con, post_pr)
-     z$terms.con=mt.con
-   }
+             post_pr=estep(results, pi_matrix))
    class(z) <- c("em")
    return(z)
 }

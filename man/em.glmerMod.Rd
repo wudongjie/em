@@ -8,7 +8,7 @@
   object,
   latent = 2,
   verbose = F,
-  init.method = c("random", "kmeans"),
+  init.method = c("random", "kmeans", "hc"),
   algo = c("em", "cem", "sem"),
   max_iter = 500,
   concomitant = list(...),
@@ -23,9 +23,10 @@
 \item{verbose}{`True` to print the process of convergence.}
 
 \item{init.method}{the initialization method used in the model.
-The default method is `random`.}
+The default method is `random`. `kmeans` is K-means clustering. 
+`hc` is model-based agglomerative hierarchical clustering.}
 
-\item{algo}{the algorithm used in em: the default EM algorithm, 
+\item{algo}{the algorithm used in em: `em` the default EM algorithm, 
 the classification em `cem`, or the stochastic em `sem`.}
 
 \item{max_iter}{the maximum iteration for em algorithm.}
@@ -34,6 +35,8 @@ the classification em `cem`, or the stochastic em `sem`.}
 The default is NULL.}
 
 \item{...}{arguments used in the `model`.}
+
+\item{init.prob}{the starting prior probabilities used in classification based method.}
 }
 \value{
 the fitting object for the model with the class `em`.

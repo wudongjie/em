@@ -6,6 +6,12 @@
 \usage{
 fit.den(object, ...)
 }
+\arguments{
+\item{object}{the fitted model such as `lm`.}
+
+\item{...}{other used arguments.
+importFrom magrittr "%>%"}
+}
 \description{
-Fit the density function for a fitted model.
+This function generates the probability density of given models.
 }

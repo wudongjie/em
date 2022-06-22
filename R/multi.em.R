@@ -13,10 +13,29 @@ multi.em <- function(object, ...) {
 #' @param parallel whether to use the parallel computing.
 #' @return return the `em` object with the maximum log-likelihood.
 #' @export
-multi.em.default <- function(object, iter=10, parallel=FALSE, ...)
+multi.em.default <- function(object, iter=10, parallel=FALSE, random.init=TRUE, ...)
 {
   args <- list(...)
   args$object <- object
+  if (is.null(args$latent)) {
+    args$latent = 2
+  }
+  rcluster <- function(x){
+    if ( (!is.vector(x)) | length(x) == 0 ) {
+      stop("init.prob is not a vector")
+    }
+    if (length(x) == 1) {
+      return(c(1))
+    } else {
+      y <- sapply(x, function(y){rlnorm(1, 0, 1)})
+      y[-1] <- exp(1)
+      return(y)
+    }
+  }
+  init.prob = matrix(1, nrow=iter, ncol=args$latent)
+  if (random.init) {
+    init.prob = t(apply(init.prob, 1, rcluster))
+  }
   fitted <- list()
   j <- 1
   if (parallel) {
@@ -44,10 +63,11 @@ multi.em.default <- function(object, iter=10, parallel=FALSE, ...)
                                    }, mc.cores = numCores
       )
   } else {
-      fitted <- lapply(seq_len(iter),
+      #browser()
+      fitted <- apply(init.prob, 1,
                    function(x) {
                       tryCatch({
-                         do.call(em, args, envir = parent.frame(3))
+                         do.call(em, args=append(args, list(init.prob=x)), envir = parent.frame(3))
                          }, error=function(e) {
                             NULL
                          }

@@ -1,4 +1,5 @@
 #' This function is from `survival` package.
+#' @importFrom survival Surv aeqSurv
 model.matrix.coxph <- function(object, data=NULL, 
                                contrast.arg=object$contrasts, ...) {
   # 

@@ -4,7 +4,7 @@
 \alias{multi.em.default}
 \title{Default generic for multi.em}
 \usage{
-\method{multi.em}{default}(object, iter = 10, parallel = FALSE, ...)
+\method{multi.em}{default}(object, iter = 10, parallel = FALSE, random.init = TRUE, ...)
 }
 \arguments{
 \item{object}{the model to use in em, e.g. `lm`, `glm`, `gnm`}

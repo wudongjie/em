@@ -4,9 +4,11 @@
 #' @param latent the number of latent classes.
 #' @param verbose `True` to print the process of convergence.
 #' @param init.method the initialization method used in the model.
-#' The default method is `random`.
+#' The default method is `random`. `kmeans` is K-means clustering. 
+#' `hc` is model-based agglomerative hierarchical clustering.
+#' @param init.prob the starting prior probabilities used in classification based method.
 #' @param max_iter the maximum iteration for em algorithm.
-#' @param algo the algorithm used in em: the default EM algorithm, 
+#' @param algo the algorithm used in em: `em` the default EM algorithm, 
 #' the classification em `cem`, or the stochastic em `sem`.
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
@@ -15,7 +17,7 @@
 #' @importFrom stats .checkMFClasses delete.response density deviance fitted makepredictcall model.weights terms var
 #' @export
 em.glmerMod <- function(object, latent=2, verbose=F,
-                       init.method = c("random", "kmeans"), 
+                       init.method = c("random", "kmeans", "hc"), 
                        algo= c("em", "cem", "sem"),
                        max_iter=500, concomitant=list(...), ...)
 {
@@ -85,6 +87,7 @@ em.glmerMod <- function(object, latent=2, verbose=F,
     pi_matrix <- matrix(colSums(post_pr)/nrow(post_pr),
                         nrow=nrow(post_pr), ncol=ncol(post_pr),
                         byrow=T)
+    browser()
     results <- mstep(models, post_pr=post_pr)
     if (length(concomitant)!=0) {
       if ("formula" %in% names(concomitant)) {
@@ -141,6 +144,65 @@ em.glmerMod <- function(object, latent=2, verbose=F,
     z$results.con=mstep.concomitant.refit(concomitant$formula, mf.con, post_pr)
     z$terms.con=mt.con
   }
-  class(z) <- c("em")
+  class(z) <- c("em.glmerMod")
   return(z)
+}
+
+#' @export
+summary.em.glmerMod <- function(object, ...){
+  ans = list(call=object$call,
+             coefficients= list(),
+             pi=object$pi,
+             latent=object$latent,
+             ll=0)
+  names_coef <- c()
+  for (i in 1:length(object$models)){
+    #browser()
+    if (any(!is.na(object$models[[i]]))) {
+      ans$sum.models[[i]] <- summary(object$models[[i]])
+      names_coef <- c(names_coef,
+                      paste(as.character(i),
+                            names(coef(object$models[[i]])),sep="."))
+      ans$coefficients[[i]] <- coef(ans$sum.models[[i]])
+    }
+    #ans$ll <- ans$ll + log(ans$pi[[i]]) + logLik(object$models[[i]])
+    #ans$ll <- ans$ll + sum(object$models[[i]]$weights*
+    #                         (log(ans$pi[[i]])+log(fit.den(object$models[[i]]))))
+    
+    #ans$ll <- ans$ll + ans$pi[[i]]*fit.den(object$models[[i]])
+  }
+  if (length(object$concomitant)!=0) {
+    ans$concomitant <- object$concomitant
+    ans$concomitant.summary <- summary(object$results.con)
+    c.df <- nrow(ans$concomitant.summary$fitted.values) -
+      ans$concomitant.summary$rank
+    c.coef <- c()
+    c.std <- c()
+    c.tval <- c()
+    c.pval <- c()
+    c.names <- c()
+    for (i in 1:(ans$latent-1)) {
+      na <- paste(rownames(ans$concomitant.summary$coefficients)[[i]],
+                  colnames(ans$concomitant.summary$coefficients), sep='.')
+      c.names <- c(c.names, na)
+      c.coef <- c(c.coef, ans$concomitant.summary$coefficients[i,])
+      c.std <-  c(c.std, ans$concomitant.summary$standard.errors[i,])
+    }
+    c.tval <- c(c.tval, c.coef/c.std)
+    c.pval <- c(c.pval, 2*pt(-abs(c.tval), c.df))
+    coef.con <- t(rbind(c.coef, c.std, c.tval, c.pval))
+    rownames(coef.con) <- c.names
+    colnames(coef.con) <- c("Estimate", "Std. Error",
+                            "t value", "Pr(>|t|)")
+    ans$concomitant.coef <- coef.con
+  }
+  ans$ll <- logLik(object)
+  ans$df <- attr(ans$ll, "df")
+  ans$coefficients <- do.call(rbind, ans$coefficients)
+  rownames(ans$coefficients) <- names_coef
+  ans$obs <- object$obs
+  ans$AIC <- 2 * ans$df - 2 * ans$ll
+  ans$BIC <- ans$df * log(ans$obs) - 2 * ans$ll
+  class(ans) <- c("summary.em")
+  ans
 }

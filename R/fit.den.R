@@ -1,4 +1,7 @@
 #' Fit the density function for a fitted model.
+#' @description This function generates the probability density of given models.
+#' @param object the fitted model such as `lm`.
+#' @param ... other used arguments.
 #' @export
 fit.den <- function(object, ...) {
   UseMethod("fit.den")
@@ -129,10 +132,9 @@ fit.den.coxph <- function(object, ...){
   }
   co <- coef(object)
   co[is.na(co)] <- 0
-  pred <- exp(x %*% co) / (1 + exp(x %*% co))
-  gen.mn <- function(dt) {
-    dmultinom(dt$y, prob=dt$fitted)
-  }
+  # pred <- exp(x %*% co) #/ (1 + exp(x %*% co))
+  l1 = y*(x %*% co)
+  l2 = exp(x %*% co)
   # gen.mn <- function(v1,v2) {
   #   dmultinom(v1,prob=v2)
   # }
@@ -142,7 +144,8 @@ fit.den.coxph <- function(object, ...){
 
   #
   #library(data.table)
-  df <- data.frame(y=y, fitted=pred,strat=strat)
+  #df <- data.frame(y=y, fitted=pred,strat=strat)
+  df <-  data.frame(l1=l1, l2=l2, strat=strat)
   #dt <- data.table(df, key="strat")
   #browser()
   #dt <- setDT(dt)
@@ -150,13 +153,17 @@ fit.den.coxph <- function(object, ...){
   #den <- unlist(by(dt,
   #                 strat, gen.mn, simplify = F))
   #den <- plyr::ddply(dt, ~strat, gen.mn)$V1
-  den <- (df %>% dplyr::group_by(strat) %>% dplyr::summarise(den=dmultinom(y, prob=fitted)))$den
-  den
+  #den <- (df %>% dplyr::group_by(strat) %>% dplyr::summarise(den=dmultinom(y, prob=fitted)))$den
+  group_sum <- function(l1, l2) {
+    sum(l1) - log(sum(l2))
+  }
+  den <- (df %>% dplyr::group_by(strat) %>% dplyr::summarise(den=group_sum(l1,l2)))$den
+  exp(den)
 }
 
 #' @export
 fit.den.glmerMod <- function(object, ...){
-  browser()
+  #browser()
   if (object@resp$family[1]$family == "gaussian") {
     y <- model.response(object@frame)
     sigma <- sqrt(sum(object@resp$weights * object$residuals^2/mean(object@resp$weights))/(object$df.residual-1))

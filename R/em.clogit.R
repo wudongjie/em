@@ -1,22 +1,25 @@
 #' The em function for `survival::clogit`.
+#' @importFrom utils methods str
+#' @importFrom survival untangle.specials strata
 #' @param object the model used, e.g. `lm`, `glm`, `gnm`.
 #' @param ... arguments used in the `model`.
 #' @param latent the number of latent classes.
 #' @param verbose `True` to print the process of convergence.
 #' @param init.method the initialization method used in the model.
-#' The default method is `random`.
+#' The default method is `random`. `kmeans` is K-means clustering. 
+#' `hc` is model-based agglomerative hierarchical clustering.
+#' @param init.prob the starting prior probabilities used in classification based method.
 #' @param max_iter the maximum iteration for em algorithm.
-#' @param algo the algorithm used in em: the default EM algorithm, 
+#' @param algo the algorithm used in em: `em` the default EM algorithm, 
 #' the classification em `cem`, or the stochastic em `sem`.
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
 #' @return the fitting object for the model with the class `em`.
-#' @importFrom utils methods str
 #' @export
 em.clogit <- function(object, latent=2, verbose=F,
-                       init.method = c("random", "kmeans"),
-                      algo= c("em", "cem", "sem"), cluster.by=NULL,
-                       max_iter=500, concomitant=list(...), ...)
+                       init.method = c("random", "kmeans", "hc"), init.prob = NULL,
+                      algo= c("em", "cem", "sem"),
+                      cluster.by=NULL, max_iter=500, concomitant=list(...), ...)
 {
   if(!missing(...)) warning("extra arguments discarded")
   cl <- match.call()
@@ -97,10 +100,20 @@ em.clogit <- function(object, latent=2, verbose=F,
   }
   post_pr <- matrix(0, nrow=np, ncol=latent)
   class(post_pr) <- match.arg(init.method)
-  post_pr <- init.em(post_pr, mt$x)
+  if (!is.null(init.prob)) {
+    if (!is.vector(init.prob)) {
+      warnings("init.prob should be a vector! Drop init.prob.")
+      init.prob = NULL
+    } 
+    if (length(init.prob)!=latent) {
+      warnings("init.prob should be equal to the number of latent classes! Dropb init.prob.")
+      init.prob = NULL
+    }
+  }
   mt$x <- model.matrix(mt$terms, mt$model)
   mt$y <- model.response(mt$model)
-
+  post_pr <- init.em(post_pr, data=cbind(mt$y, mt$x), init.prob=init.prob)
+  
   # chk_df <- 10
   # while (any(colSums(post_pr) <= length(object$coefficients))) {
   #   warnings("Lack of degree of freedom. Reinitializing...")
@@ -131,7 +144,9 @@ em.clogit <- function(object, latent=2, verbose=F,
     if (length(post_pr_ex) == nr) {
       post_pr_ex <- matrix(post_pr_ex, ncol=1)
     }
-    results <- mstep(models, post_pr=post_pr_ex)
+
+    results <- mstep(models, post_pr=post_pr)
+
     # Likely that there are not enough obs in a class.
     #browser()
     #if (results$)
