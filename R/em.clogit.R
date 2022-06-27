@@ -53,25 +53,27 @@ em.clogit <- function(object, latent=2, verbose=F,
   }
   nr <- object$n #nrow
   n <- object$nevent #strata
-
-
-
-  ## load the concomitant model
-  if (length(concomitant) != 0)
-  {
-    m.con <- match(c("formula", "data", "subset", "weights", "na.action", "offset"),
-                   names(concomitant), 0L)
-    mf.con <- concomitant[m.con]
-    mf.con$drop.unused.levels <- TRUE
-    mf.con <- do.call(model.frame, mf.con)
-    mt.con <- attr(mf.con, "terms")
-  }
   #### TODO: use init.em for init_pr
   temp <- untangle.specials(object$terms, 'strata', 1)
   strat <- as.integer(strata(mf[temp$vars], shortlabel=T))
   mt$model <- mt$model[order(strat),]
   strat <- strat[order(strat)]
   strat.freq <- as.data.frame(table(strat))$Freq
+  ## load the concomitant model
+  if (length(concomitant) != 0)
+  {
+    m.con <- match(c("formula", "data", "subset", "weights", "na.action", "offset"),
+                   names(concomitant), 0L)
+    mf.con <- concomitant[m.con]
+    if (!is.null(cluster.by)) {
+      mf.con$data <- mf.con$data[!duplcated(cluster.by), ] 
+    } else {
+      mf.con$data <- mf.con$data[!duplicated(strat),]
+    }
+    mf.con$drop.unused.levels <- TRUE
+    mf.con <- do.call(model.frame, mf.con)
+    mt.con <- attr(mf.con, "terms")
+  }
   if (is.null(cluster.by)) {
     np <- n
     cfreq <- 1
