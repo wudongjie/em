@@ -21,7 +21,7 @@ mstep <- function(models, post_pr=NULL)
     result <- list()
     cls <- list()
     upost_pr <- unique(as.vector(post_pr))
-    env <- parent.frame(2)
+    env <- parent.frame(3)
     for (i in 1:length(models)) {
     if (isS4(models[[i]])) {
       cls[[i]] <- models[[i]]@call

@@ -13,8 +13,9 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: yes
-Depends: R (>= 3.0.0)
-Imports: nnet, stats, utils, gnm, survival, plm, methods, mclust, dplyr
+Depends: R (>= 3.0.0), nnet
+Imports: Rcpp (>= 1.0.7), stats, utils, gnm, survival, plm, methods, mclust, dplyr, numDeriv, optimx
+LinkingTo: Rcpp, RcppArmadillo, survival
 Suggests: 
     testthat (>= 3.0.0),
     parallel,

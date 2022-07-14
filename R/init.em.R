@@ -39,7 +39,7 @@ init.em.kmeans <- function(object, ...) {
   if (is.null(args$data)) {
     stop("Please provide the data")
   }
-  z <- vdummy(kmeans(args$data, centers=ncol(object), nstart=20, algorithm = "Lloyd")$cluster)
+  z <- suppressWarnings(vdummy(kmeans(args$data, centers=ncol(object), nstart=20, algorithm = "Lloyd")$cluster))
   z
 }
 
@@ -52,5 +52,14 @@ init.em.hc <- function(object, ...) {
   }
   #browser()
   z <- vdummy(mclust::hclass(mclust::hcEII(args$data), 2))
+  z
+}
+
+init.em.sample5 <- function(object, ...) {
+  args = list()
+  if (!missing(...)) {
+    args = list(...)
+  }
+  z <- vdummy(sample(1:ncol(object), size=nrow(object), replace=T, prob=args$init.prob))
   z
 }

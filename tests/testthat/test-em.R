@@ -6,20 +6,18 @@
 #   fit_lm <- lm(formula, data=NPreg)
 #   glm_fit <- glm(formula=formula, data=NPreg)
 #   pd <- predict(fit_lm)
-#   result1 <- em(fit_lm, latent=1)
+#   browser()
+#   ##result1 <- em(fit_lm, latent=1)
 #   results <- em(fit_lm, latent=2, verbose=T)
 #   # Test predict
 #   fmm_fit <- predict(results)
 #   fmm_fit_post <- predict(results, prob="posterior")
-#   browser()
 #   #Test cem and sem
-#   results_wem <- em(fit_lm, latent=2, verbose=T, algo="wem")
-#   print(summary(results_wem))
 #   results_sem <- em(fit_lm, latent=2, verbose=T, algo="sem")
 #   # cem is very likely to result in all variables assigned to one class
 #   results_cem <- multi.em(fit_lm, latent=2, verbose=T, algo="cem")
 #   print(summary(results_cem))
-#   print(predict(results_sem))
+#   print(summary(results_sem))
 # 
 # 
 #   print(summary(results))
@@ -33,7 +31,8 @@
 #   results_glm <- em(glm_fit)
 #   print(summary(results_glm))
 # 
-# })# test_that("test linear regression", {
+#  })
+# test_that("test linear regression", {
 #   NPreg <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[1])
 #   NPreg$x2 <- (NPreg$x)^2
 #   formula <- yn~x+x2
@@ -96,34 +95,38 @@
 #   print(fit_glm)
 #   results2 <- em(fit_glm, latent=2)
 #   print(summary(results2))
-#   results2w <- em(fit_glm, latent=2, algo="wem")
-#   print(summary(results2w))
 #   results3 <- em(fit_glm, init.method="kmeans", verbose=T) # Test kmeans
 #   print(summary(results3))
 #   results4 <- em(fit_glm, init.method="hc", verbose=T) # Test kmeans
 #   print(summary(results4))
 # })
-# 
+
 # test_that("test glm logit", {
 #   # Example from "https://rdrr.io/cran/mixtools/man/logisregmixEM.html"
 #   browser()
 #   set.seed(100)
 #   beta <- matrix(c(-10, .1, 20, -.1), 2, 2)
-#   x <- runif(500, 50, 250)
+#   x <- runif(10000, 50, 250)
 #   x1 <- cbind(1, x)
 #   xbeta <- x1%*%beta
-#   w <- rbinom(500, 1, .3)
-#   y <- w*rbinom(500, size = 1, prob = (1/(1+exp(-xbeta[, 1]))))+
-#     (1-w)*rbinom(500, size = 1, prob =
+#   w <- rbinom(10000, 1, .3)
+#   y <- w*rbinom(10000, size = 1, prob = (1/(1+exp(-xbeta[, 1]))))+
+#     (1-w)*rbinom(10000, size = 1, prob =
 #                    (1/(1+exp(-xbeta[, 2]))))
 #   dt <- data.frame(y=y, x=x)
 #   formula <- y~x
 #   fit_glm <- glm(formula=formula, family=binomial, data=dt)
-#   fit_em <- em(fit_glm, latent=2, verbose = T)
+#   fit_em <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans", use.optim=T)
+#   browser()
+#   fit_em2 <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans",
+#                use.optim=T, optim.start="sample5")
+# 
 #   print(summary(fit_em))
+#   print(summary(fit_em2))
+#   browser()
 #  })
-# 
-# 
+
+
 # test_that("test gnm poisson(unidiff)", {
 #   library(gnm)
 # 
@@ -171,9 +174,9 @@
 test_that("test clogit with simulation", {
   browser()
   library(survival)
-  set.seed(100)
-  beta1 <- matrix(c(.6,.1, 1.1, -.1), 2, 2)
-  beta2 <- matrix(c(.3,.2, 0.5, 0.7), 2, 2)
+  set.seed(122)
+  beta1 <- matrix(c(2.1,4.1, 8.1, -.1), 2, 2)
+  beta2 <- matrix(c(20.3,1.9, 10.5, 0.7), 2, 2)
   x <- sample.int(3, 10000, replace =T)
   x <- vdummy(x)
   z <- runif(10000)
@@ -186,19 +189,23 @@ test_that("test clogit with simulation", {
   xbeta2 <- exp(Xt%*%beta2)
   prb1 <- cbind(1, xbeta1)
   prb2 <- cbind(1, xbeta2)
-  # w <- rbinom(10000, 1, .3)
-  w <- rbinom(10000, size = 1, prob = (1/(1+exp(-zbeta))))
+  w <- rbinom(10000, 1, .3)
+  # w <- rbinom(10000, size = 1, prob = (1/(1+exp(-zbeta))))
   # One class case
   y1 <- t(apply(prb1, 1, rmultinom, n = 1, size = 1))
   # Two classes
   y2 <- w*t(apply(prb1, 1, rmultinom, n = 1, size = 1))+
     (1-w)*t(apply(prb2, 1, rmultinom, n = 1, size = 1))
-  df <- cbind.data.frame(y1=apply(y1, 1, function(x) which(x==1)), 
+  df <- cbind.data.frame(y1=apply(y1, 1, function(x) which(x==1)),
                          y2=apply(y2, 1, function(x) which(x==1)),
                          x2=x2, x3=x3)
-  formula_nom <- y1 ~ 0 + x2 +x3
-  nfit <- summary(nnet::multinom(formula_nom, df))
-  print(nfit)
+  formula_nom1 <- y1 ~ 0 + x2 +x3
+  formula_nom2 <- y2 ~ 0 + x2 +x3
+  nfit1 <- nnet::multinom(formula_nom1, df)
+  nfit2 <- nnet::multinom(formula_nom2, df)
+  print(summary(nfit1))
+  browser()
+  #mfit <- em(nfit2, latent=2, verbose=T, use.optim=T,init.method="kmeans") #init.method="kmeans")
   # extend to clogit form
   y1x <- as.vector(t(y1))
   y2x <- as.vector(t(y2))
@@ -216,24 +223,35 @@ test_that("test clogit with simulation", {
   #write.csv(dat, "sim_clogit.csv")
   formula1 <- chosen1 ~ 0 + a2_x2 + a2_x3 + a3_x2 + a3_x3+ strata(id)
   formula2 <- chosen2 ~ 0 + a2_x2 + a2_x3 + a3_x2 + a3_x3+ strata(id)
+  formula3 <- chosen2 ~ 0 + a2_x2 + a2_x3 + a3_x2 + a3_x3
   formula_c <- ~ z
   cfit1 <- clogit(formula1, dat)
   print(summary(cfit1))
   browser()
-  emfit1 <- em(cfit1, latent=1, algo="sem")
-  print(summary(emfit1))
+  #emfit1 <- em(cfit1, latent=1, algo="sem")
+  #print(summary(emfit1))
   #flexfit1 <- flexmix(cbind(chosen2, 1-chosen2) ~ 0 + a2_x2 + a2_x3 + a3_x2 + a3_x3 | id, data=dat,
   #                    k=2, model = FLXMRglm(family = "binomial"))
   cfit2 <- clogit(formula2, dat)
   #emfit <- em(cfit2, latent=2, algo="sem", verbose=T)
   browser()
-  emfit <- em(cfit2, latent=2, algo="sem", verbose=T, max_iter=30)
-  print(summary(emfit))
+  # emfitr <- em(cfit2, latent=2, algo="sem", verbose=T, max_iter=30)
+  # print(summary(emfitr))
+  # emfitr2 <- em(cfit2, latent=2, algo="sem", init.method="kmeans", verbose=T, max_iter=30)
+  # print(summary(emfitr2))
+  # emfit <- em(cfit2, latent=2, verbose=T, init.method="kmeans", use.optim=T)
+  # print(summary(emfit))
+  # emfit2 <- em(cfit2, latent=2, verbose=T, init.method="random", use.optim=T, optim.start="sample5")
+  # print(summary(emfit2))
+  emfit3 <- em(cfit2, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5")
+  print(summary(emfit3))
   emfit_con <- em(cfit2, latent=2, algo="sem", verbose=T, max_iter=30, concomitant=list(formula=formula_c, data=dat))
+  print(summary(emfit_con))
   # emfit <- em(cfit2, latent=2, init.method="hc", algo="sem", verbose=T, max_iter=100)
-  emfit <- em(cfit2, latent=2, algo="sem", verbose=T, init.prob=c(0.3,0.7), max_iter=100)
-  mtfit <- multi.em(cfit2, iter=10, random.init=TRUE, latent=2, verbose=T, max_iter=100)
-  print(summary(cfit2))
+  emfit3 <- em(cfit2, latent=2, algo="sem", verbose=T, init.prob=c(0.3,0.7), max_iter=100)
+  print(summary(emfit3))
+  #mtfit <- multi.em(cfit2, iter=10, random.init=TRUE, latent=2, verbose=T, max_iter=100)
+  #print(summary(cfit2))
   browser()
 })
 

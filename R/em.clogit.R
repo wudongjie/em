@@ -19,7 +19,9 @@
 em.clogit <- function(object, latent=2, verbose=F,
                        init.method = c("random", "kmeans", "hc"), init.prob = NULL,
                       algo= c("em", "cem", "sem"),
-                      cluster.by=NULL, max_iter=500, concomitant=list(...), ...)
+                      cluster.by=NULL, max_iter=500, concomitant=list(...), 
+                      use.optim=F,  optim.start=c("random","sample5"),
+                      ...)
 {
   if(!missing(...)) warning("extra arguments discarded")
   cl <- match.call()
@@ -29,6 +31,7 @@ em.clogit <- function(object, latent=2, verbose=F,
   # }
   #browser()
   algo <- match.arg(algo)
+  optim.start <- match.arg(optim.start)
   if (algo=="em") {
     warning("The model cannot be weighted. Changed to `sem` instead.")
     algo <- "sem"
@@ -112,10 +115,14 @@ em.clogit <- function(object, latent=2, verbose=F,
       init.prob = NULL
     }
   }
-  mt$x <- model.matrix(mt$terms, mt$model)
+  mt$x <- model.matrix.coxph(object, data=mt$model)
   mt$y <- model.response(mt$model)
-  post_pr <- init.em(post_pr, data=cbind(mt$y, mt$x), init.prob=init.prob)
-  
+  mt$y <- as.matrix(as.double(mt$y[,2]))
+  dat_tmp <-  as.data.frame(cbind(mt$x,strat))
+  dat_tmp <- dat_tmp %>% dplyr::group_by(strat) %>% dplyr::mutate(alt=1:dplyr::n())
+  dat_tmp <- reshape(as.data.frame(dat_tmp), timevar="alt", idvar="strat", direction="wide")
+  dat_tmp <- subset(dat_tmp, select=-c(strat))
+  post_pr <- init.em(post_pr, data=dat_tmp, init.prob=init.prob)
   # chk_df <- 10
   # while (any(colSums(post_pr) <= length(object$coefficients))) {
   #   warnings("Lack of degree of freedom. Reinitializing...")
@@ -131,82 +138,30 @@ em.clogit <- function(object, latent=2, verbose=F,
     models[[i]] <- object
   }
   results.con <- NULL
-  cnt <- 0
-  conv <- 1
-  llp <- 0
-  while((abs(conv) > 1e-4) & (max_iter > cnt)) {
-    post_pr <- post_pr[rep(1:nrow(post_pr), cfreq),]
-    if (length(post_pr) == n) {
-      post_pr <- matrix(post_pr, ncol=1)
-    }
-    pi_matrix <- matrix(colSums(post_pr)/nrow(post_pr),
-                        nrow=nrow(post_pr), ncol=ncol(post_pr),
-                        byrow=T)
-    post_pr_ex <- post_pr[rep(1:n, strat.freq),]
-    if (length(post_pr_ex) == nr) {
-      post_pr_ex <- matrix(post_pr_ex, ncol=1)
-    }
-
-    results <- mstep(models, post_pr=post_pr)
-
-    # Likely that there are not enough obs in a class.
-    #browser()
-    #if (results$)
-    if (length(concomitant)!=0) {
-      if ("formula" %in% names(concomitant)) {
-        results.con <- mstep.concomitant(concomitant$formula, mf.con, post_pr)
-        pi_matrix <- results.con$fitted.values
-      } else {
-        stop("concomitant need to be a formula")
-      }
-    }
-    pi <- colSums(pi_matrix)/sum(pi_matrix)
-    post_pr <- estep(results, pi_matrix)
-    if (length(cfreq) != 1) {
-        post_pr <- aggregate(post_pr, by=list(rep(1:length(cfreq), cfreq)), sum)[,-1]
-        post_pr <- post_pr/rowSums(post_pr)
-    }
-    if (algo=="cem")     {
-      post_pr <- cstep(post_pr)
-    }
-    else if (algo=="sem") {
-      post_pr <- sstep(post_pr)
-    }
-
-    ll <- 0
-    if (length(concomitant)==0) {
-      for (i in 1:length(results)) {
-        if (pi[[i]] != 0) {
-          ll <- ll + pi[[i]]*fit.den(results[[i]])
-        }
-      }
-      ll <- sum(log(ll))
+  if (use.optim) {
+    if (optim.start == "sample5") {
+      sample5 = T;
     } else {
-      for (i in 1:length(results)) {
-        if (any(!is.na(results[[i]]))) {
-          ll <- ll + results.con$fitted.values[,i]*fit.den(results[[i]])
-        }
-      }
-      ll <- sum(log(ll))
+      sample5= F;
     }
-    conv <- ll - llp
-    llp <- ll
-    if (verbose) {
-      cat(paste0("Iteration ", cnt, ": ",
-                 "(EM) log likelihood = ",
-                 round(ll, 4), "\n"))
-    }
-    cnt <- cnt + 1
+    results <- emOptim(models, post_pr, sample5=sample5)
+    pi_matrix <- results[[1]]$pi_matrix
+    z <- list(models=results,
+              pi=colSums(pi_matrix)/sum(pi_matrix),
+              latent=latent,
+              algorithm=algo,
+              obs=n,
+              post_pr=estep(results, pi_matrix),
+              concomitant=concomitant)
   }
-  z <- list(models=results,
-            pi=colSums(pi_matrix)/sum(pi_matrix),
-            latent=latent,
-            init.method = match.arg(init.method),
-            call=cl,
-            terms=mt$terms,
-            obs=n,
-            post_pr=estep(results, pi_matrix),
-            concomitant=concomitant)
+  else {
+    z <- emstep(models, post_pr, n, algo=algo, cfreq=cfreq, 
+                max_iter=max_iter, abs_tol=1e-4, concomitant=concomitant, 
+                mf.con=mf.con, verbose=verbose)
+    z$init.method = match.arg(init.method)
+    z$call=cl
+    z$terms=mt$terms
+  }
   if (length(concomitant)!=0) {
     z$results.con=mstep.concomitant.refit(concomitant$formula, mf.con, post_pr)
     z$terms.con=mt.con

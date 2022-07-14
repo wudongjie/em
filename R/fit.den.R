@@ -110,6 +110,31 @@ fit.den.nnet <- function(object, ...){
 
 }
 
+#' @export
+fit.den.multinom <- function(object, ...){
+  if (is.null(object$weights)) {
+    object$weights = 1
+  }
+  if (length(object$xlevels)!=0) {
+    for (i in 1:length(object$xlevels)) {
+      if (length(levels(object$data[[names(object$xlevels[i])]])) != 
+          length(object$xlevels[[i]])) {
+        object$xlevels[[i]] <- levels(object$data[[names(object$xlevels[i])]])
+      }
+    }
+  }
+  mf <- model.frame(object$terms)
+  y <- model.response(mf)
+  fitted <- predict(object, type="probs", newdata=mf)
+  if (is.null(dim(y))) {
+    y <- vdummy(y)
+  }
+  den <- vapply(seq_len(nrow(fitted)), function(i) { 
+          dmultinom(y[i,], prob = fitted[i, ], size = 1) }, 
+          FUN.VALUE = numeric(1))
+  den
+}
+
 #' Fit the density for the survival::clogit
 #' @export
 fit.den.coxph <- function(object, ...){

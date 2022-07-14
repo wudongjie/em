@@ -55,3 +55,19 @@ flatten <- function(x, by=c("col","row")){
   }
   z
 }
+
+
+partial <- function(f, ...) {
+  l <- list(...)
+  function(...) {
+    do.call(f, c(l, list(...)))
+  }
+}
+
+gen_gr = function(ll) {
+  gr <- function(theta) {
+    g <- numDeriv::grad(ll,theta)
+    return(g)
+  }
+  return(gr)
+}
