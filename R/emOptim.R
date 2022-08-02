@@ -4,7 +4,6 @@ emOptim <- function(models, pr, algo="em", max_iter=300, verbose=T, sample5=F, c
   conv <- 1
   llp <- 0
   theta <- c()
-  browser()
   if (as.character(models[[1]]$call[[1]]) == "lm") {
     family = "gaussian"
   } else {
@@ -114,7 +113,6 @@ emOptim <- function(models, pr, algo="em", max_iter=300, verbose=T, sample5=F, c
     linv <- models[[i]]$family$linkinv
   }
   npar <- length(v$par)/length(models);
-  browser()
   for (i in 1:length(models)) {
     if (family == "gaussian") {
       models[[i]]$coefficients[]<- v$par[((i-1)*npar+2): ((i-1)*npar+npar)]

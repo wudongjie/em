@@ -104,7 +104,6 @@ em.clogit <- function(object, latent=2, verbose=F,
     }
   }
   post_pr <- matrix(0, nrow=np, ncol=latent)
-  browser()
   class(post_pr) <- match.arg(init.method)
   if (!is.null(init.prob)) {
     if (!is.vector(init.prob)) {
