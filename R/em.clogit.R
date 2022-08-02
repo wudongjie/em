@@ -32,7 +32,7 @@ em.clogit <- function(object, latent=2, verbose=F,
   #browser()
   algo <- match.arg(algo)
   optim.start <- match.arg(optim.start)
-  if (algo=="em") {
+  if (algo=="em" && use.optim==F) {
     warning("The model cannot be weighted. Changed to `sem` instead.")
     algo <- "sem"
   }
@@ -104,6 +104,7 @@ em.clogit <- function(object, latent=2, verbose=F,
     }
   }
   post_pr <- matrix(0, nrow=np, ncol=latent)
+  browser()
   class(post_pr) <- match.arg(init.method)
   if (!is.null(init.prob)) {
     if (!is.vector(init.prob)) {
@@ -118,10 +119,16 @@ em.clogit <- function(object, latent=2, verbose=F,
   mt$x <- model.matrix.coxph(object, data=mt$model)
   mt$y <- model.response(mt$model)
   mt$y <- as.matrix(as.double(mt$y[,2]))
-  dat_tmp <-  as.data.frame(cbind(mt$x,strat))
-  dat_tmp <- dat_tmp %>% dplyr::group_by(strat) %>% dplyr::mutate(alt=1:dplyr::n())
-  dat_tmp <- reshape(as.data.frame(dat_tmp), timevar="alt", idvar="strat", direction="wide")
-  dat_tmp <- subset(dat_tmp, select=-c(strat))
+  if (!is.null(cluster.by)) {
+      cid <- cluster.by
+  } else {
+      cid <- strat
+  }
+  
+  dat_tmp <-  as.data.frame(cbind(mt$x,cid))
+  dat_tmp <- dat_tmp %>% dplyr::group_by(cid) %>% dplyr::summarise(dplyr::across(dplyr::everything(), mean))
+  #dat_tmp <- reshape(as.data.frame(dat_tmp), timevar="alt", idvar="strat", direction="wide")
+  dat_tmp <- subset(dat_tmp, select=-c(cid))
   post_pr <- init.em(post_pr, data=dat_tmp, init.prob=init.prob)
   # chk_df <- 10
   # while (any(colSums(post_pr) <= length(object$coefficients))) {
@@ -144,7 +151,9 @@ em.clogit <- function(object, latent=2, verbose=F,
     } else {
       sample5= F;
     }
-    results <- emOptim(models, post_pr, sample5=sample5)
+    results <- emOptim(models, post_pr, algo=algo, sample5=sample5, 
+                       cluster.by=cluster.by, cfreq=cfreq, 
+                       concomitant=concomitant, mf.con=mf.con)
     pi_matrix <- results[[1]]$pi_matrix
     z <- list(models=results,
               pi=colSums(pi_matrix)/sum(pi_matrix),

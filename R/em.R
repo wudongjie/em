@@ -91,7 +91,7 @@ em.default <- function(object, latent=2, verbose=F,
       } else {
         # Check cluster.by
         if (is.null(dim(cluster.by))) {
-          if (length(cluster.by) != nr) {
+          if (length(cluster.by) != n) {
             stop("cluster.by does not match data used.")
           }
           mt$model <- mt$model[order(cluster.by),]
@@ -178,7 +178,8 @@ em.default <- function(object, latent=2, verbose=F,
           } else {
             sample5= F;
           }
-          results <- emOptim(models, post_pr, sample5=sample5)
+          results <- emOptim(models, post_pr, sample5=sample5, cluster.by=cluster.by, 
+                             concomitant=concomitant, mf.con=mf.con)
           pi_matrix <- results[[1]]$pi_matrix
           z <- list(models=results,
                     pi=colSums(pi_matrix)/sum(pi_matrix),

@@ -1,16 +1,16 @@
-emOptim <- function(models, pr, max_iter=300, verbose=T, sample5=F) {
+emOptim <- function(models, pr, algo="em", max_iter=300, verbose=T, sample5=F, cluster.by=NULL, 
+                    concomitant=NULL, mf.con=NULL, cfreq=1) {
   cnt <- 0
   conv <- 1
   llp <- 0
   theta <- c()
-  for (i in 1:length(models)) {
-    theta <- c(theta, coef(models[[i]]))
-  }
+  browser()
   if (as.character(models[[1]]$call[[1]]) == "lm") {
     family = "gaussian"
   } else {
     family = models[[1]]$family[1]$family
   }
+
   if (as.character(models[[1]]$call[[1]]) == "coxph") {
     family = "clogit"
     cl <- models[[1]]$call
@@ -44,9 +44,19 @@ emOptim <- function(models, pr, max_iter=300, verbose=T, sample5=F) {
     X <- as.matrix(model.matrix(models[[1]]$terms, models[[1]]$model))
     Y <- as.matrix(model.response(models[[1]]$model))
   }
+  for (i in 1:length(models)) {
+    if (family == "gaussian") {
+      theta <- c(theta, 1, coef(models[[i]]))
+    } else {
+      theta <- c(theta, coef(models[[i]]))
+    }
+  }
   constraint <- matrix(1)
+  if (cfreq != 1) {
+    pr <- pr[rep(1:nrow(pr), cfreq),]
+  }
   if (sample5) {
-    st <- gen_start(theta, pr, ll, gr, Y, X, models, family, constraint)
+    st <- gen_start(theta, pr, ll, gr, Y, X, models, family, constraint, cfreq, algo)
     theta <- st$theta
     pr <- st$pr
   }
@@ -58,10 +68,31 @@ emOptim <- function(models, pr, max_iter=300, verbose=T, sample5=F) {
 
     v <- fitoptim(theta, ll, gr)
     theta <- v$par
-    pi_matrix <- matrix(colSums(pr)/nrow(pr),
-                        nrow=nrow(pr), ncol=ncol(pr),
-                        byrow=T)
+    if (length(concomitant)!=0) {
+      if ("formula" %in% names(concomitant)) {
+        results.con <- mstep.concomitant(concomitant$formula, mf.con, pr)
+        pi_matrix <- results.con$fitted.values
+      } else {
+        stop("concomitant need to be a formula")
+      }
+    } else {
+      pi_matrix <- matrix(colSums(pr)/nrow(pr),
+                          nrow=nrow(pr), ncol=ncol(pr),
+                          byrow=T)
+    }
     pr  <- post_pr(theta, pi_matrix, Y, X, length(models), family, constraint=constraint)
+    if (length(cfreq) != 1) {
+      pr <- aggregate(pr, by=list(rep(1:length(cfreq), cfreq)), sum)[,-1]
+      pr <- pr/rowSums(pr)
+      pr <- pr[rep(1:nrow(pr), cfreq),]
+      pr <- matrix(unlist(pr), ncol=ncol(pr))
+    }
+    if (algo=="cem")     {
+      pr <- cstep(pr)
+    }
+    else if (algo=="sem") {
+      pr <- sstep(pr)
+    }
     ll_value <- v$value
     #ll_value <- v$function_value
     conv <- ll_value - llp
@@ -76,12 +107,20 @@ emOptim <- function(models, pr, max_iter=300, verbose=T, sample5=F) {
   if (family == "clogit") {
     linv <- binomial()$linkinv
     X <- X[,-ncol(X)]
-  } else {
+  } else if (family == "gaussian") {
+    linv <- function (eta) eta
+  } 
+  else {
     linv <- models[[i]]$family$linkinv
   }
   npar <- length(v$par)/length(models);
+  browser()
   for (i in 1:length(models)) {
-    models[[i]]$coefficients[] <- v$par[((i-1)*npar+1): ((i-1)*npar+npar)]
+    if (family == "gaussian") {
+      models[[i]]$coefficients[]<- v$par[((i-1)*npar+2): ((i-1)*npar+npar)]
+    } else {
+      models[[i]]$coefficients[] <- v$par[((i-1)*npar+1): ((i-1)*npar+npar)]
+    }
     models[[i]]$fitted.values <- linv(X %*% models[[i]]$coefficients)
     models[[i]]$residuals <- Y - models[[i]]$fitted.values
     models[[i]]$value <- v$value
@@ -98,7 +137,7 @@ fitoptim <- function(theta, ll, gr) {
   #optimization::optim_nm(ll, start=theta)
 }
 
-gen_start <- function(theta, pr, ll, gr, Y, X, models, family, constraint) {
+gen_start <- function(theta, pr, ll, gr, Y, X, models, family, constraint, cfreq, algo="em") {
   mll <- c()
   theta <- c(theta)
   theta_list <- list()
@@ -135,6 +174,18 @@ gen_start <- function(theta, pr, ll, gr, Y, X, models, family, constraint) {
                           nrow=nrow(pr), ncol=ncol(pr),
                           byrow=T)
       pr  <- post_pr(theta, pi_matrix, Y, X, length(models), family, constraint=constraint)
+      if (length(cfreq) != 1) {
+        pr <- aggregate(pr, by=list(rep(1:length(cfreq), cfreq)), sum)[,-1]
+        pr <- pr/rowSums(pr)
+        pr <- pr[rep(1:nrow(pr), cfreq),]
+        pr <- matrix(unlist(pr), ncol=ncol(pr))
+      }
+      if (algo=="cem")     {
+        pr <- cstep(pr)
+      }
+      else if (algo=="sem") {
+        pr <- sstep(pr)
+      }
       cat(paste0("Iteration ", j, ": ",
                  "(EM) log likelihood = ",
                  round(result$value, 4), "\n"))

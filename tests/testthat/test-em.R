@@ -9,6 +9,9 @@
 #   browser()
 #   ##result1 <- em(fit_lm, latent=1)
 #   results <- em(fit_lm, latent=2, verbose=T)
+#   emfit1 <- em(glm_fit, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5")
+#   browser()
+#   print(summary(emfit1))
 #   # Test predict
 #   fmm_fit <- predict(results)
 #   fmm_fit_post <- predict(results, prob="posterior")
@@ -77,6 +80,9 @@
 #   formula_c <- ~ yb
 #   lm_fit <- lm(formula, data=NPreg)
 #   results <- em(lm_fit, concomitant=list(formula=formula_c, data=NPreg), verbose=T)
+#   emfit1 <- em(lm_fit, latent=2, verbose=T, init.method="random", use.optim=T, optim.start="sample5", 
+#                concomitant=list(formula=formula_c, data=NPreg))
+#   browser()
 #   fmm_fit <- predict(results)
 #   print(summary(results))
 #   results3 <- update(results, latent=3)
@@ -99,6 +105,9 @@
 #   print(summary(results3))
 #   results4 <- em(fit_glm, init.method="hc", verbose=T) # Test kmeans
 #   print(summary(results4))
+#   emfit1 <- em(fit_glm, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5")
+#   browser()
+#   print(summary(emfit1))
 # })
 
 # test_that("test glm logit", {
@@ -115,9 +124,9 @@
 #                    (1/(1+exp(-xbeta[, 2]))))
 #   dt <- data.frame(y=y, x=x)
 #   formula <- y~x
+#   dt$z <- as.vector(sapply(1:2500, rep, times=4))
 #   fit_glm <- glm(formula=formula, family=binomial, data=dt)
 #   fit_em <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans", use.optim=T)
-#   browser()
 #   fit_em2 <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans",
 #                use.optim=T, optim.start="sample5")
 # 
@@ -214,7 +223,8 @@ test_that("test clogit with simulation", {
   a2x <- rep(c(0,1,0), 10000)
   a3x <- rep(c(0,0,1), 10000)
   idx <- as.vector(sapply(1:10000, rep, times=3))
-  dat <- data.frame(chosen1=y1x, chosen2=y2x, x2=x2x, x3=x3x, a2=a2x, a3=a3x, id=idx)
+  fid <- idx %/% 3 + 1
+  dat <- data.frame(chosen1=y1x, chosen2=y2x, x2=x2x, x3=x3x, a2=a2x, a3=a3x, id=idx, fid=fid)
   dat$a2_x2 <- as.integer((dat$a2==1) & (dat$x2==1))
   dat$a2_x3 <- as.integer((dat$a2==1) & (dat$x3==1))
   dat$a3_x2 <- as.integer((dat$a3==1) & (dat$x2==1))
@@ -245,8 +255,13 @@ test_that("test clogit with simulation", {
   # print(summary(emfit2))
   emfit3 <- em(cfit2, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5")
   print(summary(emfit3))
+  # browser()
+  #emfit4 <- em(cfit2, latent=2, verbose=T, init.method="kmeans", use.optim=T, algo="sem", optim.start="sample5", cluster.by=dat$fid)
+  #print(summary(emfit4))
   emfit_con <- em(cfit2, latent=2, algo="sem", verbose=T, max_iter=30, concomitant=list(formula=formula_c, data=dat))
   print(summary(emfit_con))
+  emfit_con2 <- em(cfit2, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5", concomitant=list(formula=formula_c, data=dat))
+  print(summary(emfit3))
   # emfit <- em(cfit2, latent=2, init.method="hc", algo="sem", verbose=T, max_iter=100)
   emfit3 <- em(cfit2, latent=2, algo="sem", verbose=T, init.prob=c(0.3,0.7), max_iter=100)
   print(summary(emfit3))

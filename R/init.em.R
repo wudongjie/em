@@ -39,6 +39,7 @@ init.em.kmeans <- function(object, ...) {
   if (is.null(args$data)) {
     stop("Please provide the data")
   }
+  #args$data[is.na(args$data)] <- 0
   z <- suppressWarnings(vdummy(kmeans(args$data, centers=ncol(object), nstart=20, algorithm = "Lloyd")$cluster))
   z
 }
