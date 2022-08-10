@@ -123,6 +123,7 @@ em.clogit <- function(object, latent=2, verbose=F,
   } else {
       cid <- strat
   }
+  browser()
   dat_tmp <-  as.data.frame(cbind(mt$x, mt$y,cid))
   dat_tmp <- dat_tmp %>% dplyr::group_by(cid) %>% dplyr::summarise(dplyr::across(dplyr::everything(), mean))
   #dat_tmp <- reshape(as.data.frame(dat_tmp), timevar="alt", idvar="strat", direction="wide")
