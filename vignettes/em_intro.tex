@@ -1,0 +1,88 @@
+\documentclass[nojss]{jss}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{\emph{em}: A Generic Function of the EM Algorithm for Finite Mixture Models in \proglang{R}}
+
+\Plaintitle{em: A Generic Function of the EM Algorithm for Finite Mixture Models in R} 
+\Shorttitle{em: the EM Algorithm in \proglang{R}}
+
+\author{Dongjie Wu\\Københavns Universitet}
+\Plainauthor{Dongjie Wu}
+
+\Address{
+  Dongjie Wu\\
+  Sociologisk Institut \\ Københavns Universitet\\
+  Øster Farimagsgade 5 \\ 1353 Copenhagen \\
+  E-mail: \email{dongjie.wu@soc.ku.dk}
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\newcommand{\R}{\proglang{R}}
+
+
+\Abstract{ 
+  Our \emph{em} package follows \proglang{R}'s feature of generic functions and the function \code{em()} can be implemented after a model fitting with one component using R's pre-existing
+functions and packages such as \code{glm()}, \code{lm()}, and so on.
+
+Currently, it supports the following models: linear models (\code{lm()}), generalized linear models (\code{glm()}), generalized non-linear model (\code{gnm()}), survival models (mainly conditional logistic regression) (\code{survival::clogit()}), multinomial models(\code{nnet::multinom()}).
+}
+
+\Keywords{\proglang{R}, the EM Algorithm, finite mixture models, model based clustering, latent
+  class regression}
+\Plainkeywords{R, the EM Algorithm, finite mixture models, model based clustering, latent
+  class regression}
+
+%%\usepackage{Sweave} %% already provided by jss.cls
+%%\VignetteIndexEntry{em: A Generic Function of the EM Algorithm for Finite Mixture Models in R}
+%%\VignetteDepends{em}
+%%\VignetteKeywords{R, the EM Algorithm, finite mixture models, model based clustering, latent class regression}
+%%\VignettePackage{em}
+
+
+
+\begin{document}
+
+   \section{Introduction}
+Finite mixture models (FMMs) are widely applied in both natural science and social science to model unobserved heterogeneity. This modelling technique usually assumes that data can be divided into unobserved groups known as latent classes, each following a distinct probability density or a regression model with its unique model parameter. 
+
+One reason for the extensive usage of finite mixture modelling is its flexibility. Its core assumption of unobserved heterogeneity can be examined on a variety of models and analysis including generalized linear regression models (GLMs), generalized non-linear regression models (GNMs), survival analysis, and etc. It can also be used on a model-based clustering technique and adopts different data structure, for example, categorical data, multidimensional data and hierarchical data.
+% Flexibility and extension like Mixture of expert in Machine learning.
+% Categorical variables 
+% mixture of growth, etc.
+It becomes increasingly popular due to the recent boost of computational power.
+
+% Introductioin of estimating FMM, Moment of Moment, MLE with EM and baysian types of measures.
+In general, FMMs can be estimated by the following four methods: Methods of moments (MoM), Maximum log-likelihood estimation (MLE), the Bayesian methods, and the unsupervised machine learning methods. MLE using \emph{Expectation-maximization} (EM) algorithm is the mainstream method of estimating FMM models due to its performance and accuracy. However, it is relatively computationally intensive. 
+
+% Why we choose making this em package instead of using other packages.
+% A bit of dicussions on packages available especially in R environments.
+% And the generic function features.
+There are many packages or software available for FMM models: e.g.  \emph{fmm}\citep{deb2007} and \emph{gllamm}\citep{rabe2004gllamm} in Stata, \emph{flexmix}\citep{leisch2004flexmix}, \emph{mixtools}\citep{benaglia2010mixtools} and \emph{mclust} in R, etc.
+We make our own package \emph{em} for estimating FMM using EM because packages mentioned above did not cover the case for our own research.
+In addition, we adopt a framework based on generic functions in R, which integrates better with other functions and packages in R and makes implementing FMM models more flexible and straightforward.
+% Intro of following chapter.
+   \section{Finite Mixture Models and the EM Algorithm}
+      \subsection{Finite Mixture Models}
+	      Finite mixture models can be described in the following equations given $J$ components:
+      \begin{equation}
+	      f(\mathbf{y}|\mathbf{x},\phi) = \sum_{j=1}^J \pi_j(f_j(\mathbf{y}|\mathbf{x}, \theta_j))
+	    \end{equation}
+	    where $\sum_{j=1}^J \pi_j = 1$,  $\mathbf{y}$ is a dependent variable with conditional density $f$,  $\mathbf{x}$ is a vector of independent variables, $\pi_j$ is the prior probability of component $j$,  $\theta_j$ is the component specific coefficients for the density function $f_j$.
+
+The model $f(\mathbf{y}|\mathbf{x}, \theta_j)$ can be one from a wide range of models: probability distributions, generalized linear models (GLM), generalized non-linear models (GNM),  survival models,  categorical models, etc. % TODO: introduction of a bunch of the models and the relavent R package.
+      \subsection{The Concomitant Models}
+% TODO: Describe the model and its use on social science
+      \subsection{The Hierarchical Mixture Models}
+   \section{Fitting Finite Mixture Models}
+      \subsection{The EM Algorithm and its extension}
+      \subsection{The Mix Likelihood Function and the Complete-Data Likelihood Function}
+      \subsection{Starting Values}
+   \section{Using the Generic em Function}
+   \section{Examples}
+   \section{Summary}
+   \section{Acknowledgments}
+   This research was supported by ... (ERC) under grant ... (). 
+   \bibliography{em}
+\end{document}
