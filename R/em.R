@@ -1,10 +1,13 @@
 #' @title A Generic EM Algorithm
 #' @author Dongjie Wu
-#' @description A generic EM algorithm that can work on specific models/objects.
+#' @description This is a generic EM algorithm that can work on specific models/objects. 
+#' Currently, it supports `lm`, `glm`, `gnm` in package gnm, 
+#' `clogit` in package survival and `multinom` in package nnet.
+#' Use `?em.default` to check the manual of the default function of `em`.
 #' @importFrom stats coef dbinom dnorm dpois kmeans logLik 
 #' @importFrom stats model.frame model.matrix model.response nobs predict 
 #' @importFrom stats printCoefmat pt rmultinom dmultinom
-#' @param object the model used, e.g. `lm`, `glm`, `gnm`.
+#' @param object the model used, e.g. `lm`, `glm`, `gnm`, `clogit`, `multinom`
 #' @param ... arguments used in the `model`.
 #' @export
 em <- function(object, ...) {

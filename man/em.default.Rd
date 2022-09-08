@@ -11,8 +11,12 @@
   init.method = c("random", "kmeans", "hc"),
   init.prob = NULL,
   algo = c("em", "cem", "sem"),
+  cluster.by = NULL,
   max_iter = 500,
+  abs_tol = 1e-04,
   concomitant = list(...),
+  use.optim = F,
+  optim.start = c("random", "sample5"),
   ...
 )
 }

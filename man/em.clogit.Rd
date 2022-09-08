@@ -14,6 +14,8 @@
   cluster.by = NULL,
   max_iter = 500,
   concomitant = list(...),
+  use.optim = F,
+  optim.start = c("random", "sample5"),
   ...
 )
 }

@@ -1,8 +1,10 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+*.Rproj.user
+*.Rhistory*
+*.RData
+*.Ruserdata
 .DS_Store
-.Rproj
+*.Rproj
 .Rbuildignore
 TODO.txt
+inst/doc
+.Rproj.user

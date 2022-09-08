@@ -9,8 +9,7 @@ fit.den(object, ...)
 \arguments{
 \item{object}{the fitted model such as `lm`.}
 
-\item{...}{other used arguments.
-importFrom magrittr "%>%"}
+\item{...}{other used arguments.}
 }
 \description{
 This function generates the probability density of given models.

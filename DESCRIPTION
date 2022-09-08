@@ -19,6 +19,8 @@ LinkingTo: Rcpp, RcppArmadillo, survival
 Suggests: 
     testthat (>= 3.0.0),
     parallel,
-    fitdistrplus
+    fitdistrplus,
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
 RoxygenNote: 7.1.2
