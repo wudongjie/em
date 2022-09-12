@@ -5,8 +5,8 @@
 //
 #include <iostream>
 #include <RcppArmadillo.h>
-#include "Family.hpp"
-#include "gen_theta.hpp"
+#include "Family.h"
+#include "gen_theta.h"
 
 using namespace Rcpp;
 

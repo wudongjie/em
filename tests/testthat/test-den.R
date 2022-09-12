@@ -17,19 +17,19 @@ test_that("test lm glm", {
 
 test_that("test gnm", {})
 
-test_that("panelmodel", {
-  browser()
-  library(plm)
-  usdata <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[3])
-  formula1 <- chosen ~ 0 + a2 + a3 + a1_x1 + a2_x2 + a3_x3
-  pfit_fe <- plm(formula1, data=usdata,
-                 model="within",
-                 index=c("obs", "alt"))
-  expect_equal(logLik(pfit_fe)[[1]], sum(log(fit.den(pfit_fe))))
-  pfit_re <- plm(formula1, data=usdata,
-                 model="random",
-                 index=c("obs", "alt"))
-  expect_equal(logLik(pfit_re)[[1]], sum(log(fit.den(pfit_re))))
-})
+# test_that("panelmodel", {
+#   browser()
+#   library(plm)
+#   usdata <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[3])
+#   formula1 <- chosen ~ 0 + a2 + a3 + a1_x1 + a2_x2 + a3_x3
+#   pfit_fe <- plm(formula1, data=usdata,
+#                  model="within",
+#                  index=c("obs", "alt"))
+#   expect_equal(logLik(pfit_fe)[[1]], sum(log(fit.den(pfit_fe))))
+#   pfit_re <- plm(formula1, data=usdata,
+#                  model="random",
+#                  index=c("obs", "alt"))
+#   expect_equal(logLik(pfit_re)[[1]], sum(log(fit.den(pfit_re))))
+# })
 
 test_that("test clogit", {})

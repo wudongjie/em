@@ -14,6 +14,7 @@
 #' the classification em `cem`, or the stochastic em `sem`.
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
+#' @param cluster.by a variable to define the level of clustering.
 #' @return the fitting object for the model with the class `em`.
 #' @export
 em.clogit <- function(object, latent=2, verbose=F,
