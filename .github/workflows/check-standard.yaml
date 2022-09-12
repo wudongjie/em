@@ -47,6 +47,7 @@ jobs:
       - name: Install sty for tinytex
         run: |
           tinytex::parse_install(text = paste('! LaTeX Error: File', "`ae.sty'", 'not found.'))
+          tinytex::parse_install(text = paste('! LaTeX Error: File', "`listings.sty'", 'not found.'))
         shell: Rscript {0} 
       
       - uses: r-lib/actions/check-r-package@v1
