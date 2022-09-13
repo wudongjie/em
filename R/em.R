@@ -29,6 +29,10 @@ em <- function(object, ...) {
 #' the classification em `cem`, or the stochastic em `sem`.
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.  
+#' @param cluster.by a variable to define the level of clustering.
+#' @param abs_tol absolute accuracy requested.
+#' @param use.optim maximize the complete log likelihood (MLE) by using `optim` and `rcpp` code.The default value is `FALSE`.
+#' @param optim.start the initialization method of generating the starting value for MLE.    
 #' @return the fitting object for the model with the class `em`.
 #' @export
 em.default <- function(object, latent=2, verbose=F,

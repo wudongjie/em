@@ -3,8 +3,10 @@
 #' observation and number of columns equal to the number of latent classes,
 #' function `init.em` generate the posterior probability using that matrix
 #' based on the method set by the user.
+#' @param object A matrix.
+#' @param ... other used arguments.
 #' @return The posterior probability matrix
-#' @importFrom "stats" "aggregate" "rlnorm" "runif"
+#' @importFrom "stats" "aggregate" "rlnorm" "runif" "binomial" "optim"
 #' @export
 init.em <- function(object, ...) {
   if (!is.matrix(object)) {
@@ -13,6 +15,9 @@ init.em <- function(object, ...) {
   UseMethod("init.em")
 }
 
+#' Random initialization
+#' @param object A matrix.
+#' @param ... other used arguments.
 init.em.random <- function(object, ...) {
   args = list()
   if (!missing(...)) {
@@ -22,6 +27,9 @@ init.em.random <- function(object, ...) {
   z
 }
 
+#' Random initialization with weights
+#' @param object A matrix.
+#' @param ... other used arguments.
 init.em.random.weights <- function(object, ...) {
   args = list()
   if (!missing(...)) {
@@ -32,6 +40,9 @@ init.em.random.weights <- function(object, ...) {
   z
 }
 
+#' K-mean initialization
+#' @param object A matrix.
+#' @param ... other used arguments.
 init.em.kmeans <- function(object, ...) {
   if (!missing(...)) {
     args = list(...)
@@ -44,6 +55,9 @@ init.em.kmeans <- function(object, ...) {
   z
 }
 
+#' model-based agglomerative hierarchical clustering
+#' @param object A matrix.
+#' @param ... other used arguments.
 init.em.hc <- function(object, ...) {
   if (!missing(...)) {
     args = list(...)
@@ -56,6 +70,9 @@ init.em.hc <- function(object, ...) {
   z
 }
 
+#' Initialization using sampling 5 times.
+#' @param object A matrix.
+#' @param ... other used arguments.
 init.em.sample5 <- function(object, ...) {
   args = list()
   if (!missing(...)) {

@@ -6,6 +6,11 @@
 \usage{
 init.em(object, ...)
 }
+\arguments{
+\item{object}{A matrix.}
+
+\item{...}{other used arguments.}
+}
 \value{
 The posterior probability matrix
 }

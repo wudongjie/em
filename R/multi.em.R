@@ -1,4 +1,6 @@
 #' Multiple run of EM algorithm
+#' @param object the model to use in em, e.g. `lm`, `glm`, `gnm`
+#' @param ... arguments used in em.
 #' @export
 multi.em <- function(object, ...) {
   UseMethod("multi.em")
@@ -11,6 +13,7 @@ multi.em <- function(object, ...) {
 #' @param ... arguments used in em.
 #' @param iter number of iterations for running EM algorithm.
 #' @param parallel whether to use the parallel computing.
+#' @param random.init whether to use a random initialization.
 #' @return return the `em` object with the maximum log-likelihood.
 #' @export
 multi.em.default <- function(object, iter=10, parallel=FALSE, random.init=TRUE, ...)

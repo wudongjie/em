@@ -44,6 +44,8 @@ The last two represent the y-axis limits}
 \item{lgd.loc}{the location of the legend. The default is "topleft".}
 
 \item{hist.args}{The list of arguments for the histogram.}
+
+\item{...}{other arguments.}
 }
 \description{
 This is the generic plot function for `em` project. One can produce

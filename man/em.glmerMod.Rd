@@ -35,8 +35,6 @@ the classification em `cem`, or the stochastic em `sem`.}
 The default is NULL.}
 
 \item{...}{arguments used in the `model`.}
-
-\item{init.prob}{the starting prior probabilities used in classification based method.}
 }
 \value{
 the fitting object for the model with the class `em`.

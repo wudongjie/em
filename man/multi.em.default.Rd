@@ -13,6 +13,8 @@
 
 \item{parallel}{whether to use the parallel computing.}
 
+\item{random.init}{whether to use a random initialization.}
+
 \item{...}{arguments used in em.}
 }
 \value{

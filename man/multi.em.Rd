@@ -6,6 +6,11 @@
 \usage{
 multi.em(object, ...)
 }
+\arguments{
+\item{object}{the model to use in em, e.g. `lm`, `glm`, `gnm`}
+
+\item{...}{arguments used in em.}
+}
 \description{
 Multiple run of EM algorithm
 }

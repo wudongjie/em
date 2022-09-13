@@ -6,6 +6,11 @@
 \usage{
 \method{logLik}{em}(object, ...)
 }
+\arguments{
+\item{object}{an object of `em`.}
+
+\item{...}{other used arguments.}
+}
 \description{
 This function computes logLik of EM Algorithm.
 }

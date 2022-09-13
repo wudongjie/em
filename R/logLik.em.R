@@ -1,5 +1,7 @@
 #' This function computes logLik of EM Algorithm.
 #' @method logLik em
+#' @param object an object of `em`.
+#' @param ... other used arguments.
 #' @export
 logLik.em <- function(object, ...) {
   p <- 0

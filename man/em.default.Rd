@@ -36,10 +36,18 @@ The default method is `random`. `kmeans` is K-means clustering.
 \item{algo}{the algorithm used in em: `em` the default EM algorithm, 
 the classification em `cem`, or the stochastic em `sem`.}
 
+\item{cluster.by}{a variable to define the level of clustering.}
+
 \item{max_iter}{the maximum iteration for em algorithm.}
+
+\item{abs_tol}{absolute accuracy requested.}
 
 \item{concomitant}{the formula to define the concomitant part of the model.
 The default is NULL.}
+
+\item{use.optim}{maximize the complete log likelihood (MLE) by using `optim` and `rcpp` code.The default value is `FALSE`.}
+
+\item{optim.start}{the initialization method of generating the starting value for MLE.}
 
 \item{...}{arguments used in the `model`.}
 }

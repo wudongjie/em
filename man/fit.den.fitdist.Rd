@@ -6,6 +6,11 @@
 \usage{
 \method{fit.den}{fitdist}(object, ...)
 }
+\arguments{
+\item{object}{the fitted model.}
+
+\item{...}{other used arguments.}
+}
 \description{
 Fitting the density function using in `fitdistrplus::fitdist()`
 }

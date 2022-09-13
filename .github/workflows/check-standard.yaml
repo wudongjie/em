@@ -51,3 +51,5 @@ jobs:
         shell: Rscript {0} 
       
       - uses: r-lib/actions/check-r-package@v1
+        with: 
+          build_args: '"--compact-vignettes=gs+qpdf"'

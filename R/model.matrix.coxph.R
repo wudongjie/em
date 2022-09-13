@@ -1,4 +1,8 @@
 #' This function is from `survival` package.
+#' @param object a model frame.
+#' @param data new data set.
+#' @param contrast.arg the argments of contrasts.
+#' @param ... other arguments.
 #' @importFrom survival Surv aeqSurv
 model.matrix.coxph <- function(object, data=NULL, 
                                contrast.arg=object$contrasts, ...) {

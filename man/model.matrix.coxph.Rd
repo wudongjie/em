@@ -6,6 +6,15 @@
 \usage{
 \method{model.matrix}{coxph}(object, data = NULL, contrast.arg = object$contrasts, ...)
 }
+\arguments{
+\item{object}{a model frame.}
+
+\item{data}{new data set.}
+
+\item{contrast.arg}{the argments of contrasts.}
+
+\item{...}{other arguments.}
+}
 \description{
 This function is from `survival` package.
 }
