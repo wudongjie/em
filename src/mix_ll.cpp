@@ -64,7 +64,7 @@ double family_mixer(const arma::vec& theta, const arma::mat& Y,
 // [[Rcpp::export]]
 NumericVector mix_ll(const arma::vec& theta, const arma::mat& Y,
                      const arma::mat& X, const arma::mat& d,
-                     int latent, Rcpp::CharacterVector family, bool isLog,
+                     unsigned int latent, Rcpp::CharacterVector family, bool isLog,
                      const arma::mat& constraint= arma::zeros(1,1)) {
     double l = 0.0;
     // d.n_cols = latent

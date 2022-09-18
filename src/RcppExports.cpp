@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // mix_ll
-NumericVector mix_ll(const arma::vec& theta, const arma::mat& Y, const arma::mat& X, const arma::mat& d, int latent, Rcpp::CharacterVector family, bool isLog, const arma::mat& constraint);
+NumericVector mix_ll(const arma::vec& theta, const arma::mat& Y, const arma::mat& X, const arma::mat& d, unsigned int latent, Rcpp::CharacterVector family, bool isLog, const arma::mat& constraint);
 RcppExport SEXP _em_mix_ll(SEXP thetaSEXP, SEXP YSEXP, SEXP XSEXP, SEXP dSEXP, SEXP latentSEXP, SEXP familySEXP, SEXP isLogSEXP, SEXP constraintSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -21,7 +21,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< int >::type latent(latentSEXP);
+    Rcpp::traits::input_parameter< unsigned int >::type latent(latentSEXP);
     Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type family(familySEXP);
     Rcpp::traits::input_parameter< bool >::type isLog(isLogSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type constraint(constraintSEXP);

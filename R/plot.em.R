@@ -128,7 +128,6 @@ plot.em <- function(x, by=c("component", "response", "prob", "prob.hist"), prior
   } else if (t == "prob.hist") {
     par(mfrow=c(3,1)) 
     ttl <- hist.args$main
-    browser()
     for (i in (1:length(x$models))) {
       hist.args$main <- ""
       main <- paste("Comp", i, sep=".")
@@ -139,7 +138,6 @@ plot.em <- function(x, by=c("component", "response", "prob", "prob.hist"), prior
       }
       title(main, adj=1)
     }
-    browser()
   }
   else {
     stop("The graph type does not exist.")

@@ -38,8 +38,8 @@ public:
     arma::mat mean_mat = (X * theta.subvec(1,(theta.n_elem-1)));
     double sd = sqrt(theta[0] * theta[0]);
     arma::mat l = arma::zeros(Y.n_rows, Y.n_cols);
-    for (int i=0; i<Y.n_rows;++i) {
-      for (int j=0; j<Y.n_cols;++j) {
+    for (unsigned int i=0; i<Y.n_rows;++i) {
+      for (unsigned int j=0; j<Y.n_cols;++j) {
           //normal_distribution nd(mean_mat.at(i,j),sd);
           l.at(i,j) = R::dnorm4(Y.at(i,j), mean_mat.at(i,j), sd, lg);
       }
@@ -56,8 +56,8 @@ public:
     arma::mat mean_mat = arma::exp(X * theta); // the precision problem
     arma::mat l = arma::zeros(Y.n_rows, Y.n_cols);
 
-    for (int i=0; i<Y.n_rows;++i) {
-      for (int j=0; j<Y.n_cols;++j) {
+    for (unsigned int i=0; i<Y.n_rows;++i) {
+      for (unsigned int j=0; j<Y.n_cols;++j) {
           l.at(i,j) = R::dpois(Y.at(i,j), mean_mat.at(i,j), lg);
       }
     }

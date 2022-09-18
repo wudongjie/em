@@ -107,7 +107,7 @@ em.default <- function(object, latent=2, verbose=F,
           cfreq <- as.data.frame(table(cluster.by))$Freq
           cfreq <- cfreq[cfreq>0]
         } else {
-          if (nrow(cluster.by) != nr) {
+          if (nrow(cluster.by) != n) {
             stop("cluster.by does not match data used.")
           }
           mt$model <- mt$model[do.call(order, as.data.frame(cluster.by)),]
@@ -186,7 +186,7 @@ em.default <- function(object, latent=2, verbose=F,
             sample5= F;
           }
           results <- emOptim(models, post_pr, sample5=sample5, cluster.by=cluster.by, 
-                             concomitant=concomitant, mf.con=mf.con)
+                             concomitant=concomitant, mf.con=mf.con, max_iter=max_iter)
           pi_matrix <- results[[1]]$pi_matrix
           z <- list(models=results,
                     pi=colSums(pi_matrix)/sum(pi_matrix),

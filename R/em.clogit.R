@@ -1,6 +1,7 @@
 #' The em function for `survival::clogit`.
 #' @importFrom utils methods str
 #' @importFrom survival untangle.specials strata
+#' @importFrom magrittr %>%
 #' @param object the model used, e.g. `lm`, `glm`, `gnm`.
 #' @param ... arguments used in the `model`.
 #' @param latent the number of latent classes.
@@ -72,7 +73,7 @@ em.clogit <- function(object, latent=2, verbose=F,
                    names(concomitant), 0L)
     mf.con <- concomitant[m.con]
     if (!is.null(cluster.by)) {
-      mf.con$data <- mf.con$data[!duplcated(cluster.by), ] 
+      mf.con$data <- mf.con$data[!duplicated(cluster.by), ] 
     } else {
       mf.con$data <- mf.con$data[!duplicated(strat),]
     }
@@ -126,7 +127,6 @@ em.clogit <- function(object, latent=2, verbose=F,
   } else {
       cid <- strat
   }
-  browser()
   dat_tmp <-  as.data.frame(cbind(mt$x, mt$y,cid))
   dat_tmp <- dat_tmp %>% dplyr::group_by(cid) %>% dplyr::summarise(dplyr::across(dplyr::everything(), mean))
   #dat_tmp <- reshape(as.data.frame(dat_tmp), timevar="alt", idvar="strat", direction="wide")
@@ -155,7 +155,7 @@ em.clogit <- function(object, latent=2, verbose=F,
     }
     results <- emOptim(models, post_pr, algo=algo, sample5=sample5, 
                        cluster.by=cluster.by, cfreq=cfreq, 
-                       concomitant=concomitant, mf.con=mf.con)
+                       concomitant=concomitant, mf.con=mf.con, max_iter=max_iter)
     pi_matrix <- results[[1]]$pi_matrix
     z <- list(models=results,
               pi=colSums(pi_matrix)/sum(pi_matrix),

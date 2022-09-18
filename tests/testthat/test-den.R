@@ -1,13 +1,11 @@
 #' Test the fitted density function "fit.den.R"
 #' `logLik(object)` should be equal to `sum(log(fit.den(object)))`
 test_that("test lm glm", {
-    NPreg <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[1])
-    NPreg$x2 <- (NPreg$x)^2
-    formula <- yn~x+x2
+    formula <- yn~x
     formula2 <- yp~x
-    fit_lm <- lm(formula, data=NPreg)
-    fit_glm <- glm(formula=formula, data=NPreg)
-    fit_glm_p <- glm(formula2, family=poisson, data=NPreg)
+    fit_lm <- lm(formula, data=simReg)
+    fit_glm <- glm(formula=formula, data=simReg)
+    fit_glm_p <- glm(formula2, family=poisson, data=simReg)
     print(logLik(fit_lm))
     print(sum(log(fit.den(fit_lm))))
     expect_equal(logLik(fit_lm)[[1]], sum(log(fit.den(fit_lm))), tolerance=1e-3)

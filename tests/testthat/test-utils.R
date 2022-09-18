@@ -1,5 +1,4 @@
 test_that("test flatten", {
-  browser()
   ### The base line level
   coefMatrix <- matrix(c(0.9,0.4), ncol=2)
   colnames(coefMatrix) <- c("(Intercept)", "yb")
