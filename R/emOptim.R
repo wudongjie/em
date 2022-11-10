@@ -1,4 +1,4 @@
-emOptim <- function(models, pr, algo="em", max_iter=300, verbose=T, sample5=F, cluster.by=NULL, 
+emOptim <- function(models, pr, algo="em", max_iter=300, verbose=T, sample5=F, cluster.by=NULL, abs_tol=1e-4,
                     concomitant=NULL, mf.con=NULL, cfreq=1) {
   cnt <- 0
   conv <- 1
@@ -59,7 +59,7 @@ emOptim <- function(models, pr, algo="em", max_iter=300, verbose=T, sample5=F, c
     theta <- st$theta
     pr <- st$pr
   }
-  while((abs(conv) > 1e-4) & (max_iter > cnt)) {
+  while((abs(conv) > abs_tol) & (max_iter > cnt)) {
     ll <-  partial(mix_ll, d=pr, 
                    Y=Y, X=X,
                    latent=length(models), family=family, isLog=T, constraint=constraint)

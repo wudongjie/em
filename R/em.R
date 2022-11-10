@@ -185,7 +185,7 @@ em.default <- function(object, latent=2, verbose=F,
           } else {
             sample5= F;
           }
-          results <- emOptim(models, post_pr, sample5=sample5, cluster.by=cluster.by, 
+          results <- emOptim(models, post_pr, sample5=sample5, cluster.by=cluster.by, abs_tol=abs_tol,
                              concomitant=concomitant, mf.con=mf.con, max_iter=max_iter)
           pi_matrix <- results[[1]]$pi_matrix
           z <- list(models=results,
@@ -197,7 +197,7 @@ em.default <- function(object, latent=2, verbose=F,
                     concomitant=concomitant)
       } else {
           z <- emstep(models, post_pr, n, algo=algo, cfreq=cfreq, 
-                      max_iter=max_iter, abs_tol=1e-4, concomitant=concomitant, 
+                      max_iter=max_iter, abs_tol=abs_tol, concomitant=concomitant, 
                       mf.con=mf.con, verbose=verbose)
           z$init.method = match.arg(init.method)
           z$call=cl

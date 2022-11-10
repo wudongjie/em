@@ -1,7 +1,9 @@
-#' @title Simulated Regression Data
+#' Simulated Regression Data
 #'
 #' @description A data set with simulated data from mixture regression models.
-#'
+#' @name simreg
+#' @docType data
+#' @keywords data
 #' @format A data frame with 1000 rows and 5 variables:
 #' \describe{
 #'   \item{yp}{A dependent variable generaged from a mixture of a poisson regression with x}
@@ -11,24 +13,28 @@
 #'   \item{z}{A concomitant variable}
 #' }
 #' @source <https://www.github.com/wudongjie/em>
-"simReg"
+"simreg"
 
-#' @title Simulated Data from a logistic regression
+#' Simulated Data from a logistic regression
 #'
 #' @description A data set with simulated data from a mixture of a logistic regression.
-#'
+#' @name simbinom
+#' @docType data
+#' @keywords data
 #' @format A data frame with 10000 rows and 2 variables:
 #' \describe{
 #'   \item{y}{A dependent variable generaged from a mixture of a logistic regression with x}
 #'   \item{x}{An independent variable}
 #' }
 #' @source <https://www.github.com/wudongjie/em>
-"simBinom"
+"simbinom"
 
-#' @title Simulated Data from a conditional logistic regression
+#' Simulated Data from a conditional logistic regression
 #'
 #' @description A data set with simulated data from a mixture of a conditional logistic regression.
-#'
+#' @name simclogit
+#' @docType data
+#' @keywords data
 #' @format A data frame with 10000 rows and 4 variables:
 #' \describe{
 #'   \item{y1}{A dependent variable generaged from a conditional logistic regression with x2 and x3}
@@ -37,4 +43,4 @@
 #'   \item{x3}{A dummy variable showing whether x is equal to level 3}
 #' }
 #' @source <https://www.github.com/wudongjie/em>
-"simClogit"
+"simclogit"

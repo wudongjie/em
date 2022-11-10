@@ -23,7 +23,7 @@
 em.clogit <- function(object, latent=2, verbose=F,
                        init.method = c("random", "kmeans", "hc"), init.prob = NULL,
                       algo= c("em", "cem", "sem"),
-                      cluster.by=NULL, max_iter=500, concomitant=list(...), 
+                      cluster.by=NULL, max_iter=500, abs_tol=1e-4, concomitant=list(...), 
                       use.optim=F,  optim.start=c("random","sample5"),
                       ...)
 {
@@ -154,7 +154,7 @@ em.clogit <- function(object, latent=2, verbose=F,
       sample5= F;
     }
     results <- emOptim(models, post_pr, algo=algo, sample5=sample5, 
-                       cluster.by=cluster.by, cfreq=cfreq, 
+                       cluster.by=cluster.by, cfreq=cfreq, abs_tol = abs_tol,
                        concomitant=concomitant, mf.con=mf.con, max_iter=max_iter)
     pi_matrix <- results[[1]]$pi_matrix
     z <- list(models=results,
@@ -167,7 +167,7 @@ em.clogit <- function(object, latent=2, verbose=F,
   }
   else {
     z <- emstep(models, post_pr, n, algo=algo, cfreq=cfreq, 
-                max_iter=max_iter, abs_tol=1e-4, concomitant=concomitant, 
+                max_iter=max_iter, abs_tol=abs_tol, concomitant=concomitant, 
                 mf.con=mf.con, verbose=verbose)
     z$init.method = match.arg(init.method)
     z$call=cl

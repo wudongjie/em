@@ -14,11 +14,11 @@ test_that("test linear regression", {
   # yn <- w * rnorm(1000, mean=xbeta[, 1], sd = 2) + (1 - w) * rnorm(1000, mean=xbeta[, 2], sd = 3)
   # yp <- w * rpois(1000, lambda=xbeta2[, 1]) + (1 - w) * rpois(1000, lambda=xbeta2[, 2])
   # yc <- w2 * rnorm(1000, mean=xbeta[, 1], sd = 2) + (1 - w2) * rnorm(1000, mean=xbeta[, 2], sd = 3)
-  # simReg <- data.frame(yp=yp, yn=yn, yc=yc, x=x, z=z)
+  # simreg <- data.frame(yp=yp, yn=yn, yc=yc, x=x, z=z)
   # browser()
   formula <- yn~x
-  fit_lm <- lm(formula, data=simReg)
-  glm_fit <- glm(formula=formula, data=simReg)
+  fit_lm <- lm(formula, data=simreg)
+  glm_fit <- glm(formula=formula, data=simreg)
   pd <- predict(fit_lm)
   ##result1 <- em(fit_lm, latent=1)
   results <- em(fit_lm, latent=2, verbose=T)
@@ -27,6 +27,7 @@ test_that("test linear regression", {
   # Test predict
   fmm_fit <- predict(results)
   fmm_fit_post <- predict(results, prob="posterior")
+  browser()
   #Test cem and sem
   results_sem <- em(fit_lm, latent=2, verbose=T, algo="sem")
   # cem is very likely to result in all variables assigned to one class
@@ -47,36 +48,33 @@ test_that("test linear regression", {
 test_that("test concomitant", {
   formula <- yc ~ x
   formula_c <- ~ z
-  lm_fit <- lm(formula, data=simReg)
-  results <- em(lm_fit, concomitant=list(formula=formula_c, data=simReg), verbose=T)
+  lm_fit <- lm(formula, data=simreg)
+  results <- em(lm_fit, concomitant=list(formula=formula_c, data=simreg), verbose=T)
   emfit1 <- em(lm_fit, latent=2, verbose=T, init.method="random", use.optim=T, optim.start="sample5",
-               concomitant=list(formula=formula_c, data=simReg))
+               concomitant=list(formula=formula_c, data=simreg))
   fmm_fit <- predict(results)
   print(summary(results))
   results3 <- update(results, latent=3)
   print(summary(results3))
-  glm_fit <- glm(formula, data=simReg)
-  results_glm <- em(glm_fit, concomitant=list(formula=formula_c, data=simReg))
+  glm_fit <- glm(formula, data=simreg)
+  results_glm <- em(glm_fit, concomitant=list(formula=formula_c, data=simreg))
   print(summary(results_glm))
 })
 
 
-# test_that("test glm poisson", {
-#   browser()
-#   NPreg <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[1])
-#   formula2 <- yp~x
-#   fit_glm <- glm(formula2, family=poisson, data=NPreg)
-#   print(fit_glm)
-#   results2 <- em(fit_glm, latent=2)
-#   print(summary(results2))
-#   results3 <- em(fit_glm, init.method="kmeans", verbose=T) # Test kmeans
-#   print(summary(results3))
-#   results4 <- em(fit_glm, init.method="hc", verbose=T) # Test kmeans
-#   print(summary(results4))
-#   emfit1 <- em(fit_glm, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5")
-#   browser()
-#   print(summary(emfit1))
-# })
+test_that("test glm poisson", {
+  formula2 <- yp~x
+  fit_glm <- glm(formula2, family=poisson, data=simreg)
+  print(fit_glm)
+  results2 <- em(fit_glm, latent=2)
+  print(summary(results2))
+  results3 <- em(fit_glm, init.method="kmeans", verbose=T) # Test kmeans
+  print(summary(results3))
+  results4 <- em(fit_glm, init.method="hc", verbose=T) # Test kmeans
+  print(summary(results4))
+  emfit1 <- em(fit_glm, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5")
+  print(summary(emfit1))
+})
 
 test_that("test glm logit", {
   #Example from "https://rdrr.io/cran/mixtools/man/logisregmixEM.html"
@@ -93,7 +91,7 @@ test_that("test glm logit", {
   # dt <- data.frame(y=y, x=x)
   formula <- y~x
   # dt$z <- as.vector(sapply(1:2500, rep, times=4))
-  fit_glm <- glm(formula=formula, family=binomial, data=simBinom)
+  fit_glm <- glm(formula=formula, family=binomial, data=simbinom)
   fit_em <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans", use.optim=T)
   fit_em2 <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans",
                use.optim=T, optim.start="sample5")
@@ -103,48 +101,48 @@ test_that("test glm logit", {
  })
 
 
-# test_that("test gnm poisson(unidiff)", {
-#   library(gnm)
-# 
-#   ## Example from Turner and Firth (2020)
-#   browser()
-#   #
-#   ### Collapse to 7 by 7 table as in Erikson et al. (1982)
-#   erikson <- as.data.frame(gnm::erikson)
-#   lvl <- levels(erikson$origin)
-#   levels(erikson$origin) <- levels(erikson$destination) <-
-#       c(rep(paste(lvl[1:2], collapse = " + "), 2), lvl[3],
-#           rep(paste(lvl[4:5], collapse = " + "), 2), lvl[6:9])
-#   erikson <- xtabs(Freq ~ origin + destination + country, data = erikson)
-#   levelMatrix <- matrix(c(2, 3, 4, 6, 5, 6, 6,
-#                           3, 3, 4, 6, 4, 5, 6,
-#                           4, 4, 2, 5, 5, 5, 5,
-#                           6, 6, 5, 1, 6, 5, 2,
-#                           4, 4, 5, 6, 3, 4, 5,
-#                           5, 4, 5, 5, 3, 3, 5,
-#                           6, 6, 5, 3, 5, 4, 1), 7, 7, byrow = TRUE)
-#   formula1 <- Freq ~ country:origin + country:destination
-#   formula2 <- Freq ~ country:origin + country:destination + Topo(origin, destination, spec = levelMatrix)
-#   formula3 <- Freq ~ country:origin + country:destination + Mult(Exp(country),
-#                             Topo(origin, destination, spec = levelMatrix))
-#   formula4 <- Freq ~ country:origin + country:destination + country:Topo(origin, destination, spec = levelMatrix)
-# 
-#   udf1 <- gnm(formula=formula1, family=poisson, data=erikson)
-#   udf2 <- gnm(formula=formula2, family=poisson, data=erikson)
-#   udf3 <- gnm(formula=formula3, family=poisson, data=erikson)
-#   udf4 <- gnm(formula=formula4, family=poisson, data=erikson)
-#   udf2_1 <- em(udf1, latent=2)
-#   ## Interaction specified by levelMatrix, common to all countries
-#   udf2_2 <- em(udf2, latent=2)
-#   #udf2_3 <- em(udf3, latent=2)
-#   udf2_3 <- multi.em(udf3, latent=2)
-#   udf2_4 <- em(udf4, latent=2)
-# 
-#   print(summary(udf2_1))
-#   print(summary(udf2_2))
-#   print(summary(udf2_3))
-#   print(summary(udf2_4))
-# })
+test_that("test gnm poisson(unidiff)", {
+  library(gnm)
+
+  ## Example from Turner and Firth (2020)
+  browser()
+  #
+  ### Collapse to 7 by 7 table as in Erikson et al. (1982)
+  erikson <- as.data.frame(gnm::erikson)
+  lvl <- levels(erikson$origin)
+  levels(erikson$origin) <- levels(erikson$destination) <-
+      c(rep(paste(lvl[1:2], collapse = " + "), 2), lvl[3],
+          rep(paste(lvl[4:5], collapse = " + "), 2), lvl[6:9])
+  erikson <- xtabs(Freq ~ origin + destination + country, data = erikson)
+  levelMatrix <- matrix(c(2, 3, 4, 6, 5, 6, 6,
+                          3, 3, 4, 6, 4, 5, 6,
+                          4, 4, 2, 5, 5, 5, 5,
+                          6, 6, 5, 1, 6, 5, 2,
+                          4, 4, 5, 6, 3, 4, 5,
+                          5, 4, 5, 5, 3, 3, 5,
+                          6, 6, 5, 3, 5, 4, 1), 7, 7, byrow = TRUE)
+  formula1 <- Freq ~ country:origin + country:destination
+  formula2 <- Freq ~ country:origin + country:destination + Topo(origin, destination, spec = levelMatrix)
+  formula3 <- Freq ~ country:origin + country:destination + Mult(Exp(country),
+                            Topo(origin, destination, spec = levelMatrix))
+  formula4 <- Freq ~ country:origin + country:destination + country:Topo(origin, destination, spec = levelMatrix)
+
+  udf1 <- gnm(formula=formula1, family=poisson, data=erikson)
+  udf2 <- gnm(formula=formula2, family=poisson, data=erikson)
+  udf3 <- gnm(formula=formula3, family=poisson, data=erikson)
+  udf4 <- gnm(formula=formula4, family=poisson, data=erikson)
+  udf2_1 <- em(udf1, latent=2)
+  ## Interaction specified by levelMatrix, common to all countries
+  udf2_2 <- em(udf2, latent=2)
+  #udf2_3 <- em(udf3, latent=2)
+  udf2_3 <- multi.em(udf3, latent=2)
+  udf2_4 <- em(udf4, latent=2)
+
+  print(summary(udf2_1))
+  print(summary(udf2_2))
+  print(summary(udf2_3))
+  print(summary(udf2_4))
+})
 
 
 test_that("test clogit with simulation", {
@@ -216,7 +214,7 @@ test_that("test clogit with simulation", {
   # print(summary(emfit))
   # emfit2 <- em(cfit2, latent=2, verbose=T, init.method="random", use.optim=T, optim.start="sample5")
   # print(summary(emfit2))
-  emfit3 <- em(cfit2, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5", max_iter=100)
+  emfit3 <- em(cfit2, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5", max_iter=100, abs_tol=0.1)
   print(summary(emfit3))
   # browser()
   #emfit4 <- em(cfit2, latent=2, verbose=T, init.method="kmeans", use.optim=T, algo="sem", optim.start="sample5", cluster.by=dat$fid)

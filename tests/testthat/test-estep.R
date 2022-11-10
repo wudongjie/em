@@ -15,7 +15,6 @@ test_that("test e-step", {
   data <- data.frame(Y=Y,x1=x1,x2=x2)
   model1 <- lm(formula, data, weights = D)
   model2 <- lm(formula, data, weights = rD)
-  browser()
   y_result <- estep(list(model1, model2), pi_v)
   sum_to_1 = rep(c(1),100)
   expect_equal(rowSums(y_result), sum_to_1)

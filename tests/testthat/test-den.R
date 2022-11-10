@@ -3,9 +3,9 @@
 test_that("test lm glm", {
     formula <- yn~x
     formula2 <- yp~x
-    fit_lm <- lm(formula, data=simReg)
-    fit_glm <- glm(formula=formula, data=simReg)
-    fit_glm_p <- glm(formula2, family=poisson, data=simReg)
+    fit_lm <- lm(formula, data=simreg)
+    fit_glm <- glm(formula=formula, data=simreg)
+    fit_glm_p <- glm(formula2, family=poisson, data=simreg)
     print(logLik(fit_lm))
     print(sum(log(fit.den(fit_lm))))
     expect_equal(logLik(fit_lm)[[1]], sum(log(fit.den(fit_lm))), tolerance=1e-3)

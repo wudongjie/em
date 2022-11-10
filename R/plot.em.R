@@ -2,9 +2,7 @@
 #' @description This is the generic plot function for `em` project. One can produce
 #' three types of graphs using this function 
 #' 1. A graph of the predicted value distribution for each component.
-#' 2. the distribution of the response variable vs the distribution of the fitted value weighted by either prior or posterior probability.
-#' 3. A combined graph of posterior probability distributions.
-#' 4. A histogram of posterior probability distributions
+#' 2. A histogram of posterior probability distributions
 #' @param x the `em` model to plot
 #' @param by the type of the graph to produce. The default is `component`. 
 #' @param prior whether fit the model using prior probabilities.
@@ -21,7 +19,7 @@
 #' @param ... other arguments.
 #' @importFrom graphics legend lines hist par title
 #' @export
-plot.em <- function(x, by=c("component", "response", "prob", "prob.hist"), prior=T, 
+plot.em <- function(x, by=c("component", "prob"), prior=F, 
                     cols=rep(1, length(x$models)), 
                     lwds=rep(3, length(x$models)), 
                     ltys=c(1:length(x$models)), 
@@ -70,62 +68,63 @@ plot.em <- function(x, by=c("component", "response", "prob", "prob.hist"), prior
     lgd$lty <- ltys
     do.call(legend, lgd)  
   }
-  else if (t == "response") {
-    if (is.null(main)) {
-      main = "The distribution of the fitted value vs. the observed value"
-    }
-    y <- model.response(x$models[[1]]$model)
-    if (is.null(ranges)) {
-      ranges <-  apply(data.frame(fitted=fitted$components, y=y), 2,
-                       function(x) { dens <- density(x); c(range(dens$x), range(dens$y)) })
-    }
-    plot(density(fitted$mean), 
-         col=cols[[1]],
-         lwd=lwds[[1]],
-         lty=ltys[[1]], xlim = range(ranges[1:2, ]),
-         ylim = range(ranges[3:4, ]),
-         main = main)
-    lines(density(y),
-          col=cols[[2]],
-          lwd=lwds[[2]],
-          lty=ltys[[2]])
-    lgd[[1L]] <- lgd.loc
-    lgd$legend <-  c("Fitted", "Observed")
-    lgd$col <- cols
-    lgd$lwd <- lwds
-    lgd$lty <- ltys
-    do.call(legend, lgd)  
-  }
+  # else if (t == "response") {
+  #   if (is.null(main)) {
+  #     main = "The distribution of the fitted value vs. the observed value"
+  #   }
+  #   y <- model.response(x$models[[1]]$model)
+  #   if (is.null(ranges)) {
+  #     ranges <-  apply(data.frame(fitted=fitted$mean, y=y), 2,
+  #                      function(x) { dens <- density(x); c(range(dens$x), range(dens$y)) })
+  #   }
+  #   plot(density(fitted$mean), 
+  #        col=cols[[1]],
+  #        lwd=lwds[[1]],
+  #        lty=ltys[[1]], xlim = range(ranges[1:2, ]),
+  #        ylim = range(ranges[3:4, ]),
+  #        main = main)
+  #   lines(density(y),
+  #         col=cols[[2]],
+  #         lwd=lwds[[2]],
+  #         lty=ltys[[2]])
+  #   lgd[[1L]] <- lgd.loc
+  #   lgd$legend <-  c("Fitted", "Observed")
+  #   lgd$col <- cols
+  #   lgd$lwd <- lwds
+  #   lgd$lty <- ltys
+  #   do.call(legend, lgd)  
+  # }
+  # else if (t == "prob") {
+  #   if (is.null(main)){
+  #     main = "The distribution of posterior probabilities"
+  #   }
+  #   for (i in (1:length(x$models))) {
+  #     if (is.null(ranges)) {
+  #       ranges <-  apply(x$post_pr, 2,
+  #                        function(x) { dens <- density(x); c(range(dens$x), range(dens$y)) })
+  #     }
+  #     if (i == 1) {
+  #       plot(density(x$post_pr[,i]), 
+  #            col=cols[[1]],
+  #            lwd=lwds[[1]],
+  #            lty=ltys[[1]], xlim = range(ranges[1:2, ]),
+  #            ylim = range(ranges[3:4, ]),
+  #            main = main)
+  #     } else {
+  #       lines(density(x$post_pr[,i]),
+  #             col=cols[[i]],
+  #             lwd=lwds[[i]],
+  #             lty=ltys[[i]])
+  #     }
+  #   }
+  #   lgd[[1L]] <- lgd.loc
+  #   lgd$legend <-  sapply(1:length(x$models), function(x){paste("Comp.", x)})
+  #   lgd$col <- cols
+  #   lgd$lwd <- lwds
+  #   lgd$lty <- ltys
+  #   do.call(legend, lgd) 
+  # }
   else if (t == "prob") {
-    if (is.null(main)){
-      main = "The distribution of posterior probabilities"
-    }
-    for (i in (1:length(x$models))) {
-      if (is.null(ranges)) {
-        ranges <-  apply(x$post_pr, 2,
-                         function(x) { dens <- density(x); c(range(dens$x), range(dens$y)) })
-      }
-      if (i == 1) {
-        plot(density(x$post_pr[,i]), 
-             col=cols[[1]],
-             lwd=lwds[[1]],
-             lty=ltys[[1]], xlim = range(ranges[1:2, ]),
-             ylim = range(ranges[3:4, ]),
-             main = main)
-      } else {
-        lines(density(x$post_pr[,i]),
-              col=cols[[i]],
-              lwd=lwds[[i]],
-              lty=ltys[[i]])
-      }
-    }
-    lgd[[1L]] <- lgd.loc
-    lgd$legend <-  sapply(1:length(x$models), function(x){paste("Comp.", x)})
-    lgd$col <- cols
-    lgd$lwd <- lwds
-    lgd$lty <- ltys
-    do.call(legend, lgd)  
-  } else if (t == "prob.hist") {
     par(mfrow=c(3,1)) 
     ttl <- hist.args$main
     for (i in (1:length(x$models))) {
