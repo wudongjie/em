@@ -13,6 +13,7 @@
   algo = c("em", "cem", "sem"),
   cluster.by = NULL,
   max_iter = 500,
+  abs_tol = 1e-04,
   concomitant = list(...),
   use.optim = F,
   optim.start = c("random", "sample5"),
@@ -38,6 +39,8 @@ the classification em `cem`, or the stochastic em `sem`.}
 \item{cluster.by}{a variable to define the level of clustering.}
 
 \item{max_iter}{the maximum iteration for em algorithm.}
+
+\item{abs_tol}{absolute accuracy requested.}
 
 \item{concomitant}{the formula to define the concomitant part of the model.
 The default is NULL.}

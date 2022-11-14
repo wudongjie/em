@@ -11,6 +11,7 @@
 #' `hc` is model-based agglomerative hierarchical clustering.
 #' @param init.prob the starting prior probabilities used in classification based method.
 #' @param max_iter the maximum iteration for em algorithm.
+#' @param abs_tol absolute accuracy requested.
 #' @param algo the algorithm used in em: `em` the default EM algorithm, 
 #' the classification em `cem`, or the stochastic em `sem`.
 #' @param concomitant the formula to define the concomitant part of the model.

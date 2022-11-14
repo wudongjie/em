@@ -101,48 +101,48 @@ test_that("test glm logit", {
  })
 
 
-test_that("test gnm poisson(unidiff)", {
-  library(gnm)
-
-  ## Example from Turner and Firth (2020)
-  browser()
-  #
-  ### Collapse to 7 by 7 table as in Erikson et al. (1982)
-  erikson <- as.data.frame(gnm::erikson)
-  lvl <- levels(erikson$origin)
-  levels(erikson$origin) <- levels(erikson$destination) <-
-      c(rep(paste(lvl[1:2], collapse = " + "), 2), lvl[3],
-          rep(paste(lvl[4:5], collapse = " + "), 2), lvl[6:9])
-  erikson <- xtabs(Freq ~ origin + destination + country, data = erikson)
-  levelMatrix <- matrix(c(2, 3, 4, 6, 5, 6, 6,
-                          3, 3, 4, 6, 4, 5, 6,
-                          4, 4, 2, 5, 5, 5, 5,
-                          6, 6, 5, 1, 6, 5, 2,
-                          4, 4, 5, 6, 3, 4, 5,
-                          5, 4, 5, 5, 3, 3, 5,
-                          6, 6, 5, 3, 5, 4, 1), 7, 7, byrow = TRUE)
-  formula1 <- Freq ~ country:origin + country:destination
-  formula2 <- Freq ~ country:origin + country:destination + Topo(origin, destination, spec = levelMatrix)
-  formula3 <- Freq ~ country:origin + country:destination + Mult(Exp(country),
-                            Topo(origin, destination, spec = levelMatrix))
-  formula4 <- Freq ~ country:origin + country:destination + country:Topo(origin, destination, spec = levelMatrix)
-
-  udf1 <- gnm(formula=formula1, family=poisson, data=erikson)
-  udf2 <- gnm(formula=formula2, family=poisson, data=erikson)
-  udf3 <- gnm(formula=formula3, family=poisson, data=erikson)
-  udf4 <- gnm(formula=formula4, family=poisson, data=erikson)
-  udf2_1 <- em(udf1, latent=2)
-  ## Interaction specified by levelMatrix, common to all countries
-  udf2_2 <- em(udf2, latent=2)
-  #udf2_3 <- em(udf3, latent=2)
-  udf2_3 <- multi.em(udf3, latent=2)
-  udf2_4 <- em(udf4, latent=2)
-
-  print(summary(udf2_1))
-  print(summary(udf2_2))
-  print(summary(udf2_3))
-  print(summary(udf2_4))
-})
+# test_that("test gnm poisson(unidiff)", {
+#   library(gnm)
+# 
+#   ## Example from Turner and Firth (2020)
+#   browser()
+#   #
+#   ### Collapse to 7 by 7 table as in Erikson et al. (1982)
+#   erikson <- as.data.frame(gnm::erikson)
+#   lvl <- levels(erikson$origin)
+#   levels(erikson$origin) <- levels(erikson$destination) <-
+#       c(rep(paste(lvl[1:2], collapse = " + "), 2), lvl[3],
+#           rep(paste(lvl[4:5], collapse = " + "), 2), lvl[6:9])
+#   erikson <- xtabs(Freq ~ origin + destination + country, data = erikson)
+#   levelMatrix <- matrix(c(2, 3, 4, 6, 5, 6, 6,
+#                           3, 3, 4, 6, 4, 5, 6,
+#                           4, 4, 2, 5, 5, 5, 5,
+#                           6, 6, 5, 1, 6, 5, 2,
+#                           4, 4, 5, 6, 3, 4, 5,
+#                           5, 4, 5, 5, 3, 3, 5,
+#                           6, 6, 5, 3, 5, 4, 1), 7, 7, byrow = TRUE)
+#   formula1 <- Freq ~ country:origin + country:destination
+#   formula2 <- Freq ~ country:origin + country:destination + Topo(origin, destination, spec = levelMatrix)
+#   formula3 <- Freq ~ country:origin + country:destination + Mult(Exp(country),
+#                             Topo(origin, destination, spec = levelMatrix))
+#   formula4 <- Freq ~ country:origin + country:destination + country:Topo(origin, destination, spec = levelMatrix)
+# 
+#   udf1 <- gnm(formula=formula1, family=poisson, data=erikson)
+#   #udf2 <- gnm(formula=formula2, family=poisson, data=erikson)
+#   udf3 <- gnm(formula=formula3, family=poisson, data=erikson)
+#   udf4 <- gnm(formula=formula4, family=poisson, data=erikson)
+#   udf2_1 <- em(udf1, latent=2)
+#   ## Interaction specified by levelMatrix, common to all countries
+#   udf2_2 <- em(udf2, latent=2)
+#   #udf2_3 <- em(udf3, latent=2)
+#   udf2_3 <- multi.em(udf3, latent=2)
+#   udf2_4 <- em(udf4, latent=2)
+# 
+#   print(summary(udf2_1))
+#   print(summary(udf2_2))
+#   print(summary(udf2_3))
+#   print(summary(udf2_4))
+# })
 
 
 test_that("test clogit with simulation", {

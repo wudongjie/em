@@ -6,8 +6,8 @@
 \usage{
 \method{plot}{em}(
   x,
-  by = c("component", "response", "prob", "prob.hist"),
-  prior = T,
+  by = c("component", "prob"),
+  prior = F,
   cols = rep(1, length(x$models)),
   lwds = rep(3, length(x$models)),
   ltys = c(1:length(x$models)),
@@ -51,7 +51,5 @@ The last two represent the y-axis limits}
 This is the generic plot function for `em` project. One can produce
 three types of graphs using this function 
 1. A graph of the predicted value distribution for each component.
-2. the distribution of the response variable vs the distribution of the fitted value weighted by either prior or posterior probability.
-3. A combined graph of posterior probability distributions.
-4. A histogram of posterior probability distributions
+2. A histogram of posterior probability distributions
 }
