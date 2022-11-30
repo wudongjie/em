@@ -28,8 +28,8 @@ alsoletter={.}
 
 
 \Abstract{ 
-  Our \emph{em} package follows \proglang{R}'s feature of generic functions and the function \code{em()} can be implemented after a model fitting with one component using R's pre-existing
-functions and packages such as \code{glm()}, \code{lm()}, and so on.
+  The \emph{em} package estimates finite mixture models using the expectation-maximization (EM) algorithm. It follows \proglang{R}'s feature of generic functions and the function \code{em()} can be applied after a model fitting with one component using R's pre-existing
+functions and packages.
 
 Currently, it supports the following models: linear models (\code{lm()}), generalized linear models (\code{glm()}), generalized non-linear model (\code{gnm()}), survival models (mainly conditional logistic regression) (\code{survival::clogit()}), multinomial models(\code{nnet::multinom()}).
 }
@@ -57,24 +57,24 @@ library("em")
 \begin{document}
 \SweaveOpts{concordance=FALSE}
    \section{Introduction}
-Finite mixture models (FMMs) are widely applied in both natural science and social science to model unobserved heterogeneity\footnote{See \citet{mclachlan2019finite} for an introduction of finite mixture models}. This modelling technique assumes that data can be divided into unobserved groups known as latent classes, each following a distinct probability density or a regression model with its unique model parameters. 
+Finite mixture models (FMMs) are widely applied in both natural science and social science to model unobserved heterogeneity\footnote{See \citet{mclachlan2019finite} for an introduction to finite mixture models}. This modelling technique assumes that data can be divided into unobserved groups known as latent classes, each following a distinct probability density or a regression model with unique model parameters. 
 
-One reason for the extensive usage of finite mixture modelling is its flexibility. Its core assumption of unobserved heterogeneity can be applied on a variety of models and analysis including generalized linear regression models (GLMs), generalized non-linear regression models (GNMs), survival analysis, and etc. It can also be used as a model-based clustering technique with different data structures, for example, categorical data, multidimensional data and hierarchical data \citep{vermunt2008latent}. In addition, FMMs can parameterize probabilities of belonging to latent classes (i.e. a concomitant model \citep{wedel2002concomitant}) or extend FMMs to a nested or hierarchical structure \citep{vermunt2005hierarchical}.
+One reason for the extensive usage of finite mixture modelling is its flexibility. Its core assumption of unobserved heterogeneity can be applied to a variety of models including generalized linear regression models (GLMs), generalized non-linear regression models (GNMs), survival analysis, etc. It can also be used as a model-based clustering technique with different data structures, for example, categorical data, multidimensional data or hierarchical data \citep{vermunt2008latent}. In addition, FMMs can parameterize probabilities of belonging to latent classes (i.e. a concomitant model \citep{wedel2002concomitant}). FMMs can also be applied to data with a nested or hierarchical structure \citep{vermunt2005hierarchical}.
 % Flexibility and extension like Mixture of expert in Machine learning.
 % Categorical variables 
 % mixture of growth, etc.
 
 % Introductioin of estimating FMM, Moment of Moment, MLE with EM and baysian types of measures.
-In general, FMMs can be estimated by the following four methods: Methods of moments (MoM), Maximum log-likelihood estimation (MLE), the Bayesian methods, and the unsupervised machine learning methods \citep{Figue2002}. MLE using \emph{Expectation-maximization} (EM) algorithm is the mainstream method of estimating FMM models due to its performance and accuracy. However, it is relatively computationally intensive as it involves iteratively computing log-likelihood values. 
+In general, FMMs can be estimated by the following four methods: Methods of moments (MoM), Maximum log-likelihood estimation (MLE), Bayesian methods, and unsupervised machine learning methods \citep{Figue2002}. MLE using the \emph{Expectation-maximization} (EM) algorithm is the mainstream method of estimating FMM models due to its performance and accuracy. However, it is relatively computationally intensive as it involves iteratively computing log-likelihood values. 
 
 % Why we choose making this em package instead of using other packages.
 % A bit of dicussions on packages available especially in R environments.
 % And the generic function features.
 There are many packages or software available for FMM models: e.g.  \emph{fmm} \citep{deb2007} and \emph{gllamm} \citep{rabe2004gllamm} in Stata, \emph{flexmix} \citep{leisch2004flexmix}, \emph{mixtools} \citep{benaglia2010mixtools} and \emph{mclust} \citep{scrucca2016mclust} in R, etc.
-We make our own package \emph{em} for estimating FMM using EM because packages mentioned above did not cover the case for our own research. To provide a user-friendly package, we adopt a framework based on generic functions in R, which integrates better with other functions and packages in R and makes implementing FMM models more flexible and straightforward.
+Although these packages provide a wide range of opportunities for fitting finite mixture models, they do not cover all models, including some of those that are used my area of research. The em package thus fills this gap. To ensure user-friendliness, the em package is based on generic functions in R, which integrates better with other functions and packages in R and makes implementing FMM models more flexible and straightforward.
 
 % Intro of following chapter.
-In section 2, we specify FMMs and their extended variations. In section 3, we present EM algorithms and the approaches we use to fit FMMs. In section 4, we introduce the \emph{em} package and the generic \emph{em} function for fitting FMMs in R. Section 5 demonstrates some examples of using \emph{em}. Section 6 provides a short summary of the paper.   
+In section 2, we define FMMs and some of their extentions. In section 3, we present EM algorithms and the approaches we use to fit FMMs. In section 4, we introduce the \emph{em} package and the generic \emph{em} function for fitting FMMs in R. Section 5 demonstrates some examples of using \emph{em}. Section 6 provides a short summary of the paper.   
    \section{Finite Mixture Models}
       \subsection{The Finite Mixture Models}
 	      Finite mixture models can be described in the following equations given $J$ components:
@@ -90,38 +90,39 @@ Given the fitted model, one can compute the posterior probability that observati
     Pr(j|\mathbf{x}, \phi, \mathbf{y}) = \pi_k\frac{f_k(\mathbf{y}|\mathbf{x}, \theta_j)}{\sum_{j=1}^J \pi_j(f_j(\mathbf{y}|\mathbf{x}, \theta_j))}
 \end{equation}
 
-The prior probability can also be parameterized by a vector of variables $\mathbf{z}$. In this case, a concomitant model is established in the following equation:
+The prior probability can also be parameterized by a vector of variables $\mathbf{z}$.
     \begin{equation}
       f(\mathbf{y}|\mathbf{x},\phi) = \sum_{j=1}^J \pi(\mathbf{z})(f_j(\mathbf{y}|\mathbf{x}, \theta_j)) \\
+      \label{eq:3}
     \end{equation}
-where $\pi(\mathbf{z})$ is a function that determines the prior probability by a vector of variables $\mathbf{z}$.
+where $\pi(\mathbf{z})$ is a function that determines the prior probability by a vector of variables $\mathbf{z}$. The equation \ref{eq:3} is known as a concomitant model.
 % TODO: Describe the model and its use on social science
-      \subsection{The Hierarchical Mixture Models}
+      \subsection{Hierarchical Mixture Models}
    \section{Fitting FMM using the EM Algorithm and its Extensions}
-   EM algorithm is the mainstream approach to fitting finite mixture models. It runs iteratively through an expectation step (E-step) and a maximization step (M-step). Given an FMM, the E-step computes posterior probabilities given the estimation on last step, while the M-step estimates the model by maximizing the log-likelihood function.
-   The log-likelihood function generated by an FMM can be rewritten in the following equation:
+   The EM algorithm is the mainstream approach to fitting finite mixture models. It runs iteratively through an expectation step (E-step) and a maximization step (M-step). Given an FMM, the E-step computes posterior probabilities given the estimation in the last step, while the M-step estimates the model by maximizing the log-likelihood function.
+   The log-likelihood function generated by an FMM can be rewritten:
    \begin{equation}
    L_I(\theta|\mathbf{y},\mathbf{x}) = \sum_{i \in N} \log \sum_{j \in J} \pi_j f_j(y_i | x_i, \theta_j)
    \end{equation}
-   An FMM can be treated as a model with missing data represented by latent classes. Therefore, we can assume a variable $w$ that captures which class each observation belongs to. In this case, the data $\{\mathbf{y}, w\}$ becomes a complete data. Base on this complete data, we can write the following complete-data log-likelihood function.
+   An FMM can be treated as a model with missing data represented by latent classes. Therefore, we can assume a variable $w$ that captures which class each observation belongs to. In this case, the data $\{\mathbf{y}, w\}$ becomes complete data. Based on this complete data, we can write the following complete-data log-likelihood function.
    \begin{equation}
       L_C(\theta|\mathbf{y},\mathbf{x}, w) = \sum_{i \in N} \log \sum_{j \in J} w_i \pi_j f_j(y_i| x_i, \theta_j)
    \end{equation}
-   Since the EM is computational intensive due to its iterative nature, we provide two extensions of the EM algorithm in our package. One is the Categorical EM (CEM) and the other is the Stochastic EM (SEM). CEM assigns each observation to a certain class based on a higher posterior probability while SEM randomly assigns each observation to a certain class based on the observation's posterior probabilities for each class. 
+   Since the EM is computationally intensive due to its iterative nature, we provide two extensions of the EM algorithm in the \emph{em} package. One is the Categorical EM (CEM) and the other is the Stochastic EM (SEM). The CEM assigns each observation to a class for which the posterior probability is higher, whereas SEM randomly assigns each observation to a certain class based on the observation's posterior probabilities for each class (i.e., weighted random allocation with weights given by the posterior probabilities). 
    
-   Using either CEM or SEM, we can assign each observation after an E-step, and estimate the model respectively for each class. This approach requires no fitting for a mixed version of log-likelihood functions. Therefore, it could be more computational efficient when the model is easier to fit given one class.
+   Using either CEM or SEM, we can assign each observation to a latent class after an E-step, and estimate the model respectively for each class. This approach requires no fitting for a mixed version of log-likelihood functions. Therefore, it could be more computational efficient when the model is easier to fit given one class.
    
-   However, this classification approach may not work well when a one-class model has a flat log-likelihood function such as a conditional logistics model. In this case, variations between class are hard to differentiate by an assignment of observations to each class. To fit this type of models, we adopt EM algorithm with a complete-data log-likelihood. A complete-data log-likelihood increases steepness of the log-likelihood function so that the EM algorithm can differentiate classes and search for the maximum. 
+   However, this classification approach may not work well when a one-class model has a flat log-likelihood function such as a conditional logit model. In this case, it is difficult to identify variation by latent classes by simply assigning observations to each latent class. To fit this type of models, we adopt an EM algorithm with a complete-data log-likelihood. A complete-data log-likelihood increases steepness of the log-likelihood function so that the EM algorithm can better differentiate classes and search for the maximum. 
    
-   To improve the performance of model-fitting, we make use of the \emph{Rcpp} and \emph{RcppArmadillo} packages to embed c++ code in R. When the computational process runs to maximize a log-likelihood function. The R programs make uses of the \code{optim} function in R to call the embed c++ code. In an E-step, we also use the c++ code to compute posterior probabilities. The use of c++ massively reduces the computational time of estimating a complete-data log-likelihood function and, therefore, improves the computational efficiency.    
+   To improve the performance of model-fitting, we make use of the \emph{Rcpp} and \emph{RcppArmadillo} packages to embed c++ code in R. The R programs make uses of the \code{optim} function in R to call the embedded c++ code. In an E-step, we also use the c++ code to compute posterior probabilities. The use of c++ massively reduces the computational time of estimating a complete-data log-likelihood function and, therefore, improves the computational efficiency.    
    
    % Starting value
-   For running EM algorithm, we also provide several methods to generate starting values. Starting values are crucial for fitting a mixture model as the log-likelihood function of a mixture model usually has several local optimums. Choosing a starting value deviated from the global optimum can lead to a less optimal result. In the package, we created two arguments \code{init.method} and \code{optim.start} for methods generating starting values. \code{init.method} generates the starting clustering for each observation. The available methods are: \code{random} -- a random assignment to a class, \code{kmeans} -- a k-mean clustering of data, and \code{hc} -- a model-based agglomerative hierarchical clustering. An m-step runs immediately after clustering to provide the starting values for the model parameters.
+   For running the EM algorithm, we also provide several methods to generate starting values. Starting values are crucial for fitting a mixture model as the log-likelihood function of a mixture model usually has several local optimums. Choosing a starting value far from the global optimum can lead to a less optimal result. In the package, we created two arguments \code{init.method} and \code{optim.start} for methods generating starting values. \code{init.method} generates the starting clustering for each observation. The available methods are: \code{random} -- random assignment to a cluster that each observatation is allocated to, \code{kmeans} -- k-mean clustering of data, and \code{hc} -- model-based agglomerative hierarchical clustering. An m-step runs immediately after the clustering to provide the starting values for the model parameters.
    
-   If the complete log-likelihood function is using in the estimation, we use \code{optim.start} for generating the starting value of MLE. In the current version, it supports two methods: \code{random} generates a set of random values and \code{sample5} generates five sets of random values and run MLE with each set of random values for five times. Values with the largest log-likelihood are picked for the starting values of next round of MLE.  
+   If the complete log-likelihood function is used in the estimation, we use \code{optim.start} for generating the starting value of MLE. In the current version, it supports two methods: \code{random} generates a set of random values and \code{sample5} generates five sets of random values and runs for each set an MLE with each set for five time. Values with the largest log-likelihood are retained as starting values of next round of MLE.  
    % methods recommandations.
    
-   For simple models like generalized linear regression models, we recommend using \code{kmeans} or \code{random} to generate the staring values. For more complex models like a conditional logit model, fitting a complete log-likelihood function with the \code{sample5} start is necessary.
+   For simple models like the generalized linear regression models, we recommend using \code{kmeans} or \code{random} to generate the staring values. For more complex models like a conditional logit model, we recommend fitting a complete log-likelihood function with \code{sample5}.
    
    \section{Using the Generic em Function}
    As a generic function, the \emph{em} function can take different models as its input. Currently, it supports the following models implemented in both the R base package and external packages:  linear models (\code{lm()}), generalized linear models (\code{glm()}),  generalized non-linear model (\code{gnm()}),  survival models (mainly conditional logistic regression) (\code{survival::clogit()}), multinomial models(\code{nnet::multinom()}).
@@ -134,10 +135,10 @@ em(object, latent=2, verbose=F,
    abs_tol=1e-4, concomitant=list(...),
    use.optim=F, optim.start=c("random","sample5"), ...)
 \end{lstlisting}
-    where \code{object} is a model object such as \code{lm()} and \code{glm()}, \code{latent} determines the number of latent classes, \code{verbose} allows printing the fitting process, \code{init.method} provides three different initialization methods, \code{init.prob} allows users to determine the staring prior probabilities, \code{algo} provides three extensions of EM algorithms, \code{cluster.by} is the variable data is clustered by, \code{max_iter} determines the maximum steps for iteration, \code{abs_tol} is the absolute tolerance -- the difference between two log-likelihood values, \code{concomitant} allows users to set a concomitant model, \code{use.optim} decides whether to use the function \code{optim()} to maximize log-likelihood functions, and \code{optim.start} determines the method to generate the starting values for \code{optim()}.\footnote{For more detail, please check \emph{em} documentations.}
+    where \code{object} is a model object such as \code{lm()} and \code{glm()}, \code{latent} determines the number of latent classes, \code{verbose} allows printing the fitting process, \code{init.method} provides three different initialization methods, \code{init.prob} allows users to determine the staring prior probabilities, \code{algo} provides three extensions of EM algorithms, \code{cluster.by} is a variable specifying the level at which the clustering should occur (for hierachical data), \code{max_iter} determines the maximum number for iteration, \code{abs_tol} is the absolute tolerance -- the difference between two log-likelihood values, \code{concomitant} allows users to specify a concomitant model, \code{use.optim} decides whether to use the function \code{optim()} to maximize log-likelihood functions, and \code{optim.start} determines the method to generate the starting values for \code{optim()}.\footnote{For more detail, please check the \emph{em} documentations.}
    \section{Examples}
    \subsection{Mixture of Generalized Linear Models}
-   In the first example, we mix two linear models described in the following two equations with probabilities 30\% and 70\% respectively:
+   In the first example, we mix two linear models described in the following two equations with mixing probabilities 30\% and 70\% respectively:
    \begin{eqnarray}
    y &=& {-10} + 0.1 x \\
    y &=& 20 - 0.1 x
@@ -153,7 +154,7 @@ summary(results)
 @
   In the code block showing above, we use \code{summary()} to print and summarize results after the use of \code{em()}. We organize the presentation of results in a similar look comparing with the summary of an baseline one-class model (like \code{lm()}). The difference is that we add a prefix $1.$ or $2.$ to represent which class the coefficients belong to. In addition, we present prior probabilities below the table of coefficients to show the proportion of each class in the mixture model.
   
-  The summary of \code{em} fitting shows that the results are close enough to the true values. After the model fitting, we can use other generic functions in R for post-estimations and results printing. The supporting generic functions in the current version are as follows: \code{summary()}, \code{print()}, \code{predict()}, \code{update()}, \code{logLik()},\code{df()}, \code{plot()}.   
+  The summary of \code{em} fitting shows that the results are close to the true values. After model fitting, we can use other generic functions in R for post-estimations and results printing. The supporting generic functions in the current version are as follows: \code{summary()}, \code{print()}, \code{predict()}, \code{update()}, \code{logLik()},\code{df()}, \code{plot()}.   
 
 <<>>=
 fmm_fit <- predict(results)
@@ -185,7 +186,7 @@ For data visualization, we use \code{plot()} to produce graphs after the model f
 plot(results)
 @
 \end{figure}
-In the default mode, \code{plot()} produces a graph of distributions of the predicted for each component. Figure \ref{fig:plot1} is the demonstration. 
+In the default mode, \code{plot()} produces a graph of distributions of fitted values for each component (See Figure \ref{fig:plot1}). 
 
 \begin{figure}[htp]
 \caption{Histograms of posterior probabilities}
@@ -216,7 +217,7 @@ summary(results)
 In the summary of results, we print the results from the concomitant model including the logistic regression of $\pi(z)$.
 
    \subsection{Mixture of Conditional Logistic Regression Models}
-   In this example, A three-level outcome $y$ is generated by a mixture of two multinomial regressions with a three-level variable $x$ described in the following equations. \\
+   In this example, a three-level outcome $y$ is generated by a mixture of two multinomial regressions with a three-category variable $x$ described in the following equations. \\
    Class 1: \\
    \begin{eqnarray}
    ln \frac{Pr(y_i = 2)}{Pr(y_i = 1)} &=& 2.1 x_2 + 4.1 x_3 \\
@@ -242,11 +243,11 @@ Using the above code block, we make use of the function \code{clogit()} in the \
 
 The results are well-separated given two classes though they are not exactly the true values. 
    \section{Summary}
-   The main challenge for implementing the EM algorithm and finite mixture modelling is that one could apply the mixture framework on any model. It could take immense effort and work if all models need to be built in the mixture form. In the \emph{em} package, we make use of the feature of generic functions in \proglang{R} so that our \code{em} function can attach to other available statistical models in \proglang{R}. Our package can, therefore, focus on algorithm development, results presentation and post-estimations.
+   The main challenge for implementing the EM algorithm and finite mixture modelling is that one could apply the mixture framework on any model. It would take immense effort and work if all models need to be built in the mixture form. In the \emph{em} package, we make use of the feature of generic functions in \proglang{R} so that our \code{em} function can attach to other available statistical models in \proglang{R}. Our package can, therefore, focus on algorithm development, results presentation and post-estimations.
    
-   The current version of \code{em} supports most of generalized linear regressions implemented by function \code{lm} and \code{glm} in R. It also supports generalized non-linear regressions (\code{gnm}), multinomial regression models (\code{nnet::multinom}) and survival models (\code{survival::clogit}). Other models we are working on include mixture effect models (the \code{lme4} package) and mixture of distributions (the \code{fitdistrplus} package) and regressions with panel data (the \code{plm} package).
+   The current version of \code{em} supports most of generalized linear regressions implemented by function \code{lm} and \code{glm} in R. It also supports generalized non-linear regressions (\code{gnm}), multinomial regression models (\code{nnet::multinom}) and survival models (\code{survival::clogit}). Other models we are working on are mixture effect models (the \code{lme4} package) and mixture of distributions (the \code{fitdistrplus} package) and regressions with panel data (the \code{plm} package).
    
-   When fitting a finite mixture model, many factors (such as starting values, algorithms and models we mixed) can determine whether the maximum log-likelihood value can be converged. The \code{em} package provides several extensions of EM algorithms and different methods to generate starting values for fitting. In addition, we provide a completed-data log-likelihood function for cases when a normal log-likelihood function is too flat. For estimating a completed-data log-likelihood function, we built a c++ module for speeding up the maximizing procedure so that a log-likelihood value is computed in c++ for each iteration. The c++ module massively reduces the computational time for the maximization part of the EM algorithm. For extensibility, These algorithms and methods are written independently in functions and objects so that more methods can be developed and included conveniently if necessary. 
+   When fitting a finite mixture model, many factors (such as starting values, algorithms and models we mixed) can determine whether the maximum log-likelihood value will converge. The \code{em} package provides several extensions of EM algorithms and different methods to generate starting values for fitting. In addition, we provide a completed-data log-likelihood function for cases when a normal log-likelihood function is too flat. For estimating a completed-data log-likelihood function, we built a c++ module for speeding up the maximizing procedure so that a log-likelihood value is computed in c++ for each iteration. The c++ module massively reduces the computational time for the maximization part of the EM algorithm. These algorithms and methods are written independently in functions and objects so that more methods can be developed and included conveniently if required. 
    
    \section*{Acknowledgments}
    The research leading to the results presented in this article has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (grant agreement no. 851293). I am thankful to Dr. Kristian Bernt Karlson for his professional guidance and valuable advice. 

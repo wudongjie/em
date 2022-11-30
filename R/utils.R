@@ -71,3 +71,5 @@ gen_gr = function(ll) {
   }
   return(gr)
 }
+
+model.matrix.coxph <- utils::getFromNamespace("model.matrix.coxph", "survival")

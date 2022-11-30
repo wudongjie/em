@@ -60,3 +60,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_em_mix_ll", (DL_FUNC) &_em_mix_ll, 8},
+    {"_em_pi_ll", (DL_FUNC) &_em_pi_ll, 4},
+    {"_em_post_pr", (DL_FUNC) &_em_post_pr, 7},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_em(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}
