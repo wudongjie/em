@@ -27,7 +27,7 @@ test_that("test linear regression", {
   # Test predict
   fmm_fit <- predict(results)
   fmm_fit_post <- predict(results, prob="posterior")
-  browser()
+  #browser()
   #Test cem and sem
   results_sem <- em(fit_lm, latent=2, verbose=T, algo="sem")
   # cem is very likely to result in all variables assigned to one class
