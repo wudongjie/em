@@ -93,11 +93,11 @@ test_that("test glm logit", {
   # dt$z <- as.vector(sapply(1:2500, rep, times=4))
   fit_glm <- glm(formula=formula, family=binomial, data=simbinom)
   fit_em <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans", use.optim=T)
-  fit_em2 <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans",
-               use.optim=T, optim.start="sample5")
+  # fit_em2 <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans",
+  #              use.optim=T, optim.start="sample5")
 
   print(summary(fit_em))
-  print(summary(fit_em2))
+  # print(summary(fit_em2))
  })
 
 
