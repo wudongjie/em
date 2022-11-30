@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Dongjie",
            family = "Wu",
            role = c("aut", "cre"),
-           email = "dongjie.wu@soc.ku.dk",
+           email = "dwu.jacob@gmail.com",
            comment = c(ORCID = "0000-0002-4490-8657"))
 Description: em is a package of generic functions for running EM algorithm with different models.
 URL: https://github.com/wudongjie/em
