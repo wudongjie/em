@@ -7,7 +7,7 @@
 \method{em}{fitdist}(
   object,
   latent = 2,
-  verbose = F,
+  verbose = FALSE,
   init.method = c("random", "kmeans", "hc"),
   init.prob = NULL,
   algo = c("em", "cem", "sem"),
@@ -23,12 +23,12 @@
 \item{verbose}{`True` to print the process of convergence.}
 
 \item{init.method}{the initialization method used in the model.
-The default method is `random`. `kmeans` is K-means clustering. 
+The default method is `random`. `kmeans` is K-means clustering.
 `hc` is model-based agglomerative hierarchical clustering.}
 
 \item{init.prob}{the starting prior probabilities used in classification based method.}
 
-\item{algo}{the algorithm used in em: `em` the default EM algorithm, 
+\item{algo}{the algorithm used in em: `em` the default EM algorithm,
 the classification em `cem`, or the stochastic em `sem`.}
 
 \item{max_iter}{the maximum iteration for em algorithm.}

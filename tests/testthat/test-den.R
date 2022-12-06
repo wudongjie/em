@@ -1,16 +1,16 @@
 #' Test the fitted density function "fit.den.R"
 #' `logLik(object)` should be equal to `sum(log(fit.den(object)))`
 test_that("test lm glm", {
-    formula <- yn~x
-    formula2 <- yp~x
-    fit_lm <- lm(formula, data=simreg)
-    fit_glm <- glm(formula=formula, data=simreg)
-    fit_glm_p <- glm(formula2, family=poisson, data=simreg)
-    print(logLik(fit_lm))
-    print(sum(log(fit.den(fit_lm))))
-    expect_equal(logLik(fit_lm)[[1]], sum(log(fit.den(fit_lm))), tolerance=1e-3)
-    expect_equal(logLik(fit_glm)[[1]], sum(log(fit.den(fit_glm))), tolerance=1e-3)
-    expect_equal(logLik(fit_glm_p)[[1]], sum(log(fit.den(fit_glm_p))))
+  formula <- yn~x
+  formula2 <- yp~x
+  fit_lm <- lm(formula, data = simreg)
+  fit_glm <- glm(formula = formula, data = simreg)
+  fit_glm_p <- glm(formula2, family = poisson, data = simreg)
+  print(logLik(fit_lm))
+  print(sum(log(fit.den(fit_lm))))
+  expect_equal(logLik(fit_lm)[[1]], sum(log(fit.den(fit_lm))), tolerance = 1e-3)
+  expect_equal(logLik(fit_glm)[[1]], sum(log(fit.den(fit_glm))), tolerance = 1e-3)
+  expect_equal(logLik(fit_glm_p)[[1]], sum(log(fit.den(fit_glm_p))))
 })
 
 test_that("test gnm", {})

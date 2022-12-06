@@ -19,11 +19,11 @@ init.em <- function(object, ...) {
 #' @param object A matrix.
 #' @param ... other used arguments.
 init.em.random <- function(object, ...) {
-  args = list()
+  args <- list()
   if (!missing(...)) {
-    args = list(...)
+    args <- list(...)
   }
-  z <- vdummy(sample(1:ncol(object), size=nrow(object), replace=T, prob=args$init.prob))
+  z <- vdummy(sample(seq_len(ncol(object)), size = nrow(object), replace = TRUE, prob = args$init.prob))
   z
 }
 
@@ -31,12 +31,16 @@ init.em.random <- function(object, ...) {
 #' @param object A matrix.
 #' @param ... other used arguments.
 init.em.random.weights <- function(object, ...) {
-  args = list()
+  args <- list()
   if (!missing(...)) {
-    args = list(...)
+    args <- list(...)
   }
-  z <- apply(object, 2, function(x){runif(x, min=0.001, max=1)})
-  z <- t(apply(z, 1, function(x){x/sum(x)}))
+  z <- apply(object, 2, function(x) {
+    runif(x, min = 0.001, max = 1)
+  })
+  z <- t(apply(z, 1, function(x) {
+    x / sum(x)
+  }))
   z
 }
 
@@ -45,13 +49,13 @@ init.em.random.weights <- function(object, ...) {
 #' @param ... other used arguments.
 init.em.kmeans <- function(object, ...) {
   if (!missing(...)) {
-    args = list(...)
+    args <- list(...)
   }
   if (is.null(args$data)) {
     stop("Please provide the data")
   }
-  #args$data[is.na(args$data)] <- 0
-  z <- suppressWarnings(vdummy(kmeans(args$data, centers=ncol(object), nstart=20, algorithm = "Lloyd")$cluster))
+  # args$data[is.na(args$data)] <- 0
+  z <- suppressWarnings(vdummy(kmeans(args$data, centers = ncol(object), nstart = 20, algorithm = "Lloyd")$cluster))
   z
 }
 
@@ -60,12 +64,12 @@ init.em.kmeans <- function(object, ...) {
 #' @param ... other used arguments.
 init.em.hc <- function(object, ...) {
   if (!missing(...)) {
-    args = list(...)
+    args <- list(...)
   }
   if (is.null(args$data)) {
     stop("Please provide the data")
   }
-  #browser()
+  # browser()
   z <- vdummy(mclust::hclass(mclust::hcEII(args$data), 2))
   z
 }
@@ -74,10 +78,10 @@ init.em.hc <- function(object, ...) {
 #' @param object A matrix.
 #' @param ... other used arguments.
 init.em.sample5 <- function(object, ...) {
-  args = list()
+  args <- list()
   if (!missing(...)) {
-    args = list(...)
+    args <- list(...)
   }
-  z <- vdummy(sample(1:ncol(object), size=nrow(object), replace=T, prob=args$init.prob))
+  z <- vdummy(sample(seq_len(ncol(object)), size = nrow(object), replace = TRUE, prob = args$init.prob))
   z
 }

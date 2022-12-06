@@ -17,67 +17,69 @@ test_that("test linear regression", {
   # simreg <- data.frame(yp=yp, yn=yn, yc=yc, x=x, z=z)
   # browser()
   formula <- yn~x
-  fit_lm <- lm(formula, data=simreg)
-  glm_fit <- glm(formula=formula, data=simreg)
+  fit_lm <- lm(formula, data = simreg)
+  glm_fit <- glm(formula = formula, data = simreg)
   pd <- predict(fit_lm)
-  ##result1 <- em(fit_lm, latent=1)
-  results <- em(fit_lm, latent=2, verbose=T)
-  emfit1 <- em(glm_fit, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5")
+  ## result1 <- em(fit_lm, latent=1)
+  results <- em(fit_lm, latent = 2, verbose = T)
+  emfit1 <- em(glm_fit, latent = 2, verbose = T, init.method = "kmeans", use.optim = T, optim.start = "sample5")
   print(summary(emfit1))
   # Test predict
   fmm_fit <- predict(results)
-  fmm_fit_post <- predict(results, prob="posterior")
-  #browser()
-  #Test cem and sem
-  results_sem <- em(fit_lm, latent=2, verbose=T, algo="sem")
+  fmm_fit_post <- predict(results, prob = "posterior")
+  # browser()
+  # Test cem and sem
+  results_sem <- em(fit_lm, latent = 2, verbose = T, algo = "sem")
   # cem is very likely to result in all variables assigned to one class
-  results_cem <- multi.em(fit_lm, latent=2, verbose=T, algo="cem")
+  results_cem <- multi.em(fit_lm, latent = 2, verbose = T, algo = "cem")
   print(summary(results_cem))
   print(summary(results_sem))
   print(summary(results))
-  results2 <- em(fit_lm, init.method="kmeans", verbose=T) # Test kmeans
+  results2 <- em(fit_lm, init.method = "kmeans", verbose = T) # Test kmeans
   print(summary(results2))
   # results3 <- em(fit_lm, init.method="hc", verbose=T) # Test kmeans
   # print(summary(results3))
   # Test update
-  results4 <- update(results, latent=3)
+  results4 <- update(results, latent = 3)
   results_glm <- em(glm_fit)
   print(summary(results_glm))
- })
+})
 
 test_that("test concomitant", {
   formula <- yc ~ x
-  formula_c <- ~ z
-  lm_fit <- lm(formula, data=simreg)
-  results <- em(lm_fit, concomitant=list(formula=formula_c, data=simreg), verbose=T)
-  emfit1 <- em(lm_fit, latent=2, verbose=T, init.method="random", use.optim=T, optim.start="sample5",
-               concomitant=list(formula=formula_c, data=simreg))
+  formula_c <- ~z
+  lm_fit <- lm(formula, data = simreg)
+  results <- em(lm_fit, concomitant = list(formula = formula_c, data = simreg), verbose = T)
+  emfit1 <- em(lm_fit,
+    latent = 2, verbose = T, init.method = "random", use.optim = T, optim.start = "sample5",
+    concomitant = list(formula = formula_c, data = simreg)
+  )
   fmm_fit <- predict(results)
   print(summary(results))
-  results3 <- update(results, latent=3)
+  results3 <- update(results, latent = 3)
   print(summary(results3))
-  glm_fit <- glm(formula, data=simreg)
-  results_glm <- em(glm_fit, concomitant=list(formula=formula_c, data=simreg))
+  glm_fit <- glm(formula, data = simreg)
+  results_glm <- em(glm_fit, concomitant = list(formula = formula_c, data = simreg))
   print(summary(results_glm))
 })
 
 
 test_that("test glm poisson", {
   formula2 <- yp~x
-  fit_glm <- glm(formula2, family=poisson, data=simreg)
+  fit_glm <- glm(formula2, family = poisson, data = simreg)
   print(fit_glm)
-  results2 <- em(fit_glm, latent=2)
+  results2 <- em(fit_glm, latent = 2)
   print(summary(results2))
-  results3 <- em(fit_glm, init.method="kmeans", verbose=T) # Test kmeans
+  results3 <- em(fit_glm, init.method = "kmeans", verbose = T) # Test kmeans
   print(summary(results3))
-  results4 <- em(fit_glm, init.method="hc", verbose=T) # Test kmeans
+  results4 <- em(fit_glm, init.method = "hc", verbose = T) # Test kmeans
   print(summary(results4))
-  emfit1 <- em(fit_glm, latent=2, verbose=T, init.method="kmeans", use.optim=T, optim.start="sample5")
+  emfit1 <- em(fit_glm, latent = 2, verbose = T, init.method = "kmeans", use.optim = T, optim.start = "sample5")
   print(summary(emfit1))
 })
 
 test_that("test glm logit", {
-  #Example from "https://rdrr.io/cran/mixtools/man/logisregmixEM.html"
+  # Example from "https://rdrr.io/cran/mixtools/man/logisregmixEM.html"
   # browser()
   # set.seed(100)
   # beta <- matrix(c(-10, .1, 20, -.1), 2, 2)
@@ -91,19 +93,19 @@ test_that("test glm logit", {
   # dt <- data.frame(y=y, x=x)
   formula <- y~x
   # dt$z <- as.vector(sapply(1:2500, rep, times=4))
-  fit_glm <- glm(formula=formula, family=binomial, data=simbinom)
-  fit_em <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans", use.optim=T)
+  fit_glm <- glm(formula = formula, family = binomial, data = simbinom)
+  fit_em <- em(fit_glm, latent = 2, verbose = T, init.method = "kmeans", use.optim = T)
   # fit_em2 <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans",
   #              use.optim=T, optim.start="sample5")
 
   print(summary(fit_em))
   # print(summary(fit_em2))
- })
+})
 
 
 # test_that("test gnm poisson(unidiff)", {
 #   library(gnm)
-# 
+#
 #   ## Example from Turner and Firth (2020)
 #   browser()
 #   #
@@ -126,7 +128,7 @@ test_that("test glm logit", {
 #   formula3 <- Freq ~ country:origin + country:destination + Mult(Exp(country),
 #                             Topo(origin, destination, spec = levelMatrix))
 #   formula4 <- Freq ~ country:origin + country:destination + country:Topo(origin, destination, spec = levelMatrix)
-# 
+#
 #   udf1 <- gnm(formula=formula1, family=poisson, data=erikson)
 #   #udf2 <- gnm(formula=formula2, family=poisson, data=erikson)
 #   udf3 <- gnm(formula=formula3, family=poisson, data=erikson)
@@ -137,7 +139,7 @@ test_that("test glm logit", {
 #   #udf2_3 <- em(udf3, latent=2)
 #   udf2_3 <- multi.em(udf3, latent=2)
 #   udf2_4 <- em(udf4, latent=2)
-# 
+#
 #   print(summary(udf2_1))
 #   print(summary(udf2_2))
 #   print(summary(udf2_3))
@@ -236,7 +238,7 @@ test_that("test glm logit", {
 #   browser()
 #   usdata <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[2])
 #   usdata_ex <- read.csv(list.files(system.file('extdata', package = 'em'), full.names = T)[3])
-# 
+#
 #   usdata$in1 <- as.factor(usdata$x == usdata$y)
 #   usdata$a1 <- as.factor((usdata$x == 1) & (usdata$y == 1))
 #   usdata$a2 <- as.factor((usdata$x == 2) & (usdata$y == 2))
@@ -250,14 +252,14 @@ test_that("test glm logit", {
 #   formula2 <- obs ~ x + y + in1
 #   formula3 <- obs ~ x + y + a1 + a2 + a3
 #   p_fit <- glm(formula2, family=poisson, data=usdata)
-# 
+#
 #   browser()
 #   #Fix the predict of missing coeffieicnets
 #   #p_fit4 <- em(p_fit, latent=5)
 #   cl_fit <- clogit(formula1.in1, usdata_ex)
-#   
+#
 #   #cl_fit2 <- em(cl_fit, latent=2, algo="sem", verbose=T)
-#   
+#
 #   cl_fit1 <- em(cl_fit, latent=1, algo="sem", verbose=T)
 #   #cl_fit3 <- em(cl_fit, latent=2, algo="sem", verbose=T, cluster.by=usdata_ex$g)
 #   #cl_wfit <- clogit(formula1, logan2, weights=rep(1, 838*5), method="breslow")
@@ -301,7 +303,7 @@ test_that("test glm logit", {
 #                  index=c("obs", "alt"))
 #   print(summary(pfit_re))
 # })
-# 
+#
 # test_that("glmer", {
 #   browser()
 #   library(lme4)
@@ -323,5 +325,3 @@ test_that("test glm logit", {
 #   em_fit <- em(d_fit, latent=2)
 #   print(summary(em_fit))
 # })
-
-

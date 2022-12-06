@@ -3,7 +3,7 @@
 \name{flatten}
 \alias{flatten}
 \title{Flatten a data.frame or matrix by column or row with its name.
-The name will be transformed into the number of row/column plus 
+The name will be transformed into the number of row/column plus
 the name of column/row separated by `.`.}
 \usage{
 flatten(x, by = c("col", "row"))
@@ -18,6 +18,6 @@ a flattened vector with names
 }
 \description{
 Flatten a data.frame or matrix by column or row with its name.
-The name will be transformed into the number of row/column plus 
+The name will be transformed into the number of row/column plus
 the name of column/row separated by `.`.
 }

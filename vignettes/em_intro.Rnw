@@ -47,8 +47,8 @@ Currently, it supports the following models: linear models (\code{lm()}), genera
 <<echo=false,results=hide>>=
 suppressWarnings(RNGversion("3.5.0"))
 set.seed(1504)
-options(width=70, prompt = "R> ", continue = "+  ", useFancyQuotes = FALSE)
-grDevices::ps.options(family="Times")
+options(width = 70, prompt = "R> ", continue = "+  ", useFancyQuotes = FALSE)
+grDevices::ps.options(family = "Times")
 library("graphics")
 library("em")
 @
@@ -146,9 +146,9 @@ em(object, latent=2, verbose=F,
   The models can be fitted and presented using the following lines of codes in \proglang{R}.
 <<>>=
 library("em")
-fit.lm <- lm(yn~x, data=simreg)
+fit.lm <- lm(yn ~ x, data = simreg)
 summary(fit.lm)
-results <- em(fit.lm, latent=2, verbose=F)
+results <- em(fit.lm, latent = 2, verbose = F)
 summary(results)
 @
   In the code block showing above, we use \code{summary()} to print and summarize results after the use of \code{em()}. We organize the presentation of results in a similar look comparing with the summary of an baseline one-class model (like \code{lm()}). The difference is that we add a prefix $1.$ or $2.$ to represent which class the coefficients belong to. In addition, we present prior probabilities below the table of coefficients to show the proportion of each class in the mixture model.
@@ -158,7 +158,7 @@ summary(results)
 <<>>=
 fmm_fit <- predict(results)
 str(fmm_fit)
-fmm_fit_post <- predict(results, prob="posterior")
+fmm_fit_post <- predict(results, prob = "posterior")
 str(fmm_fit_post)
 @
 
@@ -192,7 +192,7 @@ In the default mode, \code{plot()} produces a graph of distributions of fitted v
 \label{fig:plot2}
 \centering
 <<fig=TRUE, echo=FALSE>>=
-plot(results, by="prob")
+plot(results, by = "prob")
 @
 \end{figure}
 
@@ -208,9 +208,9 @@ We can also use a concomitant model to parameterize the prior probabilities. For
 Given the equations, we run the following lines of codes:
 <<>>=
 formula <- yc ~ x
-formula_c <- ~ z
-lm_fit <- lm(formula, data=simreg)
-results <- em(lm_fit, concomitant=list(formula=formula_c, data=simreg))
+formula_c <- ~z
+lm_fit <- lm(formula, data = simreg)
+results <- em(lm_fit, concomitant = list(formula = formula_c, data = simreg))
 summary(results)
 @
 In the summary of results, we print the results from the concomitant model including the logistic regression of $\pi(z)$.
@@ -231,9 +231,9 @@ In the summary of results, we print the results from the concomitant model inclu
 <<>>=
 library("em")
 library("survival")
-fmla <- chosen2 ~ 0 + a2_x2 + a2_x3 + a3_x2 + a3_x3+ strata(id)
+fmla <- chosen2 ~ 0 + a2_x2 + a2_x3 + a3_x2 + a3_x3 + strata(id)
 cfit <- clogit(fmla, simclogit)
-emfit <- em(cfit, latent=2, verbose=F, init.method="kmeans", use.optim=T, optim.start="sample5", max_iter=100)
+emfit <- em(cfit, latent = 2, verbose = F, init.method = "kmeans", use.optim = T, optim.start = "sample5", max_iter = 100)
 print(summary(emfit))
 @
 

@@ -11,6 +11,8 @@ Description: A package of generic functions for running EM algorithm with differ
 URL: https://github.com/wudongjie/em
 License: GPL (>= 3)
 Encoding: UTF-8
+SystemRequirements: C++11
+BugReports: https://github.com/wudongjie/em/issues
 NeedsCompilation: yes
 Depends: R (>= 3.0.0)
 Imports: stats, utils, survival, plm, methods, mclust, dplyr, numDeriv, nnet, magrittr
@@ -23,4 +25,3 @@ Suggests:
 Config/testthat/edition: 3
 RoxygenNote: 7.1.2
 LazyData: true
-Date: 2022-12-6 10:10:02 UTC

@@ -11,12 +11,14 @@ mstep.concomitant <- function(formula, data, postpr) {
   p <- ncol(y)
   mask <- c(rep(0, r + 1), rep(c(0, rep(1, r)), p - 1))
   w <- rep(1, nrow(y))
-  if ((!nrow(y)) | (nrow(y)<2)) {
+  if ((!nrow(y)) | (nrow(y) < 2)) {
     stop("Posterior probabilities should be a matrix with at least two columns")
   }
-  nnet::nnet.default(x, y, w, mask = mask, size = 0,
-               skip = TRUE, softmax = TRUE, censored = FALSE,
-               rang = 0, trace=FALSE)
+  nnet::nnet.default(x, y, w,
+    mask = mask, size = 0,
+    skip = TRUE, softmax = TRUE, censored = FALSE,
+    rang = 0, trace = FALSE
+  )
 }
 
 #' The refit of for the concomitant model.
@@ -36,4 +38,3 @@ mstep.concomitant.refit <- function(formula, data, postpr) {
   dimnames(fit$Hessian) <- lapply(dim(fit$Hessian) / ncol(x), function(i) paste(rep(seq_len(i) + 1, each = ncol(x)), colnames(x), sep = ":"))
   fit
 }
-

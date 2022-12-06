@@ -12,8 +12,8 @@ em(object, ...)
 \item{...}{arguments used in the `model`.}
 }
 \description{
-This is a generic EM algorithm that can work on specific models/objects. 
-Currently, it supports `lm`, `glm`, `gnm` in package gnm, 
+This is a generic EM algorithm that can work on specific models/objects.
+Currently, it supports `lm`, `glm`, `gnm` in package gnm,
 `clogit` in package survival and `multinom` in package nnet.
 Use `?em.default` to check the manual of the default function of `em`.
 }
