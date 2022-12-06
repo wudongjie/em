@@ -6,9 +6,9 @@
 #' @keywords data
 #' @format A data frame with 1000 rows and 5 variables:
 #' \describe{
-#'   \item{yp}{A dependent variable generaged from a mixture of a poisson regression with x}
-#'   \item{yn}{A dependent variable generaged from a mixture of a linear regression with x}
-#'   \item{yc}{A dependent variable generaged from a mixture of a linear regression with x and a concomitant variable of z}
+#'   \item{yp}{A dependent variable generated from a mixture of a poisson regression with x}
+#'   \item{yn}{A dependent variable generated from a mixture of a linear regression with x}
+#'   \item{yc}{A dependent variable generated from a mixture of a linear regression with x and a concomitant variable of z}
 #'   \item{x}{An independent variable}
 #'   \item{z}{A concomitant variable}
 #' }
@@ -23,7 +23,7 @@
 #' @keywords data
 #' @format A data frame with 10000 rows and 2 variables:
 #' \describe{
-#'   \item{y}{A dependent variable generaged from a mixture of a logistic regression with x}
+#'   \item{y}{A dependent variable generated from a mixture of a logistic regression with x}
 #'   \item{x}{An independent variable}
 #' }
 #' @source <https://www.github.com/wudongjie/em>

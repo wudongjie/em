@@ -74,7 +74,7 @@ There are many packages or software available for FMM models: e.g.  \emph{fmm} \
 Although these packages provide a wide range of opportunities for fitting finite mixture models, they do not cover all models, including some of those that are used my area of research. The em package thus fills this gap. To ensure user-friendliness, the em package is based on generic functions in R, which integrates better with other functions and packages in R and makes implementing FMM models more flexible and straightforward.
 
 % Intro of following chapter.
-In section 2, we define FMMs and some of their extentions. In section 3, we present EM algorithms and the approaches we use to fit FMMs. In section 4, we introduce the \emph{em} package and the generic \emph{em} function for fitting FMMs in R. Section 5 demonstrates some examples of using \emph{em}. Section 6 provides a short summary of the paper.   
+In section 2, we define FMMs and some of their extensions. In section 3, we present EM algorithms and the approaches we use to fit FMMs. In section 4, we introduce the \emph{em} package and the generic \emph{em} function for fitting FMMs in R. Section 5 demonstrates some examples of using \emph{em}. Section 6 provides a short summary of the paper.   
    \section{Finite Mixture Models}
       \subsection{The Finite Mixture Models}
 	      Finite mixture models can be described in the following equations given $J$ components:
@@ -117,7 +117,7 @@ where $\pi(\mathbf{z})$ is a function that determines the prior probability by a
    To improve the performance of model-fitting, we make use of the \emph{Rcpp} and \emph{RcppArmadillo} packages to embed c++ code in R. The R programs make uses of the \code{optim} function in R to call the embedded c++ code. In an E-step, we also use the c++ code to compute posterior probabilities. The use of c++ massively reduces the computational time of estimating a complete-data log-likelihood function and, therefore, improves the computational efficiency.    
    
    % Starting value
-   For running the EM algorithm, we also provide several methods to generate starting values. Starting values are crucial for fitting a mixture model as the log-likelihood function of a mixture model usually has several local optimums. Choosing a starting value far from the global optimum can lead to a less optimal result. In the package, we created two arguments \code{init.method} and \code{optim.start} for methods generating starting values. \code{init.method} generates the starting clustering for each observation. The available methods are: \code{random} -- random assignment to a cluster that each observatation is allocated to, \code{kmeans} -- k-mean clustering of data, and \code{hc} -- model-based agglomerative hierarchical clustering. An m-step runs immediately after the clustering to provide the starting values for the model parameters.
+   For running the EM algorithm, we also provide several methods to generate starting values. Starting values are crucial for fitting a mixture model as the log-likelihood function of a mixture model usually has several local optimums. Choosing a starting value far from the global optimum can lead to a less optimal result. In the package, we created two arguments \code{init.method} and \code{optim.start} for methods generating starting values. \code{init.method} generates the starting clustering for each observation. The available methods are: \code{random} -- random assignment to a cluster that each observation is allocated to, \code{kmeans} -- k-mean clustering of data, and \code{hc} -- model-based agglomerative hierarchical clustering. An m-step runs immediately after the clustering to provide the starting values for the model parameters.
    
    If the complete log-likelihood function is used in the estimation, we use \code{optim.start} for generating the starting value of MLE. In the current version, it supports two methods: \code{random} generates a set of random values and \code{sample5} generates five sets of random values and runs for each set an MLE with each set for five time. Values with the largest log-likelihood are retained as starting values of next round of MLE.  
    % methods recommandations.
@@ -135,7 +135,7 @@ em(object, latent=2, verbose=F,
    abs_tol=1e-4, concomitant=list(...),
    use.optim=F, optim.start=c("random","sample5"), ...)
 \end{lstlisting}
-    where \code{object} is a model object such as \code{lm()} and \code{glm()}, \code{latent} determines the number of latent classes, \code{verbose} allows printing the fitting process, \code{init.method} provides three different initialization methods, \code{init.prob} allows users to determine the staring prior probabilities, \code{algo} provides three extensions of EM algorithms, \code{cluster.by} is a variable specifying the level at which the clustering should occur (for hierachical data), \code{max_iter} determines the maximum number for iteration, \code{abs_tol} is the absolute tolerance -- the difference between two log-likelihood values, \code{concomitant} allows users to specify a concomitant model, \code{use.optim} decides whether to use the function \code{optim()} to maximize log-likelihood functions, and \code{optim.start} determines the method to generate the starting values for \code{optim()}.\footnote{For more detail, please check the \emph{em} documentations.}
+    where \code{object} is a model object such as \code{lm()} and \code{glm()}, \code{latent} determines the number of latent classes, \code{verbose} allows printing the fitting process, \code{init.method} provides three different initialization methods, \code{init.prob} allows users to determine the staring prior probabilities, \code{algo} provides three extensions of EM algorithms, \code{cluster.by} is a variable specifying the level at which the clustering should occur (for hierarchical data), \code{max_iter} determines the maximum number for iteration, \code{abs_tol} is the absolute tolerance -- the difference between two log-likelihood values, \code{concomitant} allows users to specify a concomitant model, \code{use.optim} decides whether to use the function \code{optim()} to maximize log-likelihood functions, and \code{optim.start} determines the method to generate the starting values for \code{optim()}.\footnote{For more detail, please check the \emph{em} documentations.}
    \section{Examples}
    \subsection{Mixture of Generalized Linear Models}
    In the first example, we mix two linear models described in the following two equations with mixing probabilities 30\% and 70\% respectively:
@@ -146,7 +146,6 @@ em(object, latent=2, verbose=F,
   The models can be fitted and presented using the following lines of codes in \proglang{R}.
 <<>>=
 library("em")
-data("simreg")
 fit.lm <- lm(yn~x, data=simreg)
 summary(fit.lm)
 results <- em(fit.lm, latent=2, verbose=F)
@@ -232,7 +231,6 @@ In the summary of results, we print the results from the concomitant model inclu
 <<>>=
 library("em")
 library("survival")
-data("simclogit")
 fmla <- chosen2 ~ 0 + a2_x2 + a2_x3 + a3_x2 + a3_x3+ strata(id)
 cfit <- clogit(fmla, simclogit)
 emfit <- em(cfit, latent=2, verbose=F, init.method="kmeans", use.optim=T, optim.start="sample5", max_iter=100)

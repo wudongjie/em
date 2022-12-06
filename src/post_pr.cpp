@@ -56,7 +56,7 @@ arma::mat pp_mixer(const arma::vec& theta, const arma::mat& pi_m,
 // [[Rcpp::export]]
 arma::mat post_pr(const arma::vec& theta, const arma::mat& pi_m,
                       const arma::mat& Y, const arma::mat& X, const int& latent,
-                      Rcpp::CharacterVector family, const arma::mat& constraint=arma::zeros(1,1)) {
+                      Rcpp::CharacterVector family, const arma::mat& constraint) {
     arma::mat z;
 
     // set and check family

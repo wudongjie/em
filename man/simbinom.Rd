@@ -7,7 +7,7 @@
 \format{
 A data frame with 10000 rows and 2 variables:
 \describe{
-  \item{y}{A dependent variable generaged from a mixture of a logistic regression with x}
+  \item{y}{A dependent variable generated from a mixture of a logistic regression with x}
   \item{x}{An independent variable}
 }
 }

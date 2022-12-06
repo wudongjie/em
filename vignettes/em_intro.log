@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.9.20)  8 NOV 2022 13:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.9.20)  2 DEC 2022 14:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -435,11 +435,11 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [3]
-Overfull \hbox (6.47838pt too wide) in paragraph at lines 119--121
+Overfull \hbox (6.47838pt too wide) in paragraph at lines 120--122
 \T1/lmr/m/n/10.95 (\T1/lmtt/m/n/10.95 gnm()\T1/lmr/m/n/10.95 ), sur-vival mod-els (mainly con-di-tional lo-gis-tic re-gres-sion) (\T1/lmtt/m/n/10.95 survival::clogit()\T1/lmr/m/n/10.95 ), multi-
  []
 
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 126.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 127.
 (/Users/bqh202/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -458,12 +458,12 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [6]
-<em_intro-004.pdf, id=151, 433.62pt x 433.62pt>
+<em_intro-004.pdf, id=153, 433.62pt x 433.62pt>
 File: em_intro-004.pdf Graphic file (type pdf)
 <use em_intro-004.pdf>
 Package pdftex.def Info: em_intro-004.pdf  used on input line 245.
 (pdftex.def)             Requested size: 354.12434pt x 354.14154pt.
-<em_intro-005.pdf, id=153, 433.62pt x 433.62pt>
+<em_intro-005.pdf, id=155, 433.62pt x 433.62pt>
 File: em_intro-005.pdf Graphic file (type pdf)
 <use em_intro-005.pdf>
 Package pdftex.def Info: em_intro-005.pdf  used on input line 253.
@@ -515,21 +515,21 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 [13] (./em_intro.aux)
 Package rerunfilecheck Info: File `em_intro.out' has not changed.
-(rerunfilecheck)             Checksum: 138FB7F1C33CF62F398E493FA1460B5B;2300.
+(rerunfilecheck)             Checksum: E5A9E25F274337AC6FC741E3604104E7;2273.
  ) 
 Here is how much of TeX's memory you used:
- 13125 strings out of 477035
- 199725 string characters out of 5827464
- 714230 words of memory out of 5000000
- 33986 multiletter control sequences out of 15000+600000
+ 13126 strings out of 477035
+ 199720 string characters out of 5827464
+ 715230 words of memory out of 5000000
+ 33987 multiletter control sequences out of 15000+600000
  575274 words of font info for 87 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 87i,11n,91p,968b,1970s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 87i,11n,91p,1036b,1970s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/Users/bqh202/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Users/bqh202/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/Users/bqh202/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/Users/bqh202/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/bqh202/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/Users/bqh202/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}</Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmro10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmss10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/bqh202/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtto10.pfb>
-Output written on em_intro.pdf (13 pages, 409051 bytes).
+Output written on em_intro.pdf (13 pages, 409307 bytes).
 PDF statistics:
- 324 PDF objects out of 1000 (max. 8388607)
- 258 compressed objects within 3 object streams
+ 326 PDF objects out of 1000 (max. 8388607)
+ 260 compressed objects within 3 object streams
  66 named destinations out of 1000 (max. 500000)
  91 words of extra memory for PDF output out of 10000 (max. 10000000)
 
