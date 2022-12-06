@@ -4,10 +4,12 @@ Version: 1.0.0
 Authors@R: 
     person(given = "Dongjie",
            family = "Wu",
-           role = c("aut", "cre"),
+           role = c("aut", "cre", "cph"),
            email = "dwu.jacob@gmail.com",
            comment = c(ORCID = "0000-0002-4490-8657"))
-Description: A package of generic functions for running EM algorithm with different models.
+Description: A generic function for running the EM algorithm 
+  with different models is implemented. It can be applied after a model 
+  fitting using R's pre-existing functions and packages.
 URL: https://github.com/wudongjie/em
 License: GPL (>= 3)
 Encoding: UTF-8
