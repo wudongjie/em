@@ -9,7 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-4490-8657"))
 Description: A generic function for running the EM algorithm 
   with different models is implemented. It can be applied after a model 
-  fitting using R's pre-existing functions and packages.
+  fitting using R's existing functions and packages.
 URL: https://github.com/wudongjie/em
 License: GPL (>= 3)
 Encoding: UTF-8
