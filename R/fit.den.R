@@ -2,6 +2,7 @@
 #' @description This function generates the probability density of given models.
 #' @param object the fitted model such as `lm`.
 #' @param ... other used arguments.
+#' @return the density function.
 #' @export
 fit.den <- function(object, ...) {
   UseMethod("fit.den")
@@ -10,6 +11,7 @@ fit.den <- function(object, ...) {
 #' Fitting the density function using in `fitdistrplus::fitdist()`
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
 #' @export
 fit.den.fitdist <- function(object, ...) {
   ddistname <- paste("d", object$distname, sep = "")
@@ -31,6 +33,7 @@ fit.den.fitdist <- function(object, ...) {
 #' Fit the density function for a linear regression model.
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
 #' @export
 fit.den.lm <- function(object, ...) {
   if (is.null(object$weights)) {
@@ -53,6 +56,7 @@ fit.den.lm <- function(object, ...) {
 #' Fit the density function for a generalized linear regression model.
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
 #' @export
 fit.den.glm <- function(object, ...) {
   if (is.null(object$weights)) {
@@ -88,6 +92,8 @@ fit.den.glm <- function(object, ...) {
 #' Fit the density function for a generalized non-linear regression model.
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
+#' @export
 fit.den.gnm <- function(object, ...) {
   if (is.null(object$weights)) {
     object$weights <- 1
@@ -122,7 +128,6 @@ fit.den.gnm <- function(object, ...) {
 #' Fit the density function for a `nnet` model.
 #' @param object the fitted model.
 #' @param ... other used arguments.
-#' @export
 fit.den.nnet <- function(object, ...) {
 
 }
@@ -130,6 +135,7 @@ fit.den.nnet <- function(object, ...) {
 #' Fit the density function for a multinomial regression model.
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
 #' @export
 fit.den.multinom <- function(object, ...) {
   if (is.null(object$weights)) {
@@ -160,6 +166,7 @@ fit.den.multinom <- function(object, ...) {
 #' Fit the density for the survival::clogit
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
 #' @export
 fit.den.coxph <- function(object, ...) {
   cl <- object$call
@@ -212,6 +219,7 @@ fit.den.coxph <- function(object, ...) {
 #' Fit the density function for a generalized linear mixed effect model.
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
 #' @export
 fit.den.glmerMod <- function(object, ...) {
   # browser()
@@ -237,6 +245,7 @@ fit.den.glmerMod <- function(object, ...) {
 #' Fit the density function for a panel regression model.
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
 #' @export
 fit.den.plm <- function(object, ...) {
   if (is.null(object$weights)) {

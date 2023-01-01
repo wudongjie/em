@@ -11,6 +11,9 @@ fit.den(object, ...)
 
 \item{...}{other used arguments.}
 }
+\value{
+the density function.
+}
 \description{
 This function generates the probability density of given models.
 }

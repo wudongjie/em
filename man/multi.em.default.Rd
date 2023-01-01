@@ -4,7 +4,14 @@
 \alias{multi.em.default}
 \title{Default generic for multi.em}
 \usage{
-\method{multi.em}{default}(object, iter = 10, parallel = FALSE, random.init = TRUE, ...)
+\method{multi.em}{default}(
+  object,
+  iter = 10,
+  parallel = FALSE,
+  num.cores = 2,
+  random.init = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{the model to use in em, e.g. `lm`, `glm`, `gnm`}
@@ -12,6 +19,8 @@
 \item{iter}{number of iterations for running EM algorithm.}
 
 \item{parallel}{whether to use the parallel computing.}
+
+\item{num.cores}{number of cores used in the parallel computing.}
 
 \item{random.init}{whether to use a random initialization.}
 

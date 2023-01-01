@@ -11,7 +11,17 @@
 #' the classification em `cem`, or the stochastic em `sem`.
 #' @param concomitant the formula to define the concomitant part of the model.
 #' The default is NULL.
-#' @return the fitting object for the model with the class `em`.
+#' @return An object of class `em` is a list containing at least the following components:
+#'  \code{models} a list of models/objects whose class are determined by a model fitting from the previous step.  
+#'  \code{pi} the prior probabilities.
+#'  \code{latent} number of the latent classes.
+#'  \code{algorithm} the algorithm used (could be either `em`, `sem` or `cem`).
+#'  \code{obs} the number of observations.
+#'  \code{post_pr} the posterior probabilities.
+#'  \code{concomitant} a list of the concomitant model. It is empty if no concomitant model is used.
+#'  \code{init.method} the initialization method used.
+#'  \code{call} the matched call.
+#'  \code{terms} the code{terms} object used.
 #' @importFrom methods .hasSlot slot
 #' @importFrom stats .checkMFClasses delete.response density deviance fitted makepredictcall model.weights terms var
 #' @export

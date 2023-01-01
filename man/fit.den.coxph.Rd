@@ -11,6 +11,9 @@
 
 \item{...}{other used arguments.}
 }
+\value{
+the density function.
+}
 \description{
 Fit the density for the survival::clogit
 }

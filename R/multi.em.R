@@ -1,6 +1,7 @@
 #' Multiple run of EM algorithm
 #' @param object the model to use in em, e.g. `lm`, `glm`, `gnm`
 #' @param ... arguments used in em.
+#' @return return the `em` object with the maximum log-likelihood.
 #' @export
 multi.em <- function(object, ...) {
   UseMethod("multi.em")
@@ -14,9 +15,10 @@ multi.em <- function(object, ...) {
 #' @param iter number of iterations for running EM algorithm.
 #' @param parallel whether to use the parallel computing.
 #' @param random.init whether to use a random initialization.
+#' @param num.cores number of cores used in the parallel computing.
 #' @return return the `em` object with the maximum log-likelihood.
 #' @export
-multi.em.default <- function(object, iter = 10, parallel = FALSE, random.init = TRUE, ...) {
+multi.em.default <- function(object, iter = 10, parallel = FALSE, num.cores = 2, random.init = TRUE, ...) {
   args <- list(...)
   args$object <- object
   if (is.null(args$latent)) {
@@ -49,7 +51,7 @@ multi.em.default <- function(object, iter = 10, parallel = FALSE, random.init = 
       numCores <- 2L
     } else {
       # use all cores in devtools::test()
-      numCores <- parallel::detectCores()
+      numCores <- num.cores
     }
     fitted <- parallel::mclapply(seq_len(iter),
       function(x) {

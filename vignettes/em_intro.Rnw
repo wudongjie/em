@@ -127,14 +127,14 @@ where $\pi(\mathbf{z})$ is a function that determines the prior probability by a
    \section{Using the Generic em Function}
    As a generic function, the \emph{em} function can take different models as its input. Currently, it supports the following models implemented in both the R base package and external packages:  linear models (\code{lm()}), generalized linear models (\code{glm()}),  generalized non-linear model (\code{gnm()}),  survival models (mainly conditional logistic regression) (\code{survival::clogit()}), multinomial models(\code{nnet::multinom()}).
    The following function describes the default \emph{em} function:
-\begin{lstlisting}
+\begin{Soutput}
 em(object, latent=2, verbose=F, 
    init.method = c("random", "kmeans", "hc"),
    init.prob = NULL, algo= c("em", "cem", "sem"),
    cluster.by=NULL, max_iter=500, 
    abs_tol=1e-4, concomitant=list(...),
    use.optim=F, optim.start=c("random","sample5"), ...)
-\end{lstlisting}
+\end{Soutput}
     where \code{object} is a model object such as \code{lm()} and \code{glm()}, \code{latent} determines the number of latent classes, \code{verbose} allows printing the fitting process, \code{init.method} provides three different initialization methods, \code{init.prob} allows users to determine the staring prior probabilities, \code{algo} provides three extensions of EM algorithms, \code{cluster.by} is a variable specifying the level at which the clustering should occur (for hierarchical data), \code{max_iter} determines the maximum number for iteration, \code{abs_tol} is the absolute tolerance -- the difference between two log-likelihood values, \code{concomitant} allows users to specify a concomitant model, \code{use.optim} decides whether to use the function \code{optim()} to maximize log-likelihood functions, and \code{optim.start} determines the method to generate the starting values for \code{optim()}.\footnote{For more detail, please check the \emph{em} documentations.}
    \section{Examples}
    \subsection{Mixture of Generalized Linear Models}
@@ -228,14 +228,94 @@ In the summary of results, we print the results from the concomitant model inclu
    ln \frac{Pr(y_i = 3)}{Pr(y_i = 1)} &=& 10.5 x_2 + 0.7 x_3
    \end{eqnarray}   
    The probability of the mixture is 0.3 and 0.7 for two classes, respectively.
-<<>>=
+<<eval=FALSE>>=
 library("em")
 library("survival")
 fmla <- chosen2 ~ 0 + a2_x2 + a2_x3 + a3_x2 + a3_x3 + strata(id)
 cfit <- clogit(fmla, simclogit)
-emfit <- em(cfit, latent = 2, verbose = F, init.method = "kmeans", use.optim = T, optim.start = "sample5", max_iter = 30)
+emfit <- em(cfit, latent = 2, verbose = F, init.method = "kmeans", use.optim = T, optim.start = "sample5", max_iter = 100)
 print(summary(emfit))
-@
+@ 
+
+\begin{Soutput}
+Random start: 1
+Iteration 1: (EM) log likelihood = 14323.5221
+Iteration 2: (EM) log likelihood = 14033.9953
+Iteration 3: (EM) log likelihood = 14004.4842
+Iteration 4: (EM) log likelihood = 14001.2086
+Iteration 5: (EM) log likelihood = 14000.8126
+Random start: 2
+Iteration 1: (EM) log likelihood = 14323.5221
+Iteration 2: (EM) log likelihood = 13987.5831
+Iteration 3: (EM) log likelihood = 13996.8977
+Iteration 4: (EM) log likelihood = 14003.7911
+Iteration 5: (EM) log likelihood = 14005.0099
+Random start: 3
+Iteration 1: (EM) log likelihood = 14323.5221
+Iteration 2: (EM) log likelihood = 13814.0416
+Iteration 3: (EM) log likelihood = 13767.1343
+Iteration 4: (EM) log likelihood = 13761.0806
+Iteration 5: (EM) log likelihood = 13760.0858
+Random start: 4
+Iteration 1: (EM) log likelihood = 14323.5221
+Iteration 2: (EM) log likelihood = 14198.8056
+Iteration 3: (EM) log likelihood = 14244.7413
+Iteration 4: (EM) log likelihood = 14249.8756
+Iteration 5: (EM) log likelihood = 14250.3362
+Random start: 5
+Iteration 1: (EM) log likelihood = 14323.5221
+Iteration 2: (EM) log likelihood = 14474.4036
+Iteration 3: (EM) log likelihood = 14471.6073
+Iteration 4: (EM) log likelihood = 14471.5818
+Iteration 5: (EM) log likelihood = 14471.6738
+Iteration 0: (EM) log likelihood = 13759.9111
+Iteration 1: (EM) log likelihood = 13759.5697
+Iteration 2: (EM) log likelihood = 13759.5447
+Iteration 3: (EM) log likelihood = 13759.5073
+Iteration 4: (EM) log likelihood = 13759.5583
+Iteration 5: (EM) log likelihood = 13759.5316
+Iteration 6: (EM) log likelihood = 13759.529
+Iteration 7: (EM) log likelihood = 13759.5186
+Iteration 8: (EM) log likelihood = 13759.5082
+Iteration 9: (EM) log likelihood = 13759.4992
+Iteration 10: (EM) log likelihood = 13759.4988
+Iteration 11: (EM) log likelihood = 13759.4959
+Iteration 12: (EM) log likelihood = 13759.4972
+Iteration 13: (EM) log likelihood = 13759.4948
+Iteration 14: (EM) log likelihood = 13759.4951
+Iteration 15: (EM) log likelihood = 13759.4945
+Iteration 16: (EM) log likelihood = 13759.4948
+Iteration 17: (EM) log likelihood = 13759.4942
+Iteration 18: (EM) log likelihood = 13759.4946
+Iteration 19: (EM) log likelihood = 13759.4951
+Iteration 20: (EM) log likelihood = 13759.4959
+Iteration 21: (EM) log likelihood = 13759.496
+Iteration 22: (EM) log likelihood = 13759.4979
+Iteration 23: (EM) log likelihood = 13759.4965
+Iteration 24: (EM) log likelihood = 13759.4978
+Iteration 25: (EM) log likelihood = 13759.498
+Iteration 26: (EM) log likelihood = 13759.4987
+Iteration 27: (EM) log likelihood = 13759.4987
+R> print(summary(emfit))
+Call: NULL
+Coefficients:
+             coef exp(coef)  se(coef)      z Pr(>|z|)
+1.a2_x2 7.261e+00 1.424e+03 1.000e+00  7.260 3.87e-13 ***
+1.a2_x3 3.989e+00 5.398e+01 6.665e-02 59.846  < 2e-16 ***
+1.a3_x2 6.753e+00 8.568e+02 1.001e+00  6.750 1.48e-11 ***
+1.a3_x3 1.256e+00 3.513e+00 7.831e-02 16.044  < 2e-16 ***
+2.a2_x2 1.084e+01 5.082e+04 1.000e+00 10.834  < 2e-16 ***
+2.a2_x3 8.993e-01 2.458e+00 6.665e-02 13.494  < 2e-16 ***
+2.a3_x2 8.904e+00 7.358e+03 1.001e+00  8.899  < 2e-16 ***
+2.a3_x3 5.079e-01 1.662e+00 7.831e-02  6.486 8.84e-11 ***
+---
+Signif. codes:  0 ’***’ 0.001 ’**’ 0.01 ’*’ 0.05 ’.’ 0.1 ’ ’ 1
+Prior Probabilities:
+Comp.1: 0.6721
+Comp.2: 0.3279
+logLik: -7954, AIC: 15927, BIC: 15992.
+
+\end{Soutput}
 
 Using the above code block, we make use of the function \code{clogit()} in the \code{survival} package and fit an FMM with two latent classes. We set \code{use.optim} to \code{TRUE} so that the \code{optim()} function is used with the embedded c++ code. To generate a start value for the M-step, we produce a set of random values for the parameters for five times. For each set of random values, we run the maximum log-likelihood estimate for five steps. We pick the values with the largest log-likelihood as the starting value.
 
