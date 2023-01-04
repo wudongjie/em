@@ -11,6 +11,9 @@ multi.em(object, ...)
 
 \item{...}{arguments used in em.}
 }
+\value{
+return the `em` object with the maximum log-likelihood.
+}
 \description{
 Multiple run of EM algorithm
 }

@@ -15,7 +15,7 @@
   max_iter = 500,
   abs_tol = 1e-04,
   concomitant = list(...),
-  use.optim = F,
+  use.optim = FALSE,
   optim.start = c("random", "sample5"),
   ...
 )
@@ -52,7 +52,17 @@ The default is NULL.}
 \item{...}{arguments used in the `model`.}
 }
 \value{
-the fitting object for the model with the class `em`.
+An object of class `em` is a list containing at least the following components:
+ \code{models} a list of models/objects whose class are determined by a model fitting from the previous step.  
+ \code{pi} the prior probabilities.
+ \code{latent} number of the latent classes.
+ \code{algorithm} the algorithm used (could be either `em`, `sem` or `cem`).
+ \code{obs} the number of observations.
+ \code{post_pr} the posterior probabilities.
+ \code{concomitant} a list of the concomitant model. It is empty if no concomitant model is used.
+ \code{init.method} the initialization method used.
+ \code{call} the matched call.
+ \code{terms} the code{terms} object used.
 }
 \description{
 The default em function

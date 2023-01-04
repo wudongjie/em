@@ -10,7 +10,17 @@
 #' @param max_iter the maximum iteration for em algorithm.
 #' @param algo the algorithm used in em: `em` the default EM algorithm,
 #' the classification em `cem`, or the stochastic em `sem`.
-#' @return the fitting object for the model with the class `em`.
+#' @return An object of class `em` is a list containing at least the following components:
+#'  \code{models} a list of models/objects whose class are determined by a model fitting from the previous step.  
+#'  \code{pi} the prior probabilities.
+#'  \code{latent} number of the latent classes.
+#'  \code{algorithm} the algorithm used (could be either `em`, `sem` or `cem`).
+#'  \code{obs} the number of observations.
+#'  \code{post_pr} the posterior probabilities.
+#'  \code{concomitant} a list of the concomitant model. It is empty if no concomitant model is used.
+#'  \code{init.method} the initialization method used.
+#'  \code{call} the matched call.
+#'  \code{terms} the code{terms} object used.
 #' @export
 em.fitdist <- function(object, latent = 2, verbose = FALSE,
                        init.method = c("random", "kmeans", "hc"), init.prob = NULL,

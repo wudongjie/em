@@ -1,4 +1,5 @@
-emstep <- function(models, post_pr, n, algo = "em", cfreq = 1, max_iter = 300, abs_tol = 1e-4, concomitant = NULL, mf.con = NULL, verbose = TRUE) {
+emstep <- function(models, post_pr, n, algo = "em", cfreq = 1, max_iter = 300, 
+                   abs_tol = 1e-4, concomitant = NULL, mf.con = NULL, verbose = TRUE) {
   cnt <- 0
   conv <- 1
   llp <- 0

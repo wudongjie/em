@@ -136,7 +136,8 @@ plot.em <- function(x, by = c("component", "prob"), prior = FALSE,
   #   do.call(legend, lgd)
   # }
   else if (t == "prob") {
-    par(mfrow = c(3, 1))
+    opar <- par(mfrow = c(3, 1))
+    on.exit(par(opar))
     ttl <- hist.args$main
     for (i in (seq_len(length(x$models)))) {
       hist.args$main <- ""

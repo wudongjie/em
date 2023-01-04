@@ -24,6 +24,7 @@ test_that("test linear regression", {
   results <- em(fit_lm, latent = 2, verbose = T)
   emfit1 <- em(glm_fit, latent = 2, verbose = T, init.method = "kmeans", use.optim = T, optim.start = "sample5")
   print(summary(emfit1))
+  browser()
   # Test predict
   fmm_fit <- predict(results)
   fmm_fit_post <- predict(results, prob = "posterior")

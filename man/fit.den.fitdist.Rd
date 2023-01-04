@@ -11,6 +11,9 @@
 
 \item{...}{other used arguments.}
 }
+\value{
+the density function.
+}
 \description{
 Fitting the density function using in `fitdistrplus::fitdist()`
 }
