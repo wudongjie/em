@@ -11,6 +11,9 @@
 
 \item{...}{other used arguments.}
 }
+\value{
+the log-likelihood value
+}
 \description{
 This function computes logLik of EM Algorithm.
 }

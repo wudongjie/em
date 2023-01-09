@@ -11,6 +11,9 @@
 
 \item{...}{other used arguments.}
 }
+\value{
+The posterior probability matrix
+}
 \description{
 model-based agglomerative hierarchical clustering
 }

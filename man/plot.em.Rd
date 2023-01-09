@@ -47,6 +47,9 @@ The last two represent the y-axis limits}
 
 \item{...}{other arguments.}
 }
+\value{
+`NULL`
+}
 \description{
 This is the generic plot function for `em` project. One can produce
 three types of graphs using this function

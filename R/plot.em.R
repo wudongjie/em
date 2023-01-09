@@ -17,6 +17,7 @@
 #' @param lgd.loc the location of the legend. The default is "topleft".
 #' @param hist.args The list of arguments for the histogram.
 #' @param ... other arguments.
+#' @return `NULL`
 #' @importFrom graphics legend lines hist par title
 #' @export
 plot.em <- function(x, by = c("component", "prob"), prior = FALSE,

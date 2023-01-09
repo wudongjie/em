@@ -18,6 +18,7 @@ init.em <- function(object, ...) {
 #' Random initialization
 #' @param object A matrix.
 #' @param ... other used arguments.
+#' @return The posterior probability matrix
 init.em.random <- function(object, ...) {
   args <- list()
   if (!missing(...)) {
@@ -30,6 +31,7 @@ init.em.random <- function(object, ...) {
 #' Random initialization with weights
 #' @param object A matrix.
 #' @param ... other used arguments.
+#' @return The posterior probability matrix
 init.em.random.weights <- function(object, ...) {
   args <- list()
   if (!missing(...)) {
@@ -47,6 +49,7 @@ init.em.random.weights <- function(object, ...) {
 #' K-mean initialization
 #' @param object A matrix.
 #' @param ... other used arguments.
+#' @return The posterior probability matrix
 init.em.kmeans <- function(object, ...) {
   if (!missing(...)) {
     args <- list(...)
@@ -62,6 +65,7 @@ init.em.kmeans <- function(object, ...) {
 #' model-based agglomerative hierarchical clustering
 #' @param object A matrix.
 #' @param ... other used arguments.
+#' @return The posterior probability matrix
 init.em.hc <- function(object, ...) {
   if (!missing(...)) {
     args <- list(...)
@@ -77,6 +81,7 @@ init.em.hc <- function(object, ...) {
 #' Initialization using sampling 5 times.
 #' @param object A matrix.
 #' @param ... other used arguments.
+#' @return The posterior probability matrix
 init.em.sample5 <- function(object, ...) {
   args <- list()
   if (!missing(...)) {

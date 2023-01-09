@@ -128,6 +128,7 @@ fit.den.gnm <- function(object, ...) {
 #' Fit the density function for a `nnet` model.
 #' @param object the fitted model.
 #' @param ... other used arguments.
+#' @return the density function.
 fit.den.nnet <- function(object, ...) {
 
 }

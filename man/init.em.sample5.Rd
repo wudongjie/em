@@ -11,6 +11,9 @@
 
 \item{...}{other used arguments.}
 }
+\value{
+The posterior probability matrix
+}
 \description{
 Initialization using sampling 5 times.
 }

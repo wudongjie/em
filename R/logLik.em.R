@@ -2,6 +2,7 @@
 #' @method logLik em
 #' @param object an object of `em`.
 #' @param ... other used arguments.
+#' @return the log-likelihood value
 #' @export
 logLik.em <- function(object, ...) {
   p <- 0

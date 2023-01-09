@@ -5,7 +5,7 @@ test_that("Test Plots", {
   pd <- predict(fit_lm)
   results <- em(fit_lm, latent = 3, verbose = T)
   plot(results)
-  browser()
+  # browser()
   dev.off()
   # plot(results, by="response")
   # dev.off()
