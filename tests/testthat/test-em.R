@@ -326,3 +326,5 @@ test_that("test glm logit", {
 #   em_fit <- em(d_fit, latent=2)
 #   print(summary(em_fit))
 # })
+
+

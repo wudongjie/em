@@ -258,3 +258,46 @@ fit.den.plm <- function(object, ...) {
   den <- dnorm(y, mean = predict(object, newdata = object$frame, model = md, effect = ef, theta = object$ercomp$theta), sd = sigma)
   return(den)
 }
+
+#' Fit the density function for a `udiff` model.
+#' @param object the fitted model.
+#' @param ... other used arguments.
+#' @return the density function.
+#' @export
+fit.den.udiff <- function(object, ...) {
+  if (is.null(object$weights)) {
+    object$weights <- 1
+  }
+  if (length(object$xlevels) != 0) {
+    for (i in seq_len(length(object$xlevels))) {
+      if (length(levels(object$data[[names(object$xlevels[i])]])) !=
+          length(object$xlevels[[i]])) {
+        object$xlevels[[i]] <- levels(object$data[[names(object$xlevels[i])]])
+      }
+    }
+  }
+  #browser()
+  theta <- object$coefficients
+  Y <- object$model[,1]
+  X <- object$model[,2]
+  Z <- object$model[,3]
+  Y <- vdummy(Y)[,2:length(unique(Y))]
+  X <- vdummy(X)[,2:length(unique(X))]
+  Z <- vdummy(Z)[,2:length(unique(Z))]
+  end1 = ncol(Y)*(ncol(Z)+1)
+  end2 = ncol(Y)*ncol(X)
+  end3 = ncol(Z)
+  #browser()
+  W = cbind(matrix(1,nrow(X),1), Z)
+  theta.y = theta[1:end1]
+  theta.y = matrix(c(theta.y), nrow=ncol(Z)+1, ncol=ncol(Y))
+  psi.y = theta[(end1+1):(end1+end2)]
+  psi.y = matrix(c(psi.y), nrow=ncol(X), ncol=ncol(Y))
+  phi = theta[(end1+end2+1):(end1+end2+end3)]
+  phi = matrix(c(phi), nrow=ncol(Z), ncol=1)
+  expZ = exp(Z %*% phi) # [nrow * 1]
+  sump = W %*% theta.y  + (X %*% psi.y * c(expZ)) # add expZ for each col
+  ll = rowSums(Y * sump) - log(1+rowSums(exp(sump)))
+  return(-ll)
+}
+

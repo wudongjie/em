@@ -38,7 +38,9 @@ emstep <- function(models, post_pr, n, algo = "em", cfreq = 1, max_iter = 300,
     } else if (algo == "sem") {
       post_pr <- sstep(post_pr)
     }
+    print(colSums(post_pr))
     ll <- 0
+    #browser()
     if (length(concomitant) == 0) {
       for (i in seq_len(length(results))) {
         if (pi[[i]] != 0) {

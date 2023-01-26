@@ -1,6 +1,6 @@
 Package: em
 Title: Generic EM Algorithm
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person(given = "Dongjie",
            family = "Wu",
