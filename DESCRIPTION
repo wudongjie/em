@@ -9,7 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-4490-8657"))
 Description: A generic function for running the Expectation-Maximization (EM) algorithm
   within a maximum likelihood framework, based on Dempster, Laird, and Rubin (1977) <doi:10.1111/j.2517-6161.1977.tb01600.x>
-  is implemented. It can be applied after a model fitting using R's existing functions and packages.
+  is implemented. It can be applied after a model fitting using R's existing functions and packages. The research leading to the software described here has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (grant agreement no. 851293).
 URL: https://github.com/wudongjie/em
 License: GPL (>= 3)
 Encoding: UTF-8

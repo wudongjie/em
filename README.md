@@ -41,4 +41,5 @@ fit_glm <- glm(formula=formula, family=binomial, data=dt)
 fit_em <- em(fit_glm, latent=2, verbose = T, init.method = "kmeans", use.optim=T)
 print(summary(fit_em))
 ```
-
+## Acknowledgements
+The research leading to the software described here has received funding from the European Research Council (ERC) under the European Union’s Horizon 2020 research and innovation programme (grant agreement no. 851293).
