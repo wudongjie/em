@@ -13,7 +13,6 @@ Description: A generic function for running the Expectation-Maximization (EM) al
 URL: https://github.com/wudongjie/em
 License: GPL (>= 3)
 Encoding: UTF-8
-SystemRequirements: C++11
 BugReports: https://github.com/wudongjie/em/issues
 NeedsCompilation: yes
 Depends: R (>= 3.0.0)
